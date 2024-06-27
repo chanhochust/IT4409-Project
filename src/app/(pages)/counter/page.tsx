@@ -1,11 +1,7 @@
-import {Counter} from "src/app/(pages)/counter/(components)/Counter";
-import {CounterController} from "src/app/(pages)/counter/(components)/CounterController";
+import {CounterPage} from "src/app/(pages)/counter/CounterPage";
 
-const Page = () => {
-  return <>
-    <Counter/>
-    <CounterController/>
-  </>
+const Page = async () => {
+  return <CounterPage/>
 }
 
 export default Page;

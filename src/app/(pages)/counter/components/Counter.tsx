@@ -1,7 +1,6 @@
 'use client'
-import {useAtomValue} from "jotai";
+import {useAtom, useAtomValue} from "jotai";
 import {CounterAtom} from "src/app/(pages)/counter/state";
-import {useAtom} from "jotai";
 
 export const Counter = () => {
   useAtom(CounterAtom.countEffect);

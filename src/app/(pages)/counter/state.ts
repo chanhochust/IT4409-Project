@@ -1,10 +1,10 @@
-import {atom} from "jotai";
 import {atomEffect} from "jotai-effect";
-import {store} from "src/lib/providers/jotaiStoreProvider";
+import {atom, createStore} from "jotai";
 
 
+export const counterStore = createStore()
 export class CounterAtom {
-  static readonly count = atom(0);
+  static readonly count = atom(10);
   static readonly countEven = atom(0);
 
 
@@ -18,15 +18,15 @@ export class CounterAtom {
       }
     },
   );
-
 }
 
 export class CounterAction {
   static increment() {
-    store.set(CounterAtom.count, (c) => c + 1);
+    counterStore.set(CounterAtom.count, (c) => c + 1);
+
   }
 
   static decrement() {
-    store.set(CounterAtom.count, (c) => c - 1);
+    counterStore.set(CounterAtom.count, (c) => c - 1);
   }
 }
