@@ -6,10 +6,10 @@ interface Props {
   children: React.ReactNode | React.ReactNode[];
 }
 
-export const jotaiStore = createStore()
+export const store = createStore()
 export const JotaiStoreProvider: FC<Props> = (props) => {
   return (
-    <Provider store={jotaiStore}>
+    <Provider store={store}>
       {props.children}
     </Provider>
   );

@@ -1,6 +1,6 @@
 import {atom} from "jotai";
 import {atomEffect} from "jotai-effect";
-import {jotaiStore} from "src/lib/providers/jotaiStoreProvider";
+import {store} from "src/lib/providers/jotaiStoreProvider";
 
 
 export class CounterAtom {
@@ -23,10 +23,10 @@ export class CounterAtom {
 
 export class CounterAction {
   static increment() {
-    jotaiStore.set(CounterAtom.count, (c) => c + 1);
+    store.set(CounterAtom.count, (c) => c + 1);
   }
 
   static decrement() {
-    jotaiStore.set(CounterAtom.count, (c) => c - 1);
+    store.set(CounterAtom.count, (c) => c - 1);
   }
 }
