@@ -8,8 +8,14 @@ export const Counter = () => {
   const countEven = useAtomValue(CounterAtom.countEven)
   return (
     <div>
-      <h1>Counter: {count}</h1>
-      <h3>Even Counter: {countEven}</h3>
+      <h1>
+        Counter:
+        {count}
+      </h1>
+      <h3>
+        Even Counter:
+        {countEven}
+      </h3>
     </div>
   )
 }
