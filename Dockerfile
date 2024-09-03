@@ -3,7 +3,6 @@ WORKDIR /app
 RUN corepack enable
 COPY package.json yarn.lock ./
 COPY .yarnrc.yml ./.yarnrc.yml
-COPY .yarn ./.yarn
 RUN yarn install
 
 FROM node:22-alpine3.19 AS builder
