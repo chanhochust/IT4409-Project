@@ -12,7 +12,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN yarn build
 
-FROM node:22-alpine3.19 AS serve
+FROM node:22-alpine3.19
 WORKDIR /app
 RUN corepack enable
 COPY --from=builder /app ./
