@@ -15,7 +15,13 @@ RUN yarn build
 FROM node:22-alpine3.19
 WORKDIR /app
 RUN corepack enable
-COPY --from=builder /app ./
+COPY --from=builder /app/ ./
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/yarn.lock ./yarn.lock
+COPY --from=builder /app/.yarnrc.yml ./yarnrc.yml
+COPY --from=builder /app/node_modules ./node_modules
 CMD yarn start
 
 #FROM node:22-alpine3.19 AS serve
