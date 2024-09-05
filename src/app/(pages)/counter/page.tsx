@@ -1,7 +1,5 @@
-import { CounterPage } from 'src/app/(pages)/counter/CounterPage'
+import { CounterPage } from 'src/app/(pages)/counter/CounterPage';
 
-const Page = async () => {
-  return <CounterPage />
+export default async function Page() {
+  return <CounterPage />;
 }
-
-export default Page

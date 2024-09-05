@@ -1,16 +1,16 @@
-import { atom, createStore } from 'jotai'
+import { atom, createStore } from 'jotai';
 
-export const counterStore = createStore()
+export const counterStore = createStore();
 export class CounterAtom {
-  static readonly count = atom(10)
+  static readonly count = atom(10);
 }
 
 export class CounterAction {
   static increment() {
-    counterStore.set(CounterAtom.count, (c) => c + 1)
+    counterStore.set(CounterAtom.count, (c) => c + 1);
   }
 
   static decrement() {
-    counterStore.set(CounterAtom.count, (c) => c - 1)
+    counterStore.set(CounterAtom.count, (c) => c - 1);
   }
 }
