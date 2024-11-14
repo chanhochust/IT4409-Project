@@ -6,11 +6,11 @@ export class CounterAtom {
 }
 
 export class CounterAction {
-  static increment() {
-    counterStore.set(CounterAtom.count, (c) => c + 1);
-  }
-
   static decrement() {
     counterStore.set(CounterAtom.count, (c) => c - 1);
+  }
+
+  static increment() {
+    counterStore.set(CounterAtom.count, (c) => c + 1);
   }
 }

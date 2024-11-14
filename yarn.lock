@@ -725,7 +725,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/types@npm:8.14.0":
+"@typescript-eslint/types@npm:8.14.0, @typescript-eslint/types@npm:^8.9.0":
   version: 8.14.0
   resolution: "@typescript-eslint/types@npm:8.14.0"
   checksum: 10c0/7707f900e24e60e6780c5705f69627b7c0ef912cb3b095dfc8f4a0c84e866c66b1c4c10278cf99724560dc66985ec640750c4192786a09b853f9bb4c3ca5a7ce
@@ -777,7 +777,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/utils@npm:8.14.0":
+"@typescript-eslint/utils@npm:8.14.0, @typescript-eslint/utils@npm:^8.9.0":
   version: 8.14.0
   resolution: "@typescript-eslint/utils@npm:8.14.0"
   dependencies:
@@ -1849,6 +1849,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-plugin-perfectionist@npm:^3.9.1":
+  version: 3.9.1
+  resolution: "eslint-plugin-perfectionist@npm:3.9.1"
+  dependencies:
+    "@typescript-eslint/types": "npm:^8.9.0"
+    "@typescript-eslint/utils": "npm:^8.9.0"
+    minimatch: "npm:^9.0.5"
+    natural-compare-lite: "npm:^1.4.0"
+  peerDependencies:
+    astro-eslint-parser: ^1.0.2
+    eslint: ">=8.0.0"
+    svelte: ">=3.0.0"
+    svelte-eslint-parser: ^0.41.1
+    vue-eslint-parser: ">=9.0.0"
+  peerDependenciesMeta:
+    astro-eslint-parser:
+      optional: true
+    svelte:
+      optional: true
+    svelte-eslint-parser:
+      optional: true
+    vue-eslint-parser:
+      optional: true
+  checksum: 10c0/ef4e4465a0a6c45d65375cdd823d133ad82e3fb576451afc802250f433797eec361abb35f2fb042496e8e35a87af7c5a7567efaa05e7fa4b72cda0060a1cc185
+  languageName: node
+  linkType: hard
+
 "eslint-plugin-prettier@npm:5.2.1":
   version: 5.2.1
   resolution: "eslint-plugin-prettier@npm:5.2.1"
@@ -1942,7 +1969,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:9.14.0":
+"eslint@npm:^9.14.0":
   version: 9.14.0
   resolution: "eslint@npm:9.14.0"
   dependencies:
@@ -3061,6 +3088,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"minimatch@npm:^9.0.5":
+  version: 9.0.5
+  resolution: "minimatch@npm:9.0.5"
+  dependencies:
+    brace-expansion: "npm:^2.0.1"
+  checksum: 10c0/de96cf5e35bdf0eab3e2c853522f98ffbe9a36c37797778d2665231ec1f20a9447a7e567cb640901f89e4daaa95ae5d70c65a9e8aa2bb0019b6facbc3c0575ed
+  languageName: node
+  linkType: hard
+
 "minimist@npm:^1.2.0, minimist@npm:^1.2.6":
   version: 1.2.8
   resolution: "minimist@npm:1.2.8"
@@ -3195,6 +3231,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"natural-compare-lite@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "natural-compare-lite@npm:1.4.0"
+  checksum: 10c0/f6cef26f5044515754802c0fc475d81426f3b90fe88c20fabe08771ce1f736ce46e0397c10acb569a4dd0acb84c7f1ee70676122f95d5bfdd747af3a6c6bbaa8
+  languageName: node
+  linkType: hard
+
 "natural-compare@npm:^1.4.0":
   version: 1.4.0
   resolution: "natural-compare@npm:1.4.0"
@@ -3223,9 +3266,10 @@ __metadata:
     "@typescript-eslint/parser": "npm:^8.4.0"
     class-variance-authority: "npm:^0.7.0"
     clsx: "npm:^2.1.1"
-    eslint: "npm:9.14.0"
+    eslint: "npm:^9.14.0"
     eslint-config-next: "npm:15.0.3"
     eslint-config-prettier: "npm:9.1.0"
+    eslint-plugin-perfectionist: "npm:^3.9.1"
     eslint-plugin-prettier: "npm:5.2.1"
     eslint-plugin-tailwindcss: "npm:3.17.5"
     husky: "npm:^9.1.5"

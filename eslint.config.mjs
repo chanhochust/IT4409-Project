@@ -1,6 +1,7 @@
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import path from 'node:path';
+import perfectionist from 'eslint-plugin-perfectionist';
 import { fileURLToPath } from 'node:url';
 import js from '@eslint/js';
 import { FlatCompat } from '@eslint/eslintrc';
@@ -20,6 +21,7 @@ export default [
     'plugin:@typescript-eslint/recommended',
     'plugin:tailwindcss/recommended',
   ),
+  perfectionist.configs['recommended-natural'],
   {
     plugins: {
       '@typescript-eslint': typescriptEslint,
