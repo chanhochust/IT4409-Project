@@ -21,6 +21,9 @@ export default [
   ...storybook.configs['flat/recommended'],
   perfectionist.configs['recommended-natural'],
   {
+    files: ['src/**/*.{tsx,ts}'],
+  },
+  {
     plugins: {
       '@typescript-eslint': typescriptEslint,
     },

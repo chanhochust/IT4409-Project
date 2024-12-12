@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import { fn } from '@storybook/test';
 
-import { Button } from './Button';
+import { AppBadge, AppBadgeVariant } from './AppBadge';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
@@ -10,45 +10,37 @@ const meta = {
   args: { onClick: fn() },
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {
-    backgroundColor: { control: 'color' },
+    variant: {
+      control: {
+        type: 'radio',
+      },
+      options: ['default', 'secondary', 'outline', 'destructive'] satisfies AppBadgeVariant['variant'][],
+    },
   },
-  component: Button,
+  component: AppBadge,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
     layout: 'centered',
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
-  title: 'Example/Button',
-} satisfies Meta<typeof Button>;
+  title: 'Components/Badge',
+} satisfies Meta<typeof AppBadge>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const Primary: Story = {
+export const Default: Story = {
   args: {
-    label: 'Button',
-    primary: true,
+    children: 'Default',
+    variant: 'default',
   },
 };
 
 export const Secondary: Story = {
   args: {
-    label: 'Button',
-  },
-};
-
-export const Large: Story = {
-  args: {
-    label: 'Button',
-    size: 'large',
-  },
-};
-
-export const Small: Story = {
-  args: {
-    label: 'Button',
-    size: 'small',
+    children: 'Secondary',
+    variant: 'secondary',
   },
 };
