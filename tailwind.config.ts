@@ -1,9 +1,11 @@
 import type { Config } from 'tailwindcss';
 
+import animatePlugin from 'tailwindcss-animate';
+
 const config: Config = {
   content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
   darkMode: ['class'],
-  plugins: [require('tailwindcss-animate')],
+  plugins: [animatePlugin],
   theme: {
     extend: {
       borderRadius: {

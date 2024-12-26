@@ -69,6 +69,8 @@ export default [
           patterns: ['../../*'],
         },
       ],
+      'perfectionist/sort-classes': 'off',
+      'perfectionist/sort-enums': 'off',
     },
   },
   eslintPluginPrettierRecommended,

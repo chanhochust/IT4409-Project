@@ -1,5 +1,5 @@
 'use client';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { CounterAtom } from 'src/app/(pages)/counter/state';
 
 export const Counter = () => {
