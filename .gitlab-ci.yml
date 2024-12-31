@@ -1,0 +1,129 @@
+image: node:22-alpine3.20
+
+variables:
+  PNPM_CACHE_FOLDER: .pnpm-cache
+  SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+  GIT_DEPTH: "0"
+  PNPM_VERSION: 9.15.2
+  CI: "true"
+workflow:
+  auto_cancel:
+    on_new_commit: interruptible
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules
+    - $PNPM_CACHE_FOLDER
+
+stages:
+  - install
+  - lint
+  - build
+
+default:
+  before_script:
+    - corepack enable
+
+Install Dependencies:
+  stage: install
+  interruptible: true
+  timeout: 10m
+  cache:
+    key: 
+      files:
+        - pnpm-lock.yaml
+    paths:
+      - $PNPM_CACHE_FOLDER
+      - node_modules
+  script:
+    - pnpm config set store-dir $PNPM_CACHE_FOLDER
+    - pnpm install
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  tags:
+    - nextjs
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - api_failure
+      - stuck_or_timeout_failure
+
+Code Linter:
+  stage: lint
+  interruptible: true
+  timeout: 10m
+  cache:
+    key: 
+      files:
+        - pnpm-lock.yaml
+    paths:
+      - $PNPM_CACHE_FOLDER
+      - node_modules
+  script:
+    - pnpm ci:lint
+  dependencies:
+    - Install Dependencies
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  tags:
+    - nextjs
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - api_failure
+      - stuck_or_timeout_failure
+
+Next Build:
+  stage: build
+  interruptible: true
+  timeout: 10m
+  cache:
+    - key: 
+        files:
+          - pnpm-lock.yaml
+      paths:
+        - $PNPM_CACHE_FOLDER
+        - node_modules
+    - key: next-cache
+      paths:
+        - .next/cache
+        - .next/static
+  script:
+    - pnpm build
+  artifacts:
+    paths:
+      - .next
+    expire_in: 1 week
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  tags:
+    - nextjs
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - api_failure
+      - stuck_or_timeout_failure
+
+# sonarqube-check:
+#   when: manual
+#   image:
+#     name: sonarsource/sonar-scanner-cli:latest
+#     entrypoint: [""]
+#   stage: lint
+#   cache:
+#     key: "${CI_JOB_NAME}"
+#     paths:
+#       - .sonar/cache
+
+#   script:
+#     - sonar-scanner
+#   allow_failure: true
+#   rules:
+#     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+#     - if: $CI_COMMIT_BRANCH == 'main'
+#   tags:
+#     - nextjs

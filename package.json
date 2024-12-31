@@ -8,8 +8,8 @@
     "start": "next start",
     "lint:fix": "next lint --fix",
     "lint": "next lint",
-    "format": "yarn lint:fix && yarn type:check",
-    "ci:lint": "yarn lint && yarn type:check",
+    "format": "pnpm lint:fix && pnpm type:check",
+    "ci:lint": "pnpm lint && pnpm type:check",
     "type:check": "tsc --noEmit",
     "prepare": "husky",
     "storybook": "storybook dev -p 6006",
@@ -63,5 +63,5 @@
     "tailwindcss": "^3.4.17",
     "typescript": "5.7.2"
   },
-  "packageManager": "yarn@4.5.3"
+  "packageManager": "pnpm@9.15.2"
 }
