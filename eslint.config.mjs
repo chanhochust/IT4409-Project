@@ -1,18 +1,17 @@
 // @ts-check
-import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import tseslint from 'typescript-eslint';
-import tsParser from '@typescript-eslint/parser';
-import path from 'node:path';
-import perfectionist from 'eslint-plugin-perfectionist';
-import { fileURLToPath } from 'node:url';
-import js from '@eslint/js';
 import { FlatCompat } from '@eslint/eslintrc';
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
-import storybook from 'eslint-plugin-storybook'
-import tailwind from "eslint-plugin-tailwindcss";
+import js from '@eslint/js';
 import nextPlugin from '@next/eslint-plugin-next';
+import tsParser from '@typescript-eslint/parser';
+import perfectionist from 'eslint-plugin-perfectionist';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import storybook from 'eslint-plugin-storybook';
+import tailwind from "eslint-plugin-tailwindcss";
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import tseslint from 'typescript-eslint';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const compat = new FlatCompat({
@@ -22,12 +21,11 @@ const compat = new FlatCompat({
 });
 
 export default [
-  ...compat.extends('plugin:@typescript-eslint/recommended'),
   ...storybook.configs['flat/recommended'],
   ...tailwind.configs['flat/recommended'],
   reactPlugin.configs.flat?.recommended,
-    ...tailwind.configs['flat/recommended'],
-
+  ...tailwind.configs['flat/recommended'],
+  ...tseslint.configs.recommendedTypeChecked,
   {
     files: ['src/**/*.{tsx,ts}'],
   },
@@ -36,15 +34,15 @@ export default [
       'tailwindcss/classnames-order': 'off',
     },
   },
-  
-    {
+
+  {
     ...perfectionist.configs['recommended-natural'],
     rules: {
       'perfectionist/sort-classes': 'off',
       'perfectionist/sort-enums': 'off',
     },
   },
- {
+  {
     plugins: {
       react: reactPlugin,
     },
@@ -73,10 +71,7 @@ export default [
     },
   },
   {
-    plugins: {
-      '@typescript-eslint': typescriptEslint,
-    },
-  
+
     languageOptions: {
       ...reactPlugin.configs.flat?.recommended.languageOptions,
       parser: tsParser,
@@ -88,7 +83,7 @@ export default [
     },
 
     rules: {
-      'prettier/prettier': 'error',
+      // 'prettier/prettier': 'error',
       '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/no-unsafe-enum-comparison': 'error',
       'react/prefer-read-only-props': 'warn',
@@ -96,6 +91,8 @@ export default [
       '@typescript-eslint/no-deprecated': 'warn',
       '@typescript-eslint/no-unsafe-declaration-merging': 'error',
       '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/unbound-method': 'off',
+      '@typescript-eslint/require-await': 'off',
       'prefer-template': 'error',
       'no-console': [
         'warn',
@@ -119,8 +116,11 @@ export default [
       ],
     },
   },
-  eslintPluginPrettierRecommended,
   {
+    ...eslintPluginPrettierRecommended,
+    rules: {
+      'prettier/prettier': 'error',
+    },
     ignores: ['.next'],
   }
 ];
