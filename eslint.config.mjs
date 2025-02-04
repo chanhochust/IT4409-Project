@@ -8,7 +8,6 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import storybook from 'eslint-plugin-storybook';
-import tailwind from "eslint-plugin-tailwindcss";
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import tseslint from 'typescript-eslint';
@@ -22,19 +21,11 @@ const compat = new FlatCompat({
 
 export default [
   ...storybook.configs['flat/recommended'],
-  ...tailwind.configs['flat/recommended'],
   reactPlugin.configs.flat?.recommended,
-  ...tailwind.configs['flat/recommended'],
   ...tseslint.configs.recommendedTypeChecked,
   {
     files: ['src/**/*.{tsx,ts}'],
   },
-  {
-    rules: {
-      'tailwindcss/classnames-order': 'off',
-    },
-  },
-
   {
     ...perfectionist.configs['recommended-natural'],
     rules: {
