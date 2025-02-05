@@ -51,3 +51,4 @@ next-env.d.ts
 # UI
 __shad
 *storybook.log
+storybook-static
