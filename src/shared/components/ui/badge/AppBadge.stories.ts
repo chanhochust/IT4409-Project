@@ -33,14 +33,28 @@ type Story = StoryObj<typeof meta>;
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Default: Story = {
   args: {
-    children: 'Default',
+    children: 'Default Badge',
     variant: 'default',
   },
 };
 
 export const Secondary: Story = {
   args: {
-    children: 'Secondary',
+    children: 'Secondary Badge',
     variant: 'secondary',
+  },
+};
+
+export const Outline: Story = {
+  args: {
+    children: 'Outline Badge',
+    variant: 'outline',
+  },
+};
+
+export const Destructive: Story = {
+  args: {
+    children: 'Destructive Badge',
+    variant: 'destructive',
   },
 };

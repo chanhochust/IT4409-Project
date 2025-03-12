@@ -1,32 +1,45 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { AppProgress } from './AppProgress';
 
 const meta = {
-  argTypes: {
-    className: {
-      control: 'text',
-      description: 'Additional CSS classes to apply',
-    },
-    value: {
-      control: { max: 100, min: 0, type: 'range' },
-      description: 'The progress value (0-100)',
-    },
-  },
   component: AppProgress,
   parameters: {
     layout: 'centered',
   },
   tags: ['autodocs'],
   title: 'Components/Progress',
+  argTypes: {
+    value: {
+      control: { type: 'range', min: 0, max: 100, step: 1 },
+    },
+  },
 } satisfies Meta<typeof AppProgress>;
 
 export default meta;
-type Story = StoryObj<typeof AppProgress>;
+type Story = StoryObj<typeof meta>;
 
-export const CustomStyling: Story = {
+export const Default: Story = {
   args: {
-    className: 'h-2 w-[300px] bg-slate-200',
-    value: 60,
+    value: 50,
+  },
+};
+
+export const Low: Story = {
+  args: {
+    value: 25,
+  },
+};
+
+export const High: Story = {
+  args: {
+    value: 75,
+  },
+};
+
+export const Complete: Story = {
+  args: {
+    value: 100,
   },
 };

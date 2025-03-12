@@ -23,6 +23,15 @@ const meta = {
         'destructive',
       ] satisfies AppButtonVariant['variant'][],
     },
+    size: {
+      control: {
+        type: 'radio',
+      },
+      options: ['default', 'sm', 'lg', 'icon'],
+    },
+    disabled: {
+      control: 'boolean',
+    },
   },
   component: AppButton,
   parameters: {
@@ -40,14 +49,70 @@ type Story = StoryObj<typeof meta>;
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Default: Story = {
   args: {
-    children: 'Default',
+    children: 'Default Button',
     variant: 'default',
   },
 };
 
 export const Secondary: Story = {
   args: {
-    children: 'Secondary',
+    children: 'Secondary Button',
     variant: 'secondary',
+  },
+};
+
+export const Outline: Story = {
+  args: {
+    children: 'Outline Button',
+    variant: 'outline',
+  },
+};
+
+export const Ghost: Story = {
+  args: {
+    children: 'Ghost Button',
+    variant: 'ghost',
+  },
+};
+
+export const Link: Story = {
+  args: {
+    children: 'Link Button',
+    variant: 'link',
+  },
+};
+
+export const Destructive: Story = {
+  args: {
+    children: 'Destructive Button',
+    variant: 'destructive',
+  },
+};
+
+export const Small: Story = {
+  args: {
+    children: 'Small Button',
+    size: 'sm',
+  },
+};
+
+export const Large: Story = {
+  args: {
+    children: 'Large Button',
+    size: 'lg',
+  },
+};
+
+export const IconButton: Story = {
+  args: {
+    children: '🚀',
+    size: 'icon',
+  },
+};
+
+export const Disabled: Story = {
+  args: {
+    children: 'Disabled Button',
+    disabled: true,
   },
 };
