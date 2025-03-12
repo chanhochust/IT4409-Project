@@ -1,0 +1,46 @@
+# Cursor Rules
+
+## Component Guidelines
+
+- **components/ui** contains basic components that can be reused for multiple purposes. Create components here only if they can be reused by many pages.
+- Other complex components should be placed in the **components** folder (e.g., combining multiple basic components to create a new one).
+- Prefer to search the **components** folder first before deciding to create a new component.
+
+## Coding Conventions
+
+### Code Style
+
+- Follow best practices and maintain consistency. The project includes a linter tool to enforce code style.
+- Each file should not have excessive lines of code. If a file exceeds **500** lines, consider splitting it into multiple smaller files.
+- Do not use the `any` type in TypeScript as it defeats the purpose of type safety. Use `unknown` and type assertions when necessary. If the use of `any` is absolutely required, add a comment explaining why.
+- Each file and function should adhere to the Single Responsibility Principle (SRP). If a file has multiple responsibilities, consider splitting it into separate files.
+- Do not nest functions more than 3 levels deep (this includes nested `if`, `else`, `for`, `while`, etc.). If additional nesting is needed, refactor the code into multiple functions.
+
+### Folder Structure
+
+- Each page should have its own folder in the **pages** directory.
+- If a component is used in multiple pages, consider placing it in the **shared/components** directory.
+
+### Commit Message Conventions
+
+- Commit messages should be descriptive and follow the convention: `[ticket_number] - [commit_message]`.
+
+### Coding Guidelines
+
+- Use function declarations instead of arrow functions assigned to variables. For example, use:
+  ```ts
+  function handleClick() { ... }
+  ```
+  instead of:
+  ```ts
+  const handleClick = () => { ... }
+  ```
+
+### Naming Conventions
+
+- **Enum** and enum values should be in PascalCase.
+- **Types**, **Interfaces**, and **Classes** should be in PascalCase.
+- **Functions** and **variables** should be in camelCase.
+- App Router page folders should be in kebab-case.
+- Filenames should be in camelCase, except for React component files which should be in PascalCase.
+- Asset files should be in kebab-case.
