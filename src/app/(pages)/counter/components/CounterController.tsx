@@ -1,6 +1,6 @@
 'use client';
 import { CounterAction } from 'src/app/(pages)/counter/state';
-import { AppButton } from 'src/shared/components/button/AppButton';
+import { AppButton } from 'src/shared/components/ui/button/AppButton';
 
 export const CounterController = () => {
   return (

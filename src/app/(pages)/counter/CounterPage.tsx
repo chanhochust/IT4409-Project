@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { Counter } from 'src/app/(pages)/counter/components/Counter';
 import { CounterController } from 'src/app/(pages)/counter/components/CounterController';
 import { counterStore } from 'src/app/(pages)/counter/state';
-import { AppButton } from 'src/shared/components/button/AppButton';
+import { AppButton } from 'src/shared/components/ui/button/AppButton';
 
 export const CounterPage = () => {
   const router = useRouter();

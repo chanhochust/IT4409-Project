@@ -1,4 +1,4 @@
-import { AppButton, buttonVariants } from 'src/shared/components/button/AppButton';
+import { buttonVariants } from 'src/shared/components/ui/button/AppButton';
 import { cn } from 'src/shared/utils/className';
 
 export default function Home() {
