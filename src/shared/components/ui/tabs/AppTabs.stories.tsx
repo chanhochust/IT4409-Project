@@ -22,8 +22,12 @@ export const Default: Story = {
         <AppTabs.Trigger value='account'>Account</AppTabs.Trigger>
         <AppTabs.Trigger value='password'>Password</AppTabs.Trigger>
       </AppTabs.List>
-      <AppTabs.Content value='account'>Make changes to your account here. Click save when you're done.</AppTabs.Content>
-      <AppTabs.Content value='password'>Change your password here. After saving, you'll be logged out.</AppTabs.Content>
+      <AppTabs.Content value='account'>
+        Make changes to your account here. Click save when you&apos;re done.
+      </AppTabs.Content>
+      <AppTabs.Content value='password'>
+        Change your password here. After saving, you&apos;ll be logged out.
+      </AppTabs.Content>
     </AppTabs.Root>
   ),
 };
