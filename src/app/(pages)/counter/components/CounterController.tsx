@@ -1,15 +1,12 @@
 'use client';
 import { CounterAction } from 'src/app/(pages)/counter/state';
+import { AppButton } from 'src/shared/components/button/AppButton';
 
 export const CounterController = () => {
   return (
-    <div className='flex gap-4'>
-      <button className='bg-red-600' onClick={CounterAction.increment}>
-        Increment
-      </button>
-      <button className='bg-red-600' onClick={CounterAction.decrement}>
-        Decrement
-      </button>
+    <div className='mb-4 flex gap-4'>
+      <AppButton onClick={CounterAction.increment}>Increment</AppButton>
+      <AppButton onClick={CounterAction.decrement}>Decrement</AppButton>
     </div>
   );
 };
