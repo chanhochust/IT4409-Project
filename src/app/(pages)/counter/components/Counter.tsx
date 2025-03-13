@@ -1,14 +1,18 @@
 'use client';
-import { useAtomValue } from 'jotai';
-import { CounterAtom } from 'src/app/(pages)/counter/state';
+import { useContext } from 'react';
+import { StateContext } from 'src/app/(pages)/counter/CounterPage';
+import { useRerenderCount } from 'src/shared/hooks/useRerenderCount';
+import { useSnapshot } from 'valtio';
 
 export const Counter = () => {
-  const count = useAtomValue(CounterAtom.count);
+  const state = useContext(StateContext);
+  const stateSnapshot = useSnapshot(state);
+  useRerenderCount('Counter');
   return (
     <div>
       <h1>
-        Counter:
-        {count}
+        This counter will be reset on component un-mount:
+        {stateSnapshot.count}
       </h1>
     </div>
   );
