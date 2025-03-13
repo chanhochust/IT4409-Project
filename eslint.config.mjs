@@ -83,6 +83,7 @@ export default [
       '@typescript-eslint/no-unsafe-return': 'off',
       '@typescript-eslint/no-unsafe-argument': 'off',
       '@typescript-eslint/no-redundant-type-constituents': 'off',
+      '@typescript-eslint/no-misused-promises': 'off',
       'react/prefer-read-only-props': 'warn',
       'react/prop-types': 'off',
       '@typescript-eslint/await-thenable': 'error',

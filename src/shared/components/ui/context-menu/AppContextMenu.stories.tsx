@@ -1,8 +1,6 @@
-import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { AppContextMenu } from './AppContextMenu';
-import { AppButton } from '../button/AppButton';
 
 const meta = {
   component: AppContextMenu.Root,

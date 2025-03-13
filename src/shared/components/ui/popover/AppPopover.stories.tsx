@@ -45,21 +45,3 @@ export const Default: Story = {
     </AppPopover.Root>
   ),
 };
-
-export const WithArrow: Story = {
-  render: () => (
-    <AppPopover.Root>
-      <AppPopover.Trigger asChild>
-        <AppButton variant='secondary'>Open Popover with Arrow</AppButton>
-      </AppPopover.Trigger>
-      <AppPopover.Content className='w-80' withArrow>
-        <div className='grid gap-4'>
-          <div className='space-y-2'>
-            <AppLabel>Popover with Arrow</AppLabel>
-            <p className='text-muted-foreground text-sm'>This popover includes an arrow pointing to the trigger.</p>
-          </div>
-        </div>
-      </AppPopover.Content>
-    </AppPopover.Root>
-  ),
-};

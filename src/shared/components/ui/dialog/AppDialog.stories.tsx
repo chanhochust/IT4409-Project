@@ -27,7 +27,9 @@ export const Default: Story = {
       <AppDialog.Content>
         <AppDialog.Header>
           <AppDialog.Title>Edit Profile</AppDialog.Title>
-          <AppDialog.Description>Make changes to your profile here. Click save when you're done.</AppDialog.Description>
+          <AppDialog.Description>
+            Make changes to your profile here. Click save when you&apos;re done.
+          </AppDialog.Description>
         </AppDialog.Header>
         <div className='grid gap-4 py-4'>
           <div className='grid grid-cols-4 items-center gap-4'>
