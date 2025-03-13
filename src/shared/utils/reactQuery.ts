@@ -132,10 +132,7 @@ type MutationAsyncFunction = (arg: never) => Promise<unknown>;
  *   }
  * });
  */
-export function generateUseMutationHook<T extends MutationAsyncFunction>(
-  fn: T,
-  mutationKey?: string | string[]
-) {
+export function generateUseMutationHook<T extends MutationAsyncFunction>(fn: T, mutationKey?: string | string[]) {
   type ResponseType = MutationAsyncFunctionReturnType<T>;
   type MultiParams = Parameters<T>;
   type Params = MultiParams[0];
@@ -148,7 +145,7 @@ export function generateUseMutationHook<T extends MutationAsyncFunction>(
 
   // Variant 2: With only options
   type MutationFnWithoutVariables = (
-    options?: Options
+    options?: Options,
   ) => ReturnType<typeof useMutation<ResponseType, AxiosError, Params>>;
 
   const mutationFn = ((...args: Params extends undefined ? [Options?] : [Params, Options?]) => {
@@ -158,7 +155,7 @@ export function generateUseMutationHook<T extends MutationAsyncFunction>(
 
     return useMutation<ResponseType, AxiosError, Params>({
       mutationKey: [...keys, firstArg],
-      mutationFn: request => fn(request) as Promise<ResponseType>,
+      mutationFn: (request) => fn(request) as Promise<ResponseType>,
       ...(options as Options),
     });
   }) as MutationFnWithVariables & MutationFnWithoutVariables;
