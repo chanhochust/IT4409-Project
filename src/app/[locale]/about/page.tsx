@@ -4,7 +4,7 @@ import { getServerTranslation } from 'src/shared/i18n/i18nServer';
 
 export default async function AboutPage({ params }: { readonly params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const { t } = await getServerTranslation(locale);
+  const { t } = await getServerTranslation(locale, ['landing', 'translation']);
 
   return (
     <div className='container mx-auto p-8'>
@@ -14,6 +14,7 @@ export default async function AboutPage({ params }: { readonly params: Promise<{
       </div>
 
       <div className='rounded-lg border p-6 shadow-sm'>
+        <h1>{t('landing:description')}</h1>
         <h2 className='mb-4 text-xl font-semibold'>
           {t('hello')} - {locale}
         </h2>

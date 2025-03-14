@@ -9,6 +9,7 @@ import { useParams } from 'next/navigation';
 export default function HomePage() {
   const { t } = useTranslation();
   const { locale } = useParams<{ locale: string }>();
+  const { t: tLanding } = useTranslation('landing');
 
   return (
     <div className='container mx-auto p-8'>
@@ -51,7 +52,7 @@ export default function HomePage() {
 
       <div className='mt-8'>
         <Link href={`/${locale}/about`} className='text-blue-500 hover:underline'>
-          Go to About Page
+          Go to About Page {tLanding('landing:description')}
         </Link>
       </div>
     </div>
