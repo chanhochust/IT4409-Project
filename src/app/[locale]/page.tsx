@@ -1,9 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { LanguageSwitcher } from 'src/shared/components/LanguageSwitcher';
+import { LanguageSwitcher } from 'src/shared/components/i18n/LanguageSwitcher';
+import { LocaleLink } from 'src/shared/components/i18n/LocaleLink';
+import { buttonVariants } from 'src/shared/components/ui/button/AppButton';
 import { useTranslation } from 'src/shared/hooks/useTranslation';
-
+import { cn } from 'src/shared/utils/className';
 export default function HomePage() {
   const { t, locale } = useTranslation();
 
@@ -11,6 +13,9 @@ export default function HomePage() {
 
   return (
     <div className='container mx-auto p-8'>
+      <LocaleLink href='/counter' className={cn(buttonVariants({ variant: 'default' }), 'mb-4')}>
+        Example Counter with Valtio as a state management
+      </LocaleLink>
       <div className='mb-8 flex items-center justify-between'>
         <h1 className='text-3xl font-bold'>{t('welcome')}</h1>
         <LanguageSwitcher />
