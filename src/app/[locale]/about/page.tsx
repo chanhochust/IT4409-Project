@@ -1,13 +1,10 @@
-'use client';
-
 import Link from 'next/link';
-import { use } from 'react';
 import { LanguageSwitcher } from 'src/shared/components/LanguageSwitcher';
-import { useTranslation } from 'src/shared/hooks/useTranslation';
+import { getServerTranslation } from 'src/shared/i18n/i18nServer';
 
-export default function AboutPage({ params }: { readonly params: Promise<{ locale: string }> }) {
-  const { t } = useTranslation();
-  const { locale } = use(params);
+export default async function AboutPage({ params }: { readonly params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const { t } = await getServerTranslation(locale);
 
   return (
     <div className='container mx-auto p-8'>

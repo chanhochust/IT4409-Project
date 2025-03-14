@@ -1,13 +1,12 @@
-import React, { use } from 'react';
+import { dir } from 'i18next';
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { dir } from 'i18next';
+import React from 'react';
 
 // Import global styles
-import '../globals.css';
-import { I18nProviderClient } from 'src/shared/providers/I18nProvider';
 import { clientEnvironment } from 'src/shared/environments/client';
-import { initReactI18next } from 'react-i18next/initReactI18next'
+import { I18nProviderClient } from 'src/shared/providers/I18nProvider';
+import '../globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
