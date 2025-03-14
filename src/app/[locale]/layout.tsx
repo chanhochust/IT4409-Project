@@ -23,8 +23,8 @@ export default async function LocaleLayout({
 }) {
   const { locale } = await params;
   return (
-    <html lang={locale} dir={dir(locale)} suppressHydrationWarning={clientEnvironment.suppressHydrationWarning}>
-      <body className={inter.className}>
+    <html lang={locale} dir={dir(locale)}>
+      <body className={inter.className} suppressHydrationWarning={clientEnvironment.suppressHydrationWarning}>
         <I18nProviderClient locale={locale}>{children}</I18nProviderClient>
       </body>
     </html>
