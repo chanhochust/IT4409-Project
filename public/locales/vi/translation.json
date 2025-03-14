@@ -1,0 +1,21 @@
+{
+  "welcome": "Chào mừng đến ứng dụng",
+  "hello": "Xin chào",
+  "common": {
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "edit": "Chỉnh sửa"
+  },
+  "auth": {
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "forgotPassword": "Quên mật khẩu?",
+    "email": "Địa chỉ email",
+    "password": "Mật khẩu"
+  },
+  "errors": {
+    "required": "Trường này là bắt buộc",
+    "invalidEmail": "Vui lòng nhập địa chỉ email hợp lệ"
+  }
+}

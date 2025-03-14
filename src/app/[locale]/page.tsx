@@ -3,9 +3,12 @@
 import React from 'react';
 import { useTranslation } from 'src/shared/i18n/useTranslation';
 import { LanguageSwitcher } from 'src/shared/components/LanguageSwitcher';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
-export default function I18nExamplePage() {
+export default function HomePage() {
   const { t } = useTranslation();
+  const { locale } = useParams<{ locale: string }>();
 
   return (
     <div className='container mx-auto p-8'>
@@ -15,35 +18,6 @@ export default function I18nExamplePage() {
       </div>
 
       <div className='grid gap-8 md:grid-cols-2'>
-        <div className='rounded-lg border p-6 shadow-sm'>
-          <h2 className='mb-4 text-xl font-semibold'>
-            {t('common.edit')} {t('hello')}
-          </h2>
-          <div className='space-y-4'>
-            <div>
-              <label className='block text-sm font-medium'>{t('auth.email')}</label>
-              <input
-                type='email'
-                className='border-input bg-background mt-1 w-full rounded-md border px-3 py-2'
-                placeholder={t('auth.email')}
-              />
-              <p className='mt-1 text-sm text-red-500'>{t('errors.required')}</p>
-            </div>
-            <div>
-              <label className='block text-sm font-medium'>{t('auth.password')}</label>
-              <input
-                type='password'
-                className='border-input bg-background mt-1 w-full rounded-md border px-3 py-2'
-                placeholder={t('auth.password')}
-              />
-            </div>
-            <div className='flex space-x-2'>
-              <button className='bg-primary text-primary-foreground rounded-md px-4 py-2'>{t('common.save')}</button>
-              <button className='rounded-md border px-4 py-2'>{t('common.cancel')}</button>
-            </div>
-          </div>
-        </div>
-
         <div className='rounded-lg border p-6 shadow-sm'>
           <h2 className='mb-4 text-xl font-semibold'>{t('auth.login')}</h2>
           <div className='space-y-4'>
@@ -73,6 +47,12 @@ export default function I18nExamplePage() {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className='mt-8'>
+        <Link href={`/${locale}/about`} className='text-blue-500 hover:underline'>
+          Go to About Page
+        </Link>
       </div>
     </div>
   );

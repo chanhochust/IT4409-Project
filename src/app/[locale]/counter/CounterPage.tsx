@@ -1,8 +1,8 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { createContext } from 'react';
-import { Counter } from 'src/app/(pages)/counter/components/Counter';
-import { CounterController } from 'src/app/(pages)/counter/components/CounterController';
+import { Counter } from 'src/app/[locale]/counter/components/Counter';
+import { CounterController } from 'src/app/[locale]/counter/components/CounterController';
 import { AppButton } from 'src/shared/components/ui/button/AppButton';
 import { useConstant } from 'src/shared/hooks/useConstant';
 import { useExampleTodoMutation } from 'src/shared/services/api/mutations/useExampleTodo.mutation';

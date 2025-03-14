@@ -1,20 +1,31 @@
 import React from 'react';
-import { useTranslation } from '../i18n/useTranslation';
+import { useRouter, usePathname, useParams } from 'next/navigation';
+import { useTranslation } from 'src/shared/i18n/useTranslation';
 
 export function LanguageSwitcher() {
-  const { i18n, changeLanguage } = useTranslation();
+  const router = useRouter();
+  const pathname = usePathname();
+  const { locale } = useParams<{ locale: string }>();
+  const { changeLanguage } = useTranslation();
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    changeLanguage(e.target.value);
+    const newLocale = e.target.value;
+
+    // Get the path without the locale prefix
+    const pathWithoutLocale = pathname.replace(`/${locale}`, '') || '/';
+
+    // Navigate to the same path but with the new locale
+    changeLanguage(newLocale);
+    router.push(`/${newLocale}${pathWithoutLocale}`);
   };
 
   return (
     <select
-      value={i18n.language}
+      value={locale}
       onChange={handleLanguageChange}
       className='bg-background border-input rounded-md border px-3 py-1 text-sm'>
       <option value='en'>English</option>
-      <option value='fr'>Français</option>
+      <option value='vi'>Tiếng Việt</option>
     </select>
   );
 }
