@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useTranslation } from 'src/shared/i18n/useTranslation';
+import { useTranslation } from 'src/shared/hooks/useTranslation';
 import { LanguageSwitcher } from 'src/shared/components/LanguageSwitcher';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';

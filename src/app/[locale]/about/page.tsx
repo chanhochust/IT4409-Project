@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { use } from 'react';
 import { LanguageSwitcher } from 'src/shared/components/LanguageSwitcher';
-import { useTranslation } from 'src/shared/i18n/useTranslation';
+import { useTranslation } from 'src/shared/hooks/useTranslation';
 
 export default function AboutPage({ params }: { readonly params: Promise<{ locale: string }> }) {
   const { t } = useTranslation();

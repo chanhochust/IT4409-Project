@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRouter, usePathname, useParams } from 'next/navigation';
-import { useTranslation } from 'src/shared/i18n/useTranslation';
+import { useTranslation } from 'src/shared/hooks/useTranslation';
 
 export function LanguageSwitcher() {
   const router = useRouter();
