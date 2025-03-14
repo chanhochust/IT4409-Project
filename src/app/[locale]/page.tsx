@@ -1,14 +1,12 @@
 'use client';
 
-import React from 'react';
-import { useTranslation } from 'src/shared/hooks/useTranslation';
-import { LanguageSwitcher } from 'src/shared/components/LanguageSwitcher';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { LanguageSwitcher } from 'src/shared/components/LanguageSwitcher';
+import { useTranslation } from 'src/shared/hooks/useTranslation';
 
 export default function HomePage() {
-  const { t } = useTranslation();
-  const { locale } = useParams<{ locale: string }>();
+  const { t, locale } = useTranslation();
+
   const { t: tLanding } = useTranslation('landing');
 
   return (
