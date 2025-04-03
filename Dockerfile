@@ -1,31 +1,22 @@
-FROM node:22-alpine3.19 AS deps
+FROM node:22-alpine3.20 AS base
 WORKDIR /app
-RUN corepack enable
-COPY package.json yarn.lock ./
-COPY .yarnrc.yml ./.yarnrc.yml
-RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn yarn install
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+ENV CI="true"
+RUN npm install -g corepack@latest
+RUN corepack enable pnpm
+COPY pnpm-lock.yaml package.json /app/
 
+FROM base AS build
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm exec next telemetry disable
+COPY . /app
+RUN --mount=type=cache,target=/app/.next/cache pnpm build
 
-FROM node:22-alpine3.19 AS ci
-WORKDIR /app
-RUN corepack enable
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-RUN yarn ci:lint
-
-FROM node:22-alpine3.19 AS builder
-WORKDIR /app
-RUN corepack enable
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-RUN yarn build
-
-FROM node:22-alpine3.19 as runner
-WORKDIR /app
-RUN corepack enable
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/public ./public
+FROM base AS runner
+COPY --from=build /app/.next/standalone ./
+COPY --from=build /app/.next/static ./.next/static
+COPY --from=build /app/public ./public
 CMD node server.js
 
 
