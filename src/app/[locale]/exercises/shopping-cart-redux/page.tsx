@@ -22,9 +22,9 @@ function formatVND(n: number): string {
    UI Components
 ========================= */
 interface ProductCardProps {
-  product: Product;
-  remaining: number;
-  onAdd: (id: number) => void;
+  readonly product: Product;
+  readonly remaining: number;
+  readonly onAdd: (id: number) => void;
 }
 
 function ProductCard(props: ProductCardProps) {
@@ -32,7 +32,7 @@ function ProductCard(props: ProductCardProps) {
     props.onAdd(props.product.id);
   }
 
-  var disabled = props.remaining <= 0;
+  const disabled = props.remaining <= 0;
 
   return (
     <div style={{ border: '1px solid #e5e7eb', borderRadius: 8, padding: 12 }}>
@@ -59,11 +59,11 @@ function ProductCard(props: ProductCardProps) {
 }
 
 interface CartItemRowProps {
-  item: CartItem;
-  onDecrease: (id: number) => void;
-  onIncrease: (id: number) => void;
-  onInputChange: (id: number, value: number) => void;
-  onRemove: (id: number) => void;
+  readonly item: CartItem;
+  readonly onDecrease: (id: number) => void;
+  readonly onIncrease: (id: number) => void;
+  readonly onInputChange: (id: number, value: number) => void;
+  readonly onRemove: (id: number) => void;
 }
 
 function CartItemRow(props: CartItemRowProps) {
@@ -74,7 +74,7 @@ function CartItemRow(props: CartItemRowProps) {
     props.onIncrease(props.item.id);
   }
   function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
-    var value = parseInt(e.target.value || '0', 10);
+    let value = parseInt(e.target.value || '0', 10);
     if (isNaN(value)) value = 0;
     props.onInputChange(props.item.id, value);
   }
@@ -149,13 +149,13 @@ function CartItemRow(props: CartItemRowProps) {
 }
 
 function ShoppingCartPage() {
-  var dispatch = useDispatch<AppDispatch>();
-  var products = useSelector(selectProducts);
-  var cart = useSelector(selectCart);
-  var total = useSelector(selectTotal);
+  const dispatch = useDispatch<AppDispatch>();
+  const products = useSelector(selectProducts);
+  const cart = useSelector(selectCart);
+  const total = useSelector(selectTotal);
 
   function qtyInCart(productId: number): number {
-    var found = cart.find(function (c) {
+    const found = cart.find(function (c) {
       return c.id === productId;
     });
     return found ? found.quantity : 0;
@@ -171,16 +171,16 @@ function ShoppingCartPage() {
     dispatch(updateQuantity({ id: productId, quantity: quantity }));
   }
   function handleDecrease(productId: number): void {
-    var current = qtyInCart(productId);
+    const current = qtyInCart(productId);
     dispatch(updateQuantity({ id: productId, quantity: current - 1 }));
   }
   function handleIncrease(productId: number): void {
-    var current = qtyInCart(productId);
+    const current = qtyInCart(productId);
     dispatch(updateQuantity({ id: productId, quantity: current + 1 }));
   }
 
   function renderProduct(p: Product) {
-    var remaining = p.stock - qtyInCart(p.id);
+    const remaining = p.stock - qtyInCart(p.id);
     return <ProductCard key={p.id} product={p} remaining={remaining} onAdd={handleAdd} />;
   }
 

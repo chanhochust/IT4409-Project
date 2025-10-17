@@ -1,7 +1,7 @@
-import type { RootState } from "./store.shoppingcart";
-import type { Product, CartItem } from "./shopSlice.shoppingcart";
+// src/shared/stores/selectors.shoppingcart.ts
+import type { RootState } from './store.shoppingcart';
+import type { Product, CartItem } from './shopSlice.shoppingcart';
 
-/* Selectors (function declaration, không arrow) */
 export function selectProducts(state: RootState): Product[] {
   return state.shop.products;
 }

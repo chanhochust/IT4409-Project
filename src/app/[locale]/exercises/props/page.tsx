@@ -9,7 +9,7 @@ interface User {
   email: string;
 }
 
-function UserProfile({ user }: { user: User }) {
+function UserProfile({ user }: { readonly user: User }) {
   return (
     <div className='mb-5 space-y-2 border-2 border-black p-8'>
       <p>User's name: {user.name}</p>
@@ -37,7 +37,7 @@ function UserList() {
   );
 }
 
-export default function Counter({ params }: { params: { locale: string } }) {
+export default function Counter({ params }: { readonly params: { locale: string } }) {
   const locale = 'en';
 
   return (

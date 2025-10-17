@@ -1,5 +1,5 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { shopReducer } from "./shopSlice.shoppingcart";
+import { configureStore } from '@reduxjs/toolkit';
+import { shopReducer } from './shopSlice.shoppingcart';
 
 /* Tạo store */
 export var store = configureStore({

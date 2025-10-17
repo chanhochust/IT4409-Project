@@ -23,7 +23,7 @@ export default function DataFetchExercise() {
       try {
         const res = await fetch('https://jsonplaceholder.typicode.com/users', { signal: ac.signal });
         if (!res.ok) {
-          throw new Error('HTTP ' + res.status + ' – ' + res.statusText);
+          throw new Error(`HTTP ${res.status} – ${res.statusText}`);
         }
         const data: User[] = await res.json();
         setUsers(data);

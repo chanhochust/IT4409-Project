@@ -166,7 +166,7 @@ export default function ImageGalleryExercise() {
                     className={
                       active ? 'h-2 w-2 rounded-full bg-white' : 'h-2 w-2 rounded-full bg-white/50 hover:bg-white/70'
                     }
-                    aria-label={'Go to ' + img.title}
+                    aria-label={`Go to ${img.title}`}
                   />
                 );
               })}

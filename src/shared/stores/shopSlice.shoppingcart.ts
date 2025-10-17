@@ -1,6 +1,6 @@
+// src/shared/stores/shopSlice.shoppingcart.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-/* ==== Types ==== */
 export interface Product {
   id: number;
   name: string;
@@ -17,7 +17,6 @@ export interface ShopState {
   cart: CartItem[];
 }
 
-/* ==== Mock data & initial state ==== */
 export const INITIAL_PRODUCTS: Product[] = [
   { id: 1, name: 'Trà gừng', price: 35000, stock: 8 },
   { id: 2, name: 'Mật ong rừng', price: 120000, stock: 5 },
@@ -25,26 +24,24 @@ export const INITIAL_PRODUCTS: Product[] = [
   { id: 4, name: 'Ngải cứu khô', price: 45000, stock: 10 },
 ];
 
-var initialState: ShopState = {
+const initialState: ShopState = {
   products: INITIAL_PRODUCTS,
   cart: [],
 };
 
-/* ==== Reducer functions (function declaration, không arrow) ==== */
 function addToCartReducer(state: ShopState, action: PayloadAction<number>): void {
-  var id = action.payload;
-
-  var product = state.products.find(function (p) {
+  const id = action.payload;
+  const product = state.products.find(function (p) {
     return p.id === id;
   });
   if (!product) return;
 
-  var idx = state.cart.findIndex(function (c) {
+  const idx = state.cart.findIndex(function (c) {
     return c.id === id;
   });
 
-  if (idx !== -1) {
-    var item = state.cart[idx];
+  if (idx >= 0) {
+    const item = state.cart[idx];
     if (!item) return;
     if (item.quantity < item.stock) {
       item.quantity += 1;
@@ -57,24 +54,25 @@ function addToCartReducer(state: ShopState, action: PayloadAction<number>): void
 }
 
 function removeFromCartReducer(state: ShopState, action: PayloadAction<number>): void {
-  var id = action.payload;
+  const id = action.payload;
   state.cart = state.cart.filter(function (c) {
     return c.id !== id;
   });
 }
 
 function updateQuantityReducer(state: ShopState, action: PayloadAction<{ id: number; quantity: number }>): void {
-  var id = action.payload.id;
-  var next = action.payload.quantity;
+  const id = action.payload.id;
+  const next = action.payload.quantity;
 
-  var i = state.cart.findIndex(function (c) {
+  const i = state.cart.findIndex(function (c) {
     return c.id === id;
   });
-  if (i === -1) return;
+  if (i < 0) return;
 
-  var item = state.cart[i];
+  const item = state.cart[i];
   if (!item) return;
-  var clamped = Math.max(0, Math.min(next, item.stock));
+
+  const clamped = Math.max(0, Math.min(next, item.stock));
 
   if (clamped === 0) {
     state.cart.splice(i, 1);
@@ -83,7 +81,7 @@ function updateQuantityReducer(state: ShopState, action: PayloadAction<{ id: num
   }
 }
 
-var shopSlice = createSlice({
+const shopSlice = createSlice({
   name: 'shop',
   initialState: initialState,
   reducers: {
@@ -93,7 +91,7 @@ var shopSlice = createSlice({
   },
 });
 
-export var shopReducer = shopSlice.reducer;
-export var addToCart = shopSlice.actions.addToCart;
-export var removeFromCart = shopSlice.actions.removeFromCart;
-export var updateQuantity = shopSlice.actions.updateQuantity;
+export const shopReducer = shopSlice.reducer;
+export const addToCart = shopSlice.actions.addToCart;
+export const removeFromCart = shopSlice.actions.removeFromCart;
+export const updateQuantity = shopSlice.actions.updateQuantity;

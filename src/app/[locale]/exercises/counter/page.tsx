@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 
-export default function Counter({ params }: { params: { locale: string } }) {
+export default function Counter({ params }: { readonly params: { locale: string } }) {
   const locale = 'en';
   const [counterNum, setCounter] = useState(0);
 

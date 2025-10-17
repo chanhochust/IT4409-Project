@@ -109,7 +109,7 @@ export default function StopwatchExercise() {
               if (prev === undefined) return null;
               const split = t - prev;
               return (
-                <li key={t + '-' + i} className='flex items-center justify-between px-4 py-3 font-mono tabular-nums'>
+                <li key={`${t}-${i}`} className='flex items-center justify-between px-4 py-3 font-mono tabular-nums'>
                   <span className='text-gray-600'>Lap {idx}</span>
                   <span className='text-gray-900'>{format(t)}</span>
                   <span className='text-gray-500'>{format(split)}</span>
