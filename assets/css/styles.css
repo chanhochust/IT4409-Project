@@ -1,0 +1,193 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body,
+input {
+    font-family: 'Poppins', sans-serif;
+}
+
+.header-top {
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #e6e6e6;
+    font-size: 1.0em;
+    color: #555;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 8%;
+}
+.header-news {
+    display: flex;
+}
+.header-news img{
+    height: 24px;
+    margin-right: 8px;
+}
+
+.header-news p {
+    margin: 0;
+    color: #555;
+}
+
+.header-news b {
+    color: #ff6600;
+    margin-right: 4px;
+}
+
+.header-top-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.lang-wrapper .lang-select {
+    border: none;
+}
+
+.lang-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    color: #555;
+    font-size: 0.9em;
+}
+
+.lang-wrapper ion-icon {
+    font-size: 24px;
+}
+
+.lang-select {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font: inherit;
+    cursor: pointer;
+    background-color: #f8f8f8;
+    outline: none;
+}
+
+#btnTheme ion-icon{
+    font-size: 24px;
+}
+
+.btnIcon {
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btnIcon:hover ion-icon {
+    color: #ff6600;
+}
+
+/*
+body.dark-mode .header-top {
+    background-color: #222;
+    color: #ddd;
+    border-bottom-color: #333;
+}
+
+body.dark-mode .lang-select {
+    background-color: #333;
+    color: #fff;
+    border-color: #555;
+}*/
+
+.header-main {
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+.header-main .container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 5px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo img {
+    height: 60px;
+    margin-right: 60px;
+}
+
+/* --search bar-- */
+.search-bar {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    margin: 0 20px;
+    transform: scale(0.9);
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px 0 0 10px;
+    font-size: 18px;
+}
+
+.search-bar input:focus {
+    outline: none;
+    border: 2px solid #d75702;
+}
+
+.search-bar button {
+    background-color: #ff6600;
+    border: none;
+    padding: 12.5px 15px;
+    border-radius: 0 10px 10px 0;
+    cursor: pointer;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-bar button:hover {
+    background-color: #e65c00;
+}
+
+.search-bar ion-icon {
+    font-size: 24px;
+}
+
+.header-icon {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.header-icon ion-icon {
+    font-size: 34px;
+}
+
+.btnIcon {
+    position: relative;
+    font-size: 24px;
+    color: #333;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+/*So luong sp trong cart*/
+.cart-count {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    background-color: red;
+    color: #fff;
+    font-size: 11px;
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 2px 6px;
+}
