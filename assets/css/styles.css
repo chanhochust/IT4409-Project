@@ -33,7 +33,7 @@ input {
 }
 
 .header-news b {
-    color: #ff6600;
+    color: rgb(20, 102, 147);
     margin-right: 4px;
 }
 
@@ -83,7 +83,7 @@ input {
 }
 
 .btnIcon:hover ion-icon {
-    color: #ff6600;
+    color: rgb(44, 164, 229);
 }
 
 /*
@@ -137,11 +137,11 @@ body.dark-mode .lang-select {
 
 .search-bar input:focus {
     outline: none;
-    border: 2px solid #d75702;
+    border: 2px solid rgb(25, 122, 173);
 }
 
 .search-bar button {
-    background-color: #ff6600;
+    background-color: rgb(44, 164, 229);
     border: none;
     padding: 12.5px 15px;
     border-radius: 0 10px 10px 0;
@@ -153,7 +153,7 @@ body.dark-mode .lang-select {
 }
 
 .search-bar button:hover {
-    background-color: #e65c00;
+    background-color: rgb(20, 102, 147);
 }
 
 .search-bar ion-icon {
@@ -192,11 +192,13 @@ body.dark-mode .lang-select {
     padding: 2px 6px;
 }
 
+
+/*------footer-------*/
 .main-nav ul {
   list-style: none;
   display: flex;
   flex-direction: row;
-  justify-content: center; /* hoặc space-between */
+  justify-content: center; 
   align-items: center;
   padding: 0;
   margin: 0;
@@ -282,4 +284,40 @@ body.dark-mode .lang-select {
   margin-top: 40px;
   color: #999;
   font-size: 14px;
+}
+
+/*------cart-------*/
+.cart-page {
+    margin: 5px 20px;
+    display: flex;
+    flex-direction: column;
+}
+.my-cart {
+    color: rgb(28, 96, 133);
+    margin-bottom: 10px;
+    text-align: center;
+}
+.cart-empty {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    gap: 30px;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: 100%;
+}
+.cart-empty p {
+  color:rgb(24, 76, 104);
+  font-size: 1.4em;
+  margin: 0 0 20px;
+}
+.cart-empty img {
+    height: 300px;
+}
+
+.cart-empty div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
