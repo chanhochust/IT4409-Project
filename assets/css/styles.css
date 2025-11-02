@@ -236,7 +236,7 @@ body.dark-mode .lang-select {
 }
 
 .footer-logo {
-  color: #00bcd4;
+  color: rgb(50, 178, 247);
   font-size: 24px;
   margin-bottom: 10px;
 }
@@ -263,7 +263,7 @@ body.dark-mode .lang-select {
 }
 
 .footer-column a:hover {
-  color: #00bcd4;
+  color: rgb(50, 178, 247);
 }
 
 .social-links a {
@@ -274,7 +274,7 @@ body.dark-mode .lang-select {
 
 .footer-column p i {
   margin-right: 8px;
-  color: #00bcd4;
+  color: rgb(50, 178, 247);
 }
 
 .footer-bottom {
@@ -288,24 +288,19 @@ body.dark-mode .lang-select {
 
 /*------cart-------*/
 .cart-page {
-    margin: 5px 20px;
+    background-color: #f8f8f8;
     display: flex;
     flex-direction: column;
 }
-.my-cart {
-    color: rgb(28, 96, 133);
-    margin-bottom: 10px;
-    text-align: center;
-}
 .cart-empty {
+    margin: 20px;
     display: flex;
     align-items: center;
     background-color: #fff;
-    gap: 30px;
-    padding: 40px;
+    padding: 20px;
+    gap: 40px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    width: 100%;
 }
 .cart-empty p {
   color:rgb(24, 76, 104);
@@ -313,7 +308,7 @@ body.dark-mode .lang-select {
   margin: 0 0 20px;
 }
 .cart-empty img {
-    height: 300px;
+    height: 250px;
 }
 
 .cart-empty div {
