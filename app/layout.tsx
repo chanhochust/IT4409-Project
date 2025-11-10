@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Header from "./components/header";
-import Footer from "./components/footer"; 
+import { AppProviders }  from './providers'
 
 export const metadata: Metadata = {
   title: "Tibiki",
@@ -16,9 +15,9 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <body className="antialiased">
-        <Header/>
+        <AppProviders>
         {children}
-        <Footer/>
+        </AppProviders>
       </body>
     </html>
   );

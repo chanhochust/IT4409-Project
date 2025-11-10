@@ -1,6 +1,8 @@
 "use client";
-
+import Link from 'next/link'; 
 import { useState } from "react";
+import { useAuth } from '../context/AuthContext';
+import { UserMenu } from './UserMenu';
 import {
   FaBell,
   FaGlobe,
@@ -10,7 +12,7 @@ import {
   FaUser,
 } from "react-icons/fa";
 
-export default function Header() {
+export function Header() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
   const toggleTheme = () => {
@@ -18,46 +20,58 @@ export default function Header() {
     document.documentElement.classList.toggle("dark");
   };
 
+  const { isLoggedIn, user, isLoading } = useAuth();
+
+  const renderAuthStatus = () => {
+    if (isLoading) {
+      return <div className="btnIcon" style={{ width: '24px', height: '24px' }} aria-label="Đang tải..."></div>;
+    }
+
+    if (isLoggedIn && user) {
+      return <UserMenu user={user} />;
+    }
+
+    return (
+      <Link href="/signin" className="btnIcon" aria-label="Tài khoản">
+        <FaUser />
+      </Link>
+    );
+  };
+
   return (
     <header className="main-header">
       {/* Header Top */}
       <div className="header-top">
-        <div className="header-news">
-          <img src="/freeship.png" alt="Miễn phí ship logo" />
-          <p>
-            <b>Miễn phí ship</b> đơn chỉ từ 45k
-          </p>
-        </div>
-
-        <div className="header-top-actions">
-          {/* Nút thông báo */}
-          <button className="btnIcon" aria-label="Xem thông báo">
-            <FaBell />
-          </button>
-
-          {/* Ngôn ngữ */}
-          <div className="lang-wrapper">
-            <label htmlFor="langSelect" className="visually-hidden">
-            </label>
-            <button className="btnIcon" aria-label="Chọn ngôn ngữ">
-              <FaGlobe />
-            </button>
-            <select id="langSelect" className="lang-select" defaultValue="vi" aria-label="Ngôn ngữ">
-              <option value="vi">VN</option>
-              <option value="en">EN</option>
-            </select>
-          </div>
-
-          {/* Đổi giao diện */}
-          <button
+         <div className="header-news">
+           <img src="/freeship.png" alt="Miễn phí ship logo" />
+           <p>
+             <b>Miễn phí ship</b> đơn chỉ từ 45k
+           </p>
+         </div>
+         <div className="header-top-actions">
+           <button className="btnIcon" aria-label="Xem thông báo">
+             <FaBell />
+           </button>
+           <div className="lang-wrapper">
+             <label htmlFor="langSelect" className="visually-hidden">
+             </label>
+             <button className="btnIcon" aria-label="Chọn ngôn ngữ">
+               <FaGlobe />
+             </button>
+             <select id="langSelect" className="lang-select" defaultValue="vi" aria-label="Ngôn ngữ">
+               <option value="vi">VN</option>
+               <option value="en">EN</option>
+             </select>
+           </div>
+           <button
             id="btnTheme"
             className="btnIcon"
             onClick={toggleTheme}
             aria-label="Chuyển chế độ sáng / tối"
-          >
-            <FaMoon />
-          </button>
-        </div>
+           >
+             <FaMoon />
+           </button>
+         </div>
       </div>
 
       {/* Header Main */}
@@ -65,34 +79,32 @@ export default function Header() {
         <div className="container">
           {/* Logo */}
           <div className="logo">
-            <a href="/">
+            <Link href="/">
               <img src="/assets/images/logo.png" alt="Logo" />
-            </a>
+            </Link>
           </div>
 
-          {/* Thanh tìm kiếm */}
+          {/* Search Bar */}
           <div className="search-bar">
-            <label htmlFor="search" className="visually-hidden">
-            </label>
-            <input
-              type="text"
-              id="search"
-              placeholder="Tìm kiếm sản phẩm..."
-            />
-            <button id="btnSearch" aria-label="Tìm kiếm">
-              <FaSearch />
-            </button>
+             <label htmlFor="search" className="visually-hidden">
+             </label>
+             <input
+               type="text"
+               id="search"
+               placeholder="Tìm kiếm sản phẩm..."
+             />
+             <button id="btnSearch" aria-label="Tìm kiếm">
+               <FaSearch />
+             </button>
           </div>
 
           {/* Các nút biểu tượng */}
           <div className="header-icon">
-            <a href="/cart" className="btnIcon" aria-label="Giỏ hàng">
+            <Link href="/cart" className="btnIcon" aria-label="Giỏ hàng">
               <FaShoppingCart />
               <span className="cart-count">0</span>
-            </a>
-            <a href="/login" className="btnIcon" aria-label="Tài khoản">
-              <FaUser />
-            </a>
+            </Link>
+            {renderAuthStatus()}
           </div>
         </div>
       </div>
@@ -100,12 +112,12 @@ export default function Header() {
       {/* Navigation */}
       <nav className="main-nav">
         <ul id="menuItems">
-          <li><a href="/">Trang chủ</a></li>
-          <li><a href="/products">Sản phẩm</a></li>
-          <li><a href="/sale">Khuyến mãi</a></li>
-          <li><a href="/about">Giới thiệu</a></li>
-          <li><a href="/contact">Liên hệ</a></li>
-          <li><a href="/faq">Hỗ trợ</a></li>
+          <li><Link href="/">Trang chủ</Link></li>
+          <li><Link href="/products">Sản phẩm</Link></li>
+          <li><Link href="/sale">Khuyến mãi</Link></li>
+          <li><Link href="/about">Giới thiệu</Link></li>
+          <li><Link href="/contact">Liên hệ</Link></li>
+          <li><Link href="/faq">Hỗ trợ</Link></li>
         </ul>
       </nav>
     </header>
