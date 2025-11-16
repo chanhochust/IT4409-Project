@@ -6,6 +6,7 @@ export type UserRole = 'admin' | 'customer';
 export interface MockUser {
   role: UserRole;
   email: string;
+  avatar?: string;
 }
 
 interface AuthContextType {
@@ -14,6 +15,7 @@ interface AuthContextType {
   isLoading: boolean; 
   login: (email: string, role: UserRole) => void;
   logout: () => void;
+  updateAvatar: (newAvatarUrl: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -41,7 +43,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isLoggedIn = !!user;
 
   const login = (email: string, role: UserRole) => {
-    const newUser: MockUser = { email, role };
+    const defaultAvatar = `https://api.dicebear.com/8.x/initials/svg?seed=${email}`;
+    const newUser: MockUser = { email, role, avatar: defaultAvatar };
     try {
       localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(newUser));
       setUser(newUser);
@@ -50,13 +53,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const updateAvatar = (newAvatarUrl: string) => {
+    setUser(prevUser => {
+      if (!prevUser) return null;
+      const updatedUser = { ...prevUser, avatar: newAvatarUrl };
+      // Cập nhật lại localStorage
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(updatedUser));
+      return updatedUser;
+    });
+  };
+
   const logout = () => {
     localStorage.removeItem(AUTH_STORAGE_KEY);
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, isLoading, updateAvatar }}>
       {children}
     </AuthContext.Provider>
   );

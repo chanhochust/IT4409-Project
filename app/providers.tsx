@@ -13,7 +13,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
   
   const pathname = usePathname();
 
-  const showMainLayout = !pathname.startsWith('/signin') && !pathname.startsWith('/register');
+  const showMainLayout = !pathname.startsWith('/signin') && !pathname.startsWith('/signup');
 
   return (
     <AuthProvider>

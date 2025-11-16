@@ -3,10 +3,15 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useEffect } from "react";
 import { useAuth } from '../context/AuthContext'
 import { FaGoogle, FaFacebook } from 'react-icons/fa'
 
 export default function SignInPage() {
+  useEffect(() => {
+      document.title = "Đăng nhập";
+    }, []);
+
   const router = useRouter()
   const { login } = useAuth()
   const [email, setEmail] = useState('')
