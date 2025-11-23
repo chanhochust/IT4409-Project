@@ -19,12 +19,12 @@ function EmptyCart() {
           <Image
             src="/empty-cart.png"
             alt="Giỏ hàng trống"
-            width={300}
-            height={300}
+            width={200}
+            height={200}
           />
           <div className="cart-text">
             <p>Giỏ hàng của bạn đang trống</p>
-            <Link href="/" className="btnShopping"><FaArrowRight />Tiếp tục mua sắm
+            <Link href="/" className="btnShopping"><FaArrowRight className="mui-ten"/>Tiếp tục mua sắm
             </Link>
           </div>
         </div>
@@ -40,8 +40,8 @@ function NotLoggedInCart() {
       <Image
             src="/empty-cart.png"
             alt="Giỏ hàng trống"
-            width={300}
-            height={300}
+            width={200}
+            height={200}
       />
       <div className="cart-text">
         <p>Vui lòng <Link href="/signin" className="login-link">đăng nhập</Link> để xem giỏ hàng</p>

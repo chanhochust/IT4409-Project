@@ -345,6 +345,7 @@ body.dark-mode .lang-select {
     margin: 20px auto;
     display: flex;
     align-items: center;
+    justify-content: center;
     background-color: #fff;
     padding: 20px;
     gap: 40px;
@@ -357,9 +358,7 @@ body.dark-mode .lang-select {
   font-size: 1.1em;
   font-weight: 600;
 }
-.cart-empty img {
-    height: 250px;
-}
+
 .login-link {
   color:rgb(48, 48, 213);
   margin: 5px;
@@ -375,21 +374,18 @@ body.dark-mode .lang-select {
   font-size: 1em;
 }
 .btnShopping {
-  color: #525252;
+  display: flex;
+  gap: 8px;
+  color: #4e4e4e;
+}
+.mui-ten {
+  margin-top: 4px;
 }
 .btnShopping:hover {
   color: red;
   text-decoration: underline;
 }
-.cart-empty div {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  font-family: 'Poppins', sans-serif;
-}
-.cart-text {
-  display: flex;
-}
+
 /* Main homepage */
 .main-home {
   min-height: calc(100vh - 120px); /* trừ header + footer */
@@ -663,8 +659,8 @@ body.dark-mode .lang-select {
   flex-direction: column;
 }
 .sidebar-user-info span {
-  font-size: 0.875rem;
-  color: #777;
+  font-size: 0.95rem;
+  color: #333;
 }
 .sidebar-user-info strong {
   font-size: 1rem;
