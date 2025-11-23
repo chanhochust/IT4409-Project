@@ -7,7 +7,7 @@ export default function HomePage() {
     {
       id: "1",
       name: "Tai nghe Bluetooth Anker Soundcore",
-      image: "",
+      image: "/tai_nghe.jpg",
       price: 890000,
       oldPrice: 1200000,
       rating: 4,
@@ -37,22 +37,16 @@ export default function HomePage() {
     },
   ];
 
-  const handleAddToCart = (id: string) => {
-    console.log("Thêm sản phẩm vào giỏ:", id);
-  };
-
   return (
     <main className="main-home">
-      {/* Hero Banner */}
       <section className="hero-banner">
         <h2>Khuyến mãi hôm nay!</h2>
       </section>
 
-      {/* Product Section */}
       <section className="product-section">
         <h3>Sản phẩm nổi bật</h3>
         <div className="product-list-grid">
-          <ProductList products={products} onAddToCart={handleAddToCart} />
+          <ProductList products={products} />
         </div>
       </section>
     </main>

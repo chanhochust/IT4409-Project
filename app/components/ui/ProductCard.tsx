@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { FC } from "react";
+import { useCartStore } from "@/store/cart_actions";
 
 export interface ProductCardProps {
   id: string;
@@ -10,7 +11,6 @@ export interface ProductCardProps {
   price: number;
   oldPrice?: number;
   rating?: number;       
-  onAddToCart?: (id: string) => void;
 }
 
 const ProductCard: FC<ProductCardProps> = ({
@@ -20,11 +20,11 @@ const ProductCard: FC<ProductCardProps> = ({
   price,
   oldPrice,
   rating = 5,
-  onAddToCart,
 }) => {
+  const onAddToCart = useCartStore((state) => state.onAddToCart);
+
   return (
     <div className="group bg-white border rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition">
-      {/* Image */}
       <div className="relative w-full h-56">
         <Image
           src={image}
@@ -34,11 +34,9 @@ const ProductCard: FC<ProductCardProps> = ({
         />
       </div>
 
-      {/* Content */}
       <div className="p-4 space-y-2">
         <h3 className="text-sm font-semibold line-clamp-2">{name}</h3>
 
-        {/* Rating */}
         <div className="flex items-center gap-1 text-yellow-400 text-sm">
           {Array.from({ length: rating }).map((_, i) => (
             <span key={i}>★</span>
@@ -46,7 +44,6 @@ const ProductCard: FC<ProductCardProps> = ({
           <span className="text-gray-400 text-xs">({rating})</span>
         </div>
 
-        {/* Price */}
         <div className="flex items-center gap-2">
           <span className="text-lg font-bold text-red-600">
             {price.toLocaleString()}₫
@@ -58,9 +55,11 @@ const ProductCard: FC<ProductCardProps> = ({
           )}
         </div>
 
-        {/* Add to Cart */}
         <button
-          onClick={() => onAddToCart && onAddToCart(id)}
+          onClick={() => {
+            console.log("clicked");
+            onAddToCart({ id, name, image, price })
+          }}
           className="w-full bg-black text-white rounded-lg py-2 text-sm hover:bg-gray-800 transition"
         >
           Thêm vào giỏ

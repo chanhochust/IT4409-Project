@@ -11,6 +11,7 @@ import {
   FaShoppingCart,
   FaUser,
 } from "react-icons/fa";
+import { useCartStore } from "@/store/cart_actions";
 
 export function Header() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -19,6 +20,9 @@ export function Header() {
     setTheme(theme === "light" ? "dark" : "light");
     document.documentElement.classList.toggle("dark");
   };
+
+  const cart = useCartStore((state) => state.cart);
+  const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const { isLoggedIn, user, isLoading } = useAuth();
 
@@ -102,7 +106,7 @@ export function Header() {
           <div className="header-icon">
             <Link href="/cart" className="btnIcon" aria-label="Giỏ hàng">
               <FaShoppingCart />
-              <span className="cart-count">0</span>
+              <span className="cart-count">{totalQuantity}</span>              
             </Link>
             {renderAuthStatus()}
           </div>

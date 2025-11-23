@@ -1,22 +1,27 @@
-import ProductCard, {ProductCardProps} from "./ui/ProductCard";
+"use client";
+
 import { FC } from "react";
+import ProductCard, { ProductCardProps } from "./ui/ProductCard";
 
 interface ProductListProps {
   products: ProductCardProps[];
-  onAddToCart?: (id: string) => void;
 }
 
-const ProductList: FC<ProductListProps> = ({ products, onAddToCart }) => {
+const ProductList: FC<ProductListProps> = ({ products }) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-      {products.map((product) => (
+    <>
+      {products.map((p) => (
         <ProductCard
-          key={product.id}
-          {...product}
-          onAddToCart={onAddToCart}
+          key={p.id}
+          id={p.id}
+          name={p.name}
+          image={p.image}
+          price={p.price}
+          oldPrice={p.oldPrice}
+          rating={p.rating}
         />
       ))}
-    </div>
+    </>
   );
 };
 
