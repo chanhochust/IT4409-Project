@@ -46,8 +46,8 @@ function NotLoggedInCart() {
       <div className="cart-text">
         <p>Vui lòng <Link href="/signin" className="login-link">đăng nhập</Link> để xem giỏ hàng</p>
         <span className="dang-ky">Chưa có tài khoản? <Link href='/signup' className='login-link'>Đăng ký ngay</Link></span>
+        </div>
       </div>
-    </div>
     </div>
   );
 }
