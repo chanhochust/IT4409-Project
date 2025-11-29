@@ -483,7 +483,7 @@ body.dark-mode .lang-select {
 
 /* Main homepage */
 .main-home {
-  min-height: calc(100vh - 120px); /* trừ header + footer */
+  min-height: calc(100vh - 120px); 
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -496,7 +496,7 @@ body.dark-mode .lang-select {
   width: 100%;
   max-width: 1120px;
   height: 16rem;
-  background-color: #dbeafe; /* blue-100 */
+  background-color: #dbeafe; 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -532,7 +532,7 @@ body.dark-mode .lang-select {
 }
 
 
-/*--User-Menu--*/
+/*--User Menu--*/
 .user-menu-hover-container {
     position: relative;
     display: inline-block;

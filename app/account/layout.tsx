@@ -39,7 +39,7 @@ function AccountSidebar() {
         <Link href="/account/profile" className={isActive('/account/profile') ? 'active' : ''}>
           <FaUser /> Hồ Sơ
         </Link>
-        <Link href="/account/orders" className={isActive('/account/orders') ? 'active' : ''}>
+        <Link href="/orders" className={isActive('/account/orders') ? 'active' : ''}>
           <FaShoppingCart /> Đơn Hàng
         </Link>
         <Link href="/account/payment" className={isActive('/account/payment') ? 'active' : ''}>
@@ -84,6 +84,8 @@ export default function AccountLayout({
     if (pathname.endsWith('/profile')) return 'Hồ Sơ Của Tôi';
     if (pathname.endsWith('/payment')) return 'Ngân Hàng';
     if (pathname.endsWith('/address')) return 'Địa Chỉ';
+    if (pathname.endsWith('/password')) return 'Mật Khẩu';
+    if (pathname.endsWith('/orders')) return 'Đơn Hàng';
     //...
     return 'Tài khoản';
   }

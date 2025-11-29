@@ -5,6 +5,11 @@ import Link from 'next/link';
 import { useAuth } from '../../context/AuthContext'; 
 import { FaUserCircle, FaMapMarkerAlt, FaCreditCard, FaLock, FaEnvelope, FaPhone, FaTrash, FaShieldAlt } from 'react-icons/fa';
 
+const DAYS = Array.from({ length: 31 }, (_, i) => i + 1);
+const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
+const CURRENT_YEAR = new Date().getFullYear();
+const YEARS = Array.from({ length: 100 }, (_, i) => CURRENT_YEAR - i);
+
 export default function ProfilePage() {
   const { user, updateAvatar } = useAuth();
 
@@ -43,6 +48,7 @@ export default function ProfilePage() {
       alert("Đã hủy thay đổi.");
     }
   }
+
   return (
     <div className="profile-page-content"> 
       <h1>Thông tin tài khoản</h1>
@@ -94,19 +100,19 @@ export default function ProfilePage() {
               <label>Ngày sinh</label>
               <div className="dob-group">
                 <select name="dob_day" value={profile.dob_day} onChange={handleInputChange} className="form-input">
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  {/* ... */}
+                  {DAYS.map(day => (
+                    <option key={day} value={day}>{day}</option>
+                  ))}
                 </select>
                 <select name="dob_month" value={profile.dob_month} onChange={handleInputChange} className="form-input">
-                  <option value="1">Tháng 1</option>
-                  <option value="2">Tháng 2</option>
-                  {/* ... */}
+                  {MONTHS.map(month => (
+                    <option key={month} value={month}>Tháng {month}</option>
+                  ))}
                 </select>
                 <select name="dob_year" value={profile.dob_year} onChange={handleInputChange} className="form-input">
-                  <option value="2000">2000</option>
-                  <option value="2001">2001</option>
-                  {/* ... */}
+                  {YEARS.map(year => (
+                    <option key={year} value={year}>{year}</option>
+                  ))}
                 </select>
               </div>
             </div>

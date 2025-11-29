@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { FaPlus, FaCheckCircle } from 'react-icons/fa';
-import styles from './adress.module.css';
+import styles from './address.module.css';
 
 interface Address {
   id: number;
