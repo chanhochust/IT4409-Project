@@ -10,18 +10,25 @@ const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
 const CURRENT_YEAR = new Date().getFullYear();
 const YEARS = Array.from({ length: 100 }, (_, i) => CURRENT_YEAR - i);
 
+
 export default function ProfilePage() {
   const { user, updateAvatar } = useAuth();
 
   const [profile, setProfile] = useState({
     fullName: "Trần Thị Nhài", 
     nickname: "datmin",
-    dob_day: "1",
-    dob_month: "1",
+    dob_day: "14",
+    dob_month: "2",
     dob_year: "2004",
     gender: "female",
     nationality: "VN",
+    phone: "0123456789",
+    email: user?.email || "abc@gmail.com"
   });
+
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [editingField, setEditingField] = useState<'phone' | 'email' | null>(null);
+  const [tempValue, setTempValue] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -48,6 +55,38 @@ export default function ProfilePage() {
       alert("Đã hủy thay đổi.");
     }
   }
+
+  const openEditModal = (field: 'phone' | 'email') => {
+    setEditingField(field);
+    setTempValue(field === 'phone' ? profile.phone : profile.email);
+    setShowContactModal(true);
+  };
+
+  const handleSaveContact = () => {
+    if (!tempValue) {
+      alert("Vui lòng nhập thông tin!");
+      return;
+    }
+
+    if (editingField === 'phone') {
+      // Giả lập validate số điện thoại
+      if (!/^\d{10,11}$/.test(tempValue)) {
+        alert("Số điện thoại không hợp lệ!");
+        return;
+      }
+      setProfile(prev => ({ ...prev, phone: tempValue }));
+    } else if (editingField === 'email') {
+      // Giả lập validate email
+      if (!/\S+@\S+\.\S+/.test(tempValue)) {
+        alert("Email không hợp lệ!");
+        return;
+      }
+      setProfile(prev => ({ ...prev, email: tempValue }));
+    }
+
+    setShowContactModal(false);
+    setEditingField(null);
+  };
 
   return (
     <div className="profile-page-content"> 
@@ -153,9 +192,9 @@ export default function ProfilePage() {
             <FaPhone className="info-icon" />
             <div className="info-text">
               <span>Số điện thoại</span>
-              <strong>0987654321</strong>
+              <strong>{profile.phone}</strong>
             </div>
-            <button className="btn-secondary">Cập nhật</button>
+            <button className="btn-secondary" onClick={() => openEditModal('phone')}>Cập nhật</button>
           </div>
           <div className="info-box">
             <FaEnvelope className="info-icon" />
@@ -163,7 +202,7 @@ export default function ProfilePage() {
               <span>Địa chỉ email</span>
               <strong>{user?.email}</strong>
             </div>
-            <button className="btn-secondary">Cập nhật</button>
+            <button className="btn-secondary" onClick={() => openEditModal('email')}>Cập nhật</button>
           </div>
 
           <h2>Bảo mật</h2>
@@ -183,6 +222,40 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+      {showContactModal && (
+        <div className="contact-modal-overlay">
+          <div className="contact-modal-content">
+            <div className="contact-modal-body">
+              
+              <h3 className="contact-modal-title">
+                {editingField === 'phone' ? 'Số điện thoại' : 'Địa chỉ Email'}
+              </h3>
+              
+              <div className="contact-input-wrapper">
+                {editingField === 'phone' && <FaPhone className="contact-input-icon"/>}
+                {editingField === 'email' && <FaEnvelope className="contact-input-icon" />}
+                
+                <input 
+                  type={editingField === 'phone' ? 'tel' : 'email'}
+                  className="contact-input-field"
+                  value={tempValue}
+                  onChange={(e) => setTempValue(e.target.value)}
+                  placeholder={editingField === 'phone' ? 'Nhập số điện thoại mới' : 'Nhập email mới'}
+                  autoFocus
+                />
+              </div>
+
+              <button className="btn-save" onClick={handleSaveContact}>
+                Lưu thay đổi
+              </button>
+              
+              <button className="btn-cancel" onClick={() => setShowContactModal(false)}>
+                Hủy bỏ
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
