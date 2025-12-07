@@ -14,6 +14,7 @@ export default function SignInPage() {
 
   const router = useRouter()
   const { login } = useAuth()
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -25,27 +26,20 @@ export default function SignInPage() {
     setIsLoading(true)
     setError('')
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // Gia lap dang nhap
-    if (email === 'admin@test.com' && password === '123') {
-      login(email, 'admin') 
-      router.push('/') 
-    } else if (email === 'customer@test.com' && password === '123') {
-      login(email, 'customer') // 
-      router.push('/') 
-    } else {
-      setError('Email/mật khẩu không đúng (Gợi ý: admin@test.com hoặc customer@test.com / 123)')
-      setIsLoading(false)
+    try {
+      // Gọi hàm login với provider là 'credentials'
+      await login('credentials', { email, password });
+    } catch (err: any) {
+      setIsLoading(false);
+      setError("Email hoặc mật khẩu không đúng");
     }
   }
-
-  // Gia lap dang nhap = pthuc khac
-  const handleMockOAuthLogin = (provider: 'google' | 'facebook') => {
+  
+  // Đăng nhập bằng FB hoặc GG
+  const handleSocialLogin = (provider: string) => {
     setIsLoading(true);
-    const mockEmail = `${provider}@test.com`;
-    login(mockEmail, 'customer');
-    router.push('/');
+    // Gọi hàm login với tên provider ('google' hoặc 'facebook')
+    login(provider); 
   }
   return (
     <div className='signin-container'>
@@ -92,7 +86,7 @@ export default function SignInPage() {
           <button
             type="button" 
             className="btn-oauth btn-google"
-            onClick={() => handleMockOAuthLogin('google')}
+            onClick={() => handleSocialLogin('google')}
             disabled={isLoading}
           >
             <Link href='/'><FaGoogle /></Link>
@@ -100,7 +94,7 @@ export default function SignInPage() {
           <button
             type="button"
             className="btn-oauth btn-facebook"
-            onClick={() => handleMockOAuthLogin('facebook')}
+            onClick={() => handleSocialLogin('facebook')}
             disabled={isLoading}
           >
             <Link href='/'><FaFacebook /></Link>

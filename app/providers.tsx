@@ -16,6 +16,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
   const showMainLayout = !pathname.startsWith('/signin') && !pathname.startsWith('/signup');
 
   return (
+    <SessionProvider>
     <AuthProvider>
       
       {showMainLayout && <Header />}
@@ -27,5 +28,6 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
       {showMainLayout && <Footer />}
 
     </AuthProvider>
+    </SessionProvider>
   );
 }
