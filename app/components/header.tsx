@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { useState } from "react";
 import { useAuth } from '../context/AuthContext';
 import { UserMenu } from './UserMenu';
+import { useRouter } from "next/navigation";
+
 import {
   FaBell,
   FaGlobe,
@@ -19,6 +21,19 @@ export function Header() {
   const toggleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light");
     document.documentElement.classList.toggle("dark");
+  };
+
+  const router = useRouter();
+  const [searchValue, setSearchValue] = useState("");
+
+  const handleSearch = () => {
+    if (!searchValue.trim()) return;
+    router.push(`/search?q=${encodeURIComponent(searchValue)}`);
+  };
+
+  // cho phép Enter để tìm kiếm
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") handleSearch();
   };
 
   const cart = useCartStore((state) => state.cart);
@@ -90,17 +105,19 @@ export function Header() {
 
           {/* Search Bar */}
           <div className="search-bar">
-             <label htmlFor="search" className="visually-hidden">
-             </label>
-             <input
-               type="text"
-               id="search"
-               placeholder="Tìm kiếm sản phẩm..."
-             />
-             <button id="btnSearch" aria-label="Tìm kiếm">
-               <FaSearch />
-             </button>
-          </div>
+        <label htmlFor="search" className="visually-hidden"></label>
+        <input
+          type="text"
+          id="search"
+          placeholder="Tìm kiếm sản phẩm..."
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          onKeyDown={onKeyDown}   // thêm dòng này
+        />
+        <button id="btnSearch" aria-label="Tìm kiếm" onClick={handleSearch}>
+          <FaSearch />
+        </button>
+      </div>
 
           {/* Các nút biểu tượng */}
           <div className="header-icon">
