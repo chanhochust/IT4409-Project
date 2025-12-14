@@ -24,7 +24,7 @@ export default function SearchPage() {
   if (loading) return <h2>Đang tìm kiếm...</h2>;
 
   return (
-    <div className="search-container">
+    <div className="page-container">
       <h2>Kết quả cho: “{q}”</h2>
       {results.length === 0 && <p>Không có sản phẩm phù hợp.</p>}
 

@@ -151,7 +151,8 @@ function HasCart() {
           <span className="total-price">
             Tổng cộng ({selected.length} sản phẩm): {selectedTotal.toLocaleString()}₫
           </span>
-          <button className="checkout-btn" disabled={selected.length === 0} onClick={() => router.push('/checkout')}
+          <button className="checkout-btn" disabled={selected.length === 0} onClick={() => router.push('/checkout?items=' + JSON.stringify(selected))}
+
 >
             Thanh toán
           </button>
