@@ -4,8 +4,8 @@ import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '../context/AuthContext';
-import { FaUser, FaMapMarkerAlt, FaCreditCard, FaLock, FaBell, FaShoppingCart, FaChevronRight } from 'react-icons/fa';
-
+import { FaUser, FaMapMarkerAlt, FaCreditCard, FaLock, FaBell, FaShoppingCart, FaChevronRight, FaTachometerAlt } from 'react-icons/fa';
+import './global.css'
 
 function LoadingSpinner() {
   return (
@@ -20,6 +20,7 @@ function AccountSidebar() {
   const { user } = useAuth();
 
   const isActive = (path: string) => pathname === path;
+  const isAdmin = user?.role === 'admin';
 
   return (
     <nav className="account-sidebar">
@@ -39,6 +40,8 @@ function AccountSidebar() {
         <Link href="/account/profile" className={isActive('/account/profile') ? 'active' : ''}>
           <FaUser /> Hồ Sơ
         </Link>
+        {!isAdmin && (
+        <>
         <Link href="/orders" className={isActive('/account/orders') ? 'active' : ''}>
           <FaShoppingCart /> Đơn Hàng
         </Link>
@@ -48,12 +51,19 @@ function AccountSidebar() {
         <Link href="/account/address" className={isActive('/account/address') ? 'active' : ''}>
           <FaMapMarkerAlt /> Địa Chỉ
         </Link>
+        </>
+        )}
         <Link href="/account/password" className={isActive('/account/password') ? 'active' : ''}>
           <FaLock /> Đổi Mật Khẩu
         </Link>
         <Link href="/account/notifications" className={isActive('/account/notifications') ? 'active' : ''}>
           <FaBell /> Thông Báo
         </Link>
+        {isAdmin && (
+          <Link href="/admin">
+             <FaTachometerAlt/> Trang Admin
+           </Link>
+        )}
       </div>
     </nav>
   )
@@ -72,7 +82,7 @@ export default function AccountLayout({
   useEffect(() => {
     if (isLoading) return;
     if (!isLoggedIn) {
-      router.push('/signin');
+      router.push('auth/signin');
     }
   }, [isLoggedIn, isLoading, router]);
 
@@ -90,14 +100,16 @@ export default function AccountLayout({
     return 'Tài khoản';
   }
 
+
   return (
     <main>
-      <nav className="breadcrumb">
-        <Link href="/">Trang chủ</Link>
-        <FaChevronRight className="breadcrumb-separator" />
-        <span>{getBreadcrumbText()}</span>
-      </nav>
-      <div className="account-page-container">
+        <nav className="breadcrumb">
+          <Link href="/">Trang chủ</Link>
+          <FaChevronRight className="breadcrumb-separator" />
+          <span>{getBreadcrumbText()}</span>
+        </nav>
+
+      <div className="account-page-container" >
         <AccountSidebar />
 
         <div className="account-content">

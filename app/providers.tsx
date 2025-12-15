@@ -13,7 +13,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
   
   const pathname = usePathname();
 
-  const showMainLayout = !pathname.startsWith('/signin') && !pathname.startsWith('/signup');
+  const showMainLayout = !pathname.startsWith('/auth') && !pathname.startsWith('/admin'); // Ẩn header & footer với trang admin và login
 
   return (
     <SessionProvider>

@@ -1,33 +1,167 @@
 [
-{
-      "id": "1",
-      "name": "Tai nghe Bluetooth Anker Soundcore",
-      "image": "/tai_nghe.jpg",
-      "price": 890000,
-      "oldPrice": 1200000,
-      "rating": 4
-    },
-    {
-      "id": "2",
-      "name": "Điện thoại Xiaomi Redmi Note 12",
-      "image": "",
-      "price": 4990000,
-      "oldPrice": 5490000,
-      "rating": 5
-    },
-    {
-      "id": "3",
-      "name": "Laptop Dell Inspiron 15",
-      "image": "",
-      "price": 14500000,
-      "oldPrice": 15900000,
-      "rating": 4
-    },
-    {
-      "id": "4",
-      "name": "Balo chống nước Mikkor",
-      "image": "",
-      "price": 490000,
-      "rating": 5
-    }
-  ]
+  {
+    "id": "1",
+    "name": "Tai nghe Bluetooth Anker Soundcore",
+    "image": "/tai_nghe.jpg",
+    "price": 890000,
+    "oldPrice": 1200000,
+    "rating": 4,
+    "category": "Điện tử",
+    "stock": 50,
+    "status": "available"
+  },
+  {
+    "id": "2",
+    "name": "Điện thoại Xiaomi Redmi Note 12",
+    "image": "https://placehold.co/300x300/eab308/ffffff/png?text=Xiao",
+    "price": 4990000,
+    "oldPrice": 5490000,
+    "rating": 5,
+    "category": "Điện tử",
+    "stock": 12,
+    "status": "available"
+  },
+  {
+    "id": "3",
+    "name": "Laptop Dell Inspiron 15",
+    "image": "https://placehold.co/300x300/eab308/ffffff/png?text=Dell",
+    "price": 14500000,
+    "oldPrice": 15900000,
+    "rating": 4,
+    "category": "Laptop",
+    "stock": 5,
+    "status": "out_of_stock"
+  },
+  {
+    "id": "4",
+    "name": "Balo chống nước Mikkor",
+    "image": "https://placehold.co/300x300/eab308/ffffff/png?text=Balo",
+    "price": 490000,
+    "oldPrice": null,
+    "rating": 5,
+    "category": "Thời trang",
+    "stock": 200,
+    "status": "available"
+  },
+  {
+    "id": "5",
+    "name": "Áo Khoác Dù Nam Cao Cấp",
+    "image": "https://placehold.co/300x300/eab308/ffffff/png?text=Jacket",
+    "price": 350000,
+    "oldPrice": 450000,
+    "rating": 4,
+    "category": "Thời trang",
+    "stock": 80,
+    "status": "available"
+  },
+  {
+    "id": "6",
+    "name": "Tủ Lạnh 2 Cánh Samsung Inverter",
+    "image": "https://placehold.co/300x300/8b5cf6/ffffff/png?text=Fridge",
+    "price": 9200000,
+    "oldPrice": null,
+    "rating": 3,
+    "category": "Gia dụng",
+    "stock": 3,
+    "status": "draft"
+  },
+  {
+    "id": "7",
+    "name": "Bộ Nồi Inox 3 Chiếc Elmich",
+    "image": "https://placehold.co/300x300/065f46/ffffff/png?text=Pots",
+    "price": 1500000,
+    "oldPrice": 1800000,
+    "rating": 5,
+    "category": "Gia dụng",
+    "stock": 450,
+    "status": "available"
+  },
+  {
+    "id": "8",
+    "name": "Máy ảnh Canon EOS R100",
+    "image": "https://placehold.co/300x300/f06292/ffffff/png?text=Camera",
+    "price": 18500000,
+    "oldPrice": null,
+    "rating": 4,
+    "category": "Điện tử",
+    "stock": 15,
+    "status": "available"
+  },
+  {
+    "id": "9",
+    "name": "Đồng hồ thông minh Huawei Watch GT 4",
+    "image": "https://placehold.co/300x300/4db6ac/ffffff/png?text=Watch",
+    "price": 5490000,
+    "oldPrice": 6000000,
+    "rating": 5,
+    "category": "Điện tử",
+    "stock": 60,
+    "status": "available"
+  },
+  {
+    "id": "10",
+    "name": "Sạc dự phòng Anker PowerCore",
+    "image": "https://placehold.co/300x300/ffb74d/ffffff/png?text=Charger",
+    "price": 650000,
+    "oldPrice": null,
+    "rating": 4,
+    "category": "Điện tử",
+    "stock": 500,
+    "status": "available"
+  },
+  {
+    "id": "11",
+    "name": "Ghế công thái học Herman Miller",
+    "image": "https://placehold.co/300x300/9e9e9e/ffffff/png?text=Chair",
+    "price": 30000000,
+    "oldPrice": 35000000,
+    "rating": 5,
+    "category": "Nội thất",
+    "stock": 8,
+    "status": "out_of_stock"
+  },
+  {
+    "id": "12",
+    "name": "Bàn phím cơ Dareu A98",
+    "image": "https://placehold.co/300x300/7986cb/ffffff/png?text=Keyboard",
+    "price": 1990000,
+    "oldPrice": 2500000,
+    "rating": 4,
+    "category": "Thiết bị ngoại vi",
+    "stock": 120,
+    "status": "available"
+  },
+  {
+    "id": "13",
+    "name": "Giày chạy bộ Adidas Ultraboost",
+    "image": "https://placehold.co/300x300/4dd0e1/ffffff/png?text=Shoes",
+    "price": 3200000,
+    "oldPrice": null,
+    "rating": 5,
+    "category": "Thời trang",
+    "stock": 40,
+    "status": "available"
+  },
+  {
+    "id": "14",
+    "name": "Kem chống nắng Biore UV",
+    "image": "https://placehold.co/300x300/ffcc80/ffffff/png?text=Cosmetic",
+    "price": 250000,
+    "oldPrice": 300000,
+    "rating": 4,
+    "category": "Mỹ phẩm",
+    "stock": 350,
+    "status": "available"
+  },
+  {
+    "id": "15",
+    "name": "Máy hút bụi cầm tay Xiaomi",
+    "image": "https://placehold.co/300x300/c5e1a5/ffffff/png?text=Vacuum",
+    "price": 1900000,
+    "oldPrice": 2200000,
+    "rating": 4,
+    "category": "Gia dụng",
+    "stock": 65,
+    "status": "available"
+  }
+]

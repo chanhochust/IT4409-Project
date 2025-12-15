@@ -18,7 +18,9 @@ export function UserMenu({ user }: { user: MockUser }) {
         <p>Chào, {user.email}!</p> 
         <ul>
           <li><Link href="/account/profile">Thông tin tài khoản</Link></li>
-          <li><Link href="/orders">Đơn hàng của tôi</Link></li>
+          {user.role === 'customer' && (
+            <li><Link href="/orders">Đơn hàng của tôi</Link></li>
+          )}
           
           {user.role === 'admin' && (
             <li><Link href="/admin">Trang Admin</Link></li>
