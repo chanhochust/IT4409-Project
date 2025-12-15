@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '../../context/AuthContext'; 
 import { FaUserCircle, FaMapMarkerAlt, FaCreditCard, FaLock, FaEnvelope, FaPhone, FaTrash, FaShieldAlt } from 'react-icons/fa';
+import 'app/account/profile/profile.css';
 
 const DAYS = Array.from({ length: 31 }, (_, i) => i + 1);
 const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);

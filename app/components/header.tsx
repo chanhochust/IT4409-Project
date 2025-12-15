@@ -51,7 +51,7 @@ export function Header() {
     }
 
     return (
-      <Link href="/signin" className="btnIcon" aria-label="Tài khoản">
+      <Link href="/auth/signin" className="btnIcon" aria-label="Tài khoản">
         <FaUser />
       </Link>
     );
@@ -112,7 +112,7 @@ export function Header() {
           placeholder="Tìm kiếm sản phẩm..."
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
-          onKeyDown={onKeyDown}   // thêm dòng này
+          onKeyDown={onKeyDown}   
         />
         <button id="btnSearch" aria-label="Tìm kiếm" onClick={handleSearch}>
           <FaSearch />

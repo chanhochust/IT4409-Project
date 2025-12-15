@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import "app/auth/auth.css"
 
 export default function SignUpPage() {
   useEffect(() => {
@@ -43,7 +44,7 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className='signin-container'>
+    <div className='flex flex-col items-center justify-center min-h-screen py-5 bg-[#f4f5f7]'>
       <form className='signin-form' onSubmit={handleSubmit}>
         <h1 className='form-title'>Đăng ký tài khoản</h1>
 
@@ -91,10 +92,12 @@ export default function SignUpPage() {
           {isLoading ? 'Đang đăng ký...' : 'Đăng ký'}
         </button>
 
+        <div className='flex flex-col items-center mt-4'>
         <p className='form-footer-text'>Đã có tài khoản?</p>
-        <Link href='/signin' className='form-link'>
+        <Link href='/auth/signin' className='inline-block font-bold text-blue-600 text-base hover:underline hover:text-blue-700'>
           Đăng nhập ngay
         </Link>
+        </div>
       </form>
     </div>
   )

@@ -4,8 +4,10 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect } from "react";
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../../context/AuthContext'
 import { FaGoogle, FaFacebook } from 'react-icons/fa'
+import "app/auth/auth.css"
+
 
 export default function SignInPage() {
   useEffect(() => {
@@ -102,7 +104,7 @@ export default function SignInPage() {
         </div>
 
         <div className='register'><p className='form-footer-text'>Chưa có tài khoản?</p>
-        <Link href='/signup' className='form-link form-link-register'>
+        <Link href='/auth/signup' className='form-link form-link-register'>
           Đăng ký
         </Link></div>
         <Link href='/' className='form-link form-link-home'>
