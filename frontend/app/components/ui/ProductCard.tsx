@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import { FC } from "react";
+import Link from "next/link";
 import { useCartStore } from "@/store/cart_actions";
+import "./ProductCard.css";
 
 export interface ProductCardProps {
   id: string;
@@ -23,54 +25,54 @@ const ProductCard: FC<ProductCardProps> = ({
 }) => {
   const onAddToCart = useCartStore((state) => state.onAddToCart);
 
+ const discountPercent = oldPrice
+  ? Math.round(((oldPrice - price) / oldPrice) * 100)
+  : null; 
+
   return (
-    <div>
-    <div className="group bg-white border rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition">
-      <div className="relative w-full h-56">
-        <Image
-          src={image}
-          alt={name}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform items-center"
-        />
-      </div>
-
-      <div className="p-6 space-y-2">
-        <h3 className="text-xs font-semibold line-clamp-2">{name}</h3>
-
-        <div className="flex items-center gap-1 text-yellow-400 text-sm">
-          {Array.from({ length: rating }).map((_, i) => (
-            <span key={i}>★</span>
-          ))}
-          <span className="text-gray-400 text-xs">({rating})</span>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <span className="text-lg font-bold text-red-600">
-            {price.toLocaleString()}₫
-          </span>
-          {oldPrice && (
-            <span className="text-sm line-through text-gray-400">
-              {oldPrice.toLocaleString()}₫
+    <div className="product-card">
+      <Link href={`/products/${id}`} className="product-link">
+        <div className="product-image-wrap">
+          {discountPercent && (
+            <span className="discount-badge">
+              -{discountPercent}%
             </span>
           )}
+          <Image
+            src={image}
+            alt={name}
+            fill
+            className="product-image"
+          />
         </div>
-      </div>
+
+        <div className="product-content">
+          <p className="product-title">
+            {name}
+          </p>
+
+          {/* Rating */}
+          <div className="product-rating">
+            {Array.from({ length: rating }).map((_, i) => (
+              <span key={i}>★</span>
+            ))}
+            <span className="rating-sold">(Đã bán 1k+)</span>
+          </div>
+
+          {/* Price */}
+          <div className="product-price-row">
+            <span className="product-price">
+              {price.toLocaleString()}₫
+            </span>
+            {oldPrice && (
+              <span className="product-old-price">
+                {oldPrice.toLocaleString()}₫
+              </span>
+            )}
+          </div>
+        </div>
+      </Link>
     </div>
-
-
-     <div>
-      <button
-          onClick={() => {
-            console.log("clicked");
-            onAddToCart({ id, name, image, price })
-          }}
-          className="w-full bg-black text-white rounded-lg py-2 text-sm hover:bg-gray-800 transition"
-        >
-          Thêm vào giỏ
-        </button>
-      </div>
-      </div>
   );
 };
 
