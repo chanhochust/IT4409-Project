@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&subset=vietnamese&display=swap');
 
-@import "tailwindcss";
-
+@import 'tailwindcss';
 
 :root {
   --background: #ffffff;
@@ -18,12 +17,10 @@
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body,
 input {
-    font-family: sans-serif;
+  font-family: sans-serif;
 }

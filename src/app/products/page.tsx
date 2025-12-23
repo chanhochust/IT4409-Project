@@ -13,10 +13,10 @@ export default function Products() {
   }, []);
 
   return (
-    <main className='page-container'>
-      <section className='product-section'>
-        <h3>Sản phẩm</h3>
-        <div className='product-list-grid'>
+    <main className='flex min-h-[calc(100vh-120px)] flex-col items-center justify-start px-4 py-8'>
+      <section className='w-full max-w-[1120px]'>
+        <h3 className='mb-6 text-center text-2xl font-bold'>Sản phẩm</h3>
+        <div className='grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-6'>
           <ProductList products={data} />
         </div>
       </section>
