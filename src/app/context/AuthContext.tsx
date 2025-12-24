@@ -1,9 +1,9 @@
 'use client';
 
 import { createContext, useContext, ReactNode } from 'react';
-import { useSession, signIn, signOut } from "next-auth/react"; 
+import { useSession, signIn, signOut } from 'next-auth/react';
 
-export type UserRole = 'admin' | 'customer';
+export type UserRole = 'admin' | 'customer' | 'seller';
 
 export interface MockUser {
   role: UserRole;
@@ -19,9 +19,9 @@ interface LoginCredentials {
 
 interface AuthContextType {
   isLoggedIn: boolean;
-  user: MockUser | null; 
+  user: MockUser | null;
   isLoading: boolean;
-  login: (provider: string, credentials?: LoginCredentials) => Promise<void>; 
+  login: (provider: string, credentials?: LoginCredentials) => Promise<void>;
   logout: () => void;
   updateAvatar: (newAvatarUrl: string) => void;
 }
@@ -31,15 +31,17 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const { data: session, status } = useSession();
 
-  const isLoggedIn = status === "authenticated";
-  const isLoading = status === "loading";
+  const isLoggedIn = status === 'authenticated';
+  const isLoading = status === 'loading';
 
-  const user: MockUser | null = session?.user ? {
-    email: session.user.email || "",
-    avatar: session.user.image || "", 
-    name: session.user.name || "",    
-    role: (session.user as any).role || 'customer' 
-  } : null;
+  const user: MockUser | null = session?.user
+    ? {
+        email: session.user.email || '',
+        avatar: session.user.image || '',
+        name: session.user.name || '',
+        role: (session.user as any).role || 'customer',
+      }
+    : null;
 
   const login = async (provider: string, credentials?: LoginCredentials) => {
     if (provider === 'credentials') {
@@ -52,10 +54,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (result?.error) {
         throw new Error(result.error);
       } else {
-        window.location.href = '/'; 
+        window.location.href = '/';
       }
     } else {
-      await signIn(provider, { callbackUrl: '/' }); 
+      await signIn(provider, { callbackUrl: '/' });
     }
   };
 
@@ -65,7 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const updateAvatar = (newAvatarUrl: string) => {
-    alert("Tính năng cập nhật Avatar cần Database để lưu trữ vĩnh viễn.");
+    alert('Tính năng cập nhật Avatar cần Database để lưu trữ vĩnh viễn.');
   };
 
   return (
