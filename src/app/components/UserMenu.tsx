@@ -50,7 +50,7 @@ export function UserMenu({ user }: { user: MockUser }) {
               <Link
                 className='block w-full rounded p-2 text-left text-[#333] no-underline hover:bg-[#f5f5f5]'
                 href='/seller/dashboard'>
-                Shop của tôi
+                Quản lý Shop
               </Link>
             </li>
           )}
