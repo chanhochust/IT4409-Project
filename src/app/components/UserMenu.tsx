@@ -12,7 +12,13 @@ export function UserMenu({ user }: { user: MockUser }) {
       <div
         className='flex cursor-pointer items-center justify-center text-[24px] text-[#555] hover:text-sky-500'
         aria-label='Tài khoản'>
-        <FaUser />
+        <div className='border-1 flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border-transparent bg-gray-200 shadow-sm group-hover:border-[#08c2f5]'>
+          {user?.avatar ? (
+            <img src={user.avatar} alt='User Avatar' className='h-full w-full object-cover' />
+          ) : (
+            <FaUser className='h-5 w-5 text-[#555]' />
+          )}
+        </div>
       </div>
 
       <div className='z-100 absolute right-0 top-full hidden w-[250px] rounded-lg border border-[#eee] bg-white p-4 shadow-[0_4px_10px_rgba(0,0,0,0.1)] group-hover:block'>

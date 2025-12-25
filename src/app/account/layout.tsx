@@ -149,6 +149,7 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
     if (pathname.endsWith('/address')) return 'Địa Chỉ';
     if (pathname.endsWith('/password')) return 'Mật Khẩu';
     if (pathname.endsWith('/orders')) return 'Đơn Hàng';
+    if (pathname.endsWith('/notifications')) return 'Thông Báo';
     return 'Tài khoản';
   };
 
