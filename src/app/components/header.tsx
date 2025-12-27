@@ -9,13 +9,6 @@ import { FaGlobe, FaMoon, FaSearch, FaShoppingCart, FaUser } from 'react-icons/f
 import { useCartStore } from '@/store/cart_actions';
 
 export function Header() {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
-
-  const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
-    document.documentElement.classList.toggle('dark');
-  };
-
   const router = useRouter();
   const [searchValue, setSearchValue] = useState('');
 
@@ -33,6 +26,28 @@ export function Header() {
   const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const { isLoggedIn, user, isLoading } = useAuth();
+  const handleSellerChannelClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    if (!isLoggedIn) {
+      router.push('/auth/signin');
+      return;
+    }
+
+    // Kiểm tra trạng thái cửa hàng của Customer
+    switch (user?.shopStatus) {
+      case 'active':
+        router.push('seller/dashboard');
+        break;
+      case 'pending':
+        alert('Hồ sơ đăng ký bán hàng của bạn đang trong quá trình kiểm duyệt. Vui lòng đợi trong 24h!');
+        break;
+      default:
+        // Mặc định là 'none' hoặc chưa có shop
+        router.push('/auth/business-signup');
+        break;
+    }
+  };
 
   const renderAuthStatus = () => {
     if (isLoading) {
@@ -74,28 +89,10 @@ export function Header() {
             aria-label='Xem thông báo'>
             <NotiDropdown />
           </div>
-          <div className='flex items-center gap-0.5 text-[0.9em] text-[#555]'>
-            <label htmlFor='langSelect' className='sr-only'></label>
-            <button
-              className='flex cursor-pointer items-center justify-center border-0 bg-transparent text-[24px] text-[#555] hover:text-sky-500'
-              aria-label='Chọn ngôn ngữ'>
-              <FaGlobe />
-            </button>
-            <select
-              id='langSelect'
-              className='cursor-pointer rounded border border-[#ccc] bg-[#f8f8f8] outline-none'
-              defaultValue='vi'
-              aria-label='Ngôn ngữ'>
-              <option value='vi'>VN</option>
-              <option value='en'>EN</option>
-            </select>
-          </div>
           <button
-            id='btnTheme'
-            className='flex cursor-pointer items-center justify-center border-0 bg-transparent text-[24px] text-[#555] hover:text-sky-500'
-            onClick={toggleTheme}
-            aria-label='Chuyển chế độ sáng / tối'>
-            <FaMoon />
+            onClick={handleSellerChannelClick}
+            className='flex cursor-pointer items-center gap-0.5 text-[1em] text-[#555] hover:text-sky-600'>
+            Kênh người bán
           </button>
         </div>
       </div>

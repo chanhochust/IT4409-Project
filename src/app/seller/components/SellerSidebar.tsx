@@ -9,7 +9,6 @@ const sellerNavItems = [
   { href: '/seller/products', icon: FaBox, label: 'Quản lý Sản phẩm' },
   { href: '/seller/orders', icon: FaClipboardList, label: 'Đơn hàng' },
   { href: '/seller/setting', icon: FaCog, label: 'Cấu hình Shop' },
-  { href: '/account/profile', icon: FaUser, label: 'Thông tin cá nhân' },
 ];
 
 export function SellerSidebar() {
@@ -30,7 +29,7 @@ export function SellerSidebar() {
           <FaStore />
         </div>
         <div className='overflow-hidden'>
-          <h2 className='text-xl font-bold tracking-tight text-white'>Tibiki Seller</h2>
+          <h2 className='text-xl font-black italic leading-none tracking-tight text-white'>Tibiki</h2>
           <p className='text-[10px] font-bold uppercase tracking-widest text-blue-400'>Kênh Người Bán</p>
         </div>
       </div>

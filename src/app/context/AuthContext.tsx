@@ -3,13 +3,15 @@
 import { createContext, useContext, ReactNode } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
 
-export type UserRole = 'admin' | 'customer' | 'seller';
+export type UserRole = 'admin' | 'customer';
+export type ShopStatus = 'active' | 'pending' | 'none';
 
 export interface MockUser {
   role: UserRole;
   email: string;
   avatar?: string;
   name?: string;
+  shopStatus: ShopStatus;
 }
 
 interface LoginCredentials {
@@ -40,6 +42,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         avatar: session.user.image || '',
         name: session.user.name || '',
         role: (session.user as any).role || 'customer',
+        shopStatus: (session.user as any).shopStatus || 'none',
       }
     : null;
 

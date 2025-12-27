@@ -50,17 +50,6 @@ export function UserMenu({ user }: { user: MockUser }) {
               </Link>
             </li>
           )}
-
-          {user.role === 'seller' && (
-            <li>
-              <Link
-                className='block w-full rounded p-2 text-left text-[#333] no-underline hover:bg-[#f5f5f5]'
-                href='/seller/dashboard'>
-                Quản lý Shop
-              </Link>
-            </li>
-          )}
-
           <li>
             <button
               onClick={logout}

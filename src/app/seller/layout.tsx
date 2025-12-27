@@ -2,29 +2,29 @@
 
 import React, { useEffect, useState } from 'react';
 import { SellerSidebar } from '@/src/app/seller/components/SellerSidebar';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/src/app/context/AuthContext';
 
 /**
  * Layout bảo mật cho Kênh Người Bán
- * Chỉ cho phép người dùng có role 'seller' truy cập
+ * Chỉ cho phép người dùng có shopStatus = "active" truy cập
  */
 export default function SellerLayout({ children }: { children: React.ReactNode }) {
-  const { user, isLoggedIn, isLoading, handleRoleRedirect } = useAuth();
+  const router = useRouter();
+  const { user, isLoggedIn, isLoading } = useAuth();
   const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
     if (isLoading) return;
 
-    if (!isLoggedIn || user?.role !== 'seller') {
+    if (!isLoggedIn || user?.shopStatus !== 'active') {
       // Nếu không phải seller, thông báo và điều hướng về trang phù hợp
-      if (typeof window !== 'undefined') {
-        alert('Khu vực này chỉ dành cho đối tác bán hàng!');
-        handleRoleRedirect(user?.role || 'customer');
-      }
+      alert('Khu vực chỉ dành cho người bán!');
+      router.push('/');
     } else {
       setIsAuthorized(true);
     }
-  }, [isLoggedIn, isLoading, user, handleRoleRedirect]);
+  }, [isLoggedIn, isLoading, user, router]);
 
   if (isLoading || !isAuthorized) {
     return (

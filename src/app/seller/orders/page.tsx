@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import {
   FaSearch,
-  FaEye,
+  FaEdit,
   FaTimes,
   FaCheckCircle,
   FaChevronLeft,
@@ -71,7 +71,7 @@ export default function SellerOrdersPage() {
       case 'pending':
         return { label: 'Chờ xác nhận', color: 'bg-amber-100 text-amber-700' };
       case 'processing':
-        return { label: 'Đang xử lý', color: 'bg-blue-100 text-blue-700' };
+        return { label: 'Chờ lấy hàng', color: 'bg-blue-100 text-blue-700' };
       case 'shipped':
         return { label: 'Đang giao', color: 'bg-indigo-100 text-indigo-700' };
       case 'delivered':
@@ -150,7 +150,7 @@ export default function SellerOrdersPage() {
         <div className='overflow-x-auto'>
           <table className='w-full border-collapse'>
             <thead>
-              <tr className='border-b border-gray-200 bg-gray-50'>
+              <tr className='border-b border-gray-300 bg-gray-50'>
                 <th className='px-6 py-4 text-left text-[0.7rem] font-bold uppercase tracking-widest text-gray-500'>
                   Mã Đơn
                 </th>
@@ -192,7 +192,7 @@ export default function SellerOrdersPage() {
                       <button
                         onClick={() => setSelectedOrder(order)}
                         className='cursor-pointer rounded-lg p-2 text-gray-400 transition-all hover:bg-blue-50 hover:text-blue-600'>
-                        <FaEye />
+                        <FaEdit />
                       </button>
                     </td>
                   </tr>
@@ -276,7 +276,7 @@ export default function SellerOrdersPage() {
                   </div>
                   <div className='border-t border-gray-50 pt-2'>
                     <p className='mb-1 text-[11px] font-bold uppercase tracking-widest text-gray-400'>
-                      Thanh toán bằng
+                      Phương thức thanh toán
                     </p>
                     <p className='text-xs font-semibold text-indigo-600'>{selectedOrder.paymentMethod}</p>
                   </div>

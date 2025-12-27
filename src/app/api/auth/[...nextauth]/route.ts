@@ -40,6 +40,7 @@ const handler = NextAuth({
             name: 'Admin Hệ Thống',
             email: 'admin@test.com',
             role: 'admin',
+            shopStatus: 'none',
             image: 'https://i.pravatar.cc/150?u=admin',
           };
         }
@@ -48,7 +49,8 @@ const handler = NextAuth({
             id: '2',
             name: 'Chủ Shop MiniShop',
             email: 'seller@test.com',
-            role: 'seller',
+            role: 'customer',
+            shopStatus: 'active',
             image: 'https://i.pravatar.cc/150?u=seller',
           };
         }
@@ -58,7 +60,18 @@ const handler = NextAuth({
             name: 'Khách Hàng',
             email: 'customer@test.com',
             role: 'customer',
+            shopStatus: 'none',
             image: 'https://i.pravatar.cc/150?u=customer',
+          };
+        }
+        if (credentials.email === 'pending@test.com' && credentials.password === '123') {
+          return {
+            id: '4',
+            name: 'Người bán tiềm năng',
+            email: 'pending@test.com',
+            role: 'customer',
+            shopStatus: 'pending',
+            image: 'https://i.pravatar.cc/150?u=pending',
           };
         }
         return null;
@@ -70,17 +83,19 @@ const handler = NextAuth({
     strategy: 'jwt',
   },
   callbacks: {
-    // Đưa thông tin role vào JWT
+    // Đưa thông tin role và shopStatus vào JWT
     async jwt({ token, user }) {
       if (user) {
-        token.role = (user as any).role; // Lưu role vào token
+        token.role = (user as any).role;
+        token.shopStatus = (user as any).shopStatus; // Thêm shopStatus vào token
       }
       return token;
     },
-    // Đưa thông tin role từ JWT vào Session
+    // Đưa thông tin từ JWT vào Session để Frontend truy cập được
     async session({ session, token }) {
       if (session.user) {
         (session.user as any).role = token.role;
+        (session.user as any).shopStatus = token.shopStatus; // Gán vào session
       }
       return session;
     },

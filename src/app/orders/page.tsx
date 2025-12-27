@@ -182,7 +182,6 @@ export default function OrdersPage() {
                   <div className='flex flex-1 flex-col justify-between overflow-hidden py-1'>
                     <div className='space-y-0.5'>
                       <h3 className='line-clamp-1 text-[15px] font-bold leading-snug text-gray-800'>{item.name}</h3>
-                      <p className='text-xs font-medium italic text-gray-400'>Phân loại: Mặc định</p>
                       <p className='mt-1 text-[13px] font-black text-gray-700'>x{item.quantity}</p>
                     </div>
                     <div className='flex items-center justify-end gap-2 text-right'>
@@ -221,19 +220,17 @@ export default function OrdersPage() {
                 )}
 
                 {order.status === 'delivered' && (
-                  <>
-                    {canReturn(order.purchaseDate) && (
-                      <button className='flex-1 cursor-pointer rounded-xl border border-gray-300 bg-white px-8 py-2.5 text-[13px] font-bold text-gray-500 transition-all hover:bg-gray-50 sm:flex-none'>
-                        Trả hàng /Hoàn hàng
-                      </button>
-                    )}
-                    <button className='flex-1 cursor-pointer rounded-xl bg-sky-500 px-10 py-3 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-sky-100 transition-all hover:bg-sky-600 active:scale-95 sm:flex-none'>
+                  <div>
+                    <button className='mr-4 flex-1 cursor-pointer rounded-xl border border-gray-300 bg-white px-8 py-2.5 text-[13px] font-bold text-gray-500 transition-all hover:bg-gray-50 sm:flex-none'>
+                      Xem chi tiết
+                    </button>
+                    <button className='mr-4 flex-1 cursor-pointer rounded-xl bg-sky-500 px-10 py-3 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-sky-100 transition-all hover:bg-sky-600 active:scale-95 sm:flex-none'>
                       Mua Lại
                     </button>
                     <button className='flex-1 cursor-pointer rounded-xl border-2 border-[#00bcd4]/20 bg-white px-8 py-3 text-xs font-black uppercase text-[#077bbe] transition-all hover:bg-cyan-50 active:scale-95 sm:flex-none'>
                       Đánh Giá
                     </button>
-                  </>
+                  </div>
                 )}
 
                 {(order.status === 'cancelled' || order.status === 'returned') && (

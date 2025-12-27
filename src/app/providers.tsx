@@ -12,7 +12,8 @@ type Props = {
 export function AppProviders({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
-  const showMainLayout = !pathname.startsWith('/auth') && !pathname.startsWith('/admin'); // Ẩn header & footer với trang admin và login
+  const showMainLayout =
+    !pathname.startsWith('/auth') && !pathname.startsWith('/admin') && !pathname.startsWith('/seller'); // Ẩn header & footer với trang admin và login
 
   return (
     <SessionProvider>

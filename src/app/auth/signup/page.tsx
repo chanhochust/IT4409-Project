@@ -107,29 +107,6 @@ export default function SignUpPage() {
           </Link>
         </div>
       </form>
-      <div className='mt-8 flex w-full max-w-[600px] flex-col items-center'>
-        <div className='mb-6 flex w-full items-center'>
-          <div className='h-[1px] flex-1 bg-gray-300'></div>
-          <span className='px-3 text-xs font-medium uppercase text-gray-500'>Bạn là doanh nghiệp?</span>
-          <div className='h-[1px] flex-1 bg-gray-300'></div>
-        </div>
-
-        <div className='w-full rounded-lg border border-gray-200 bg-white p-6 text-center shadow-sm'>
-          <h3 className='mb-2 text-base font-bold text-[#111]'>Bắt đầu bán hàng cùng Tibiki</h3>
-          <p className='mb-6 whitespace-nowrap text-sm leading-relaxed text-[#555]'>
-            Tiếp cận hàng triệu khách hàng và phát triển doanh nghiệp của bạn một cách bền vững.
-          </p>
-          <a
-            href='/auth/business-signup'
-            className='inline-block rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-[#111] shadow-sm transition-colors hover:bg-gray-50'>
-            Tạo tài khoản người bán chuyên nghiệp
-          </a>
-        </div>
-
-        <a href='/' className='mt-6 text-sm font-medium text-blue-700 hover:text-orange-700 hover:underline'>
-          Quay lại Trang chủ
-        </a>
-      </div>
     </div>
   );
 }
