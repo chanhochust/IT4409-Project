@@ -47,7 +47,7 @@ const handler = NextAuth({
         if (credentials.email === 'seller@test.com' && credentials.password === '123') {
           return {
             id: '2',
-            name: 'Chủ Shop MiniShop',
+            name: 'Trần Nam',
             email: 'seller@test.com',
             role: 'customer',
             shopStatus: 'active',
@@ -57,7 +57,7 @@ const handler = NextAuth({
         if (credentials.email === 'customer@test.com' && credentials.password === '123') {
           return {
             id: '2',
-            name: 'Khách Hàng',
+            name: 'Trần Thị Nhài',
             email: 'customer@test.com',
             role: 'customer',
             shopStatus: 'none',
@@ -67,7 +67,7 @@ const handler = NextAuth({
         if (credentials.email === 'pending@test.com' && credentials.password === '123') {
           return {
             id: '4',
-            name: 'Người bán tiềm năng',
+            name: 'Nguyễn Bảo Ngọc',
             email: 'pending@test.com',
             role: 'customer',
             shopStatus: 'pending',

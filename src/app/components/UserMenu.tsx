@@ -22,7 +22,7 @@ export function UserMenu({ user }: { user: MockUser }) {
       </div>
 
       <div className='z-100 absolute right-0 top-full hidden w-[250px] rounded-lg border border-[#eee] bg-white p-4 shadow-[0_4px_10px_rgba(0,0,0,0.1)] group-hover:block'>
-        <p className='mt-0 border-b border-[#f0f0f0] pb-2 font-semibold'>Chào, {user.email}!</p>
+        <p className='mt-0 border-b border-[#f0f0f0] pb-2 font-semibold'>Chào, {user.name}!</p>
         <ul className='mt-2 list-none p-0'>
           <li>
             <Link

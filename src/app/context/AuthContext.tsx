@@ -7,6 +7,7 @@ export type UserRole = 'admin' | 'customer';
 export type ShopStatus = 'active' | 'pending' | 'none';
 
 export interface MockUser {
+  id: string;
   role: UserRole;
   email: string;
   avatar?: string;
