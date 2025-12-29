@@ -11,6 +11,8 @@ export interface MockUser {
   role: UserRole;
   email: string;
   avatar?: string;
+  phone?: string;
+  address?: string;
   name?: string;
   shopStatus: ShopStatus;
 }
@@ -39,11 +41,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const user: MockUser | null = session?.user
     ? {
+        id: (session.user as any).id || '',
         email: session.user.email || '',
         avatar: session.user.image || '',
         name: session.user.name || '',
         role: (session.user as any).role || 'customer',
         shopStatus: (session.user as any).shopStatus || 'none',
+        phone: (session.user as any).phone || '',
+        address: (session.user as any).address || '',
       }
     : null;
 

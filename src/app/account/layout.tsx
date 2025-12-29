@@ -33,7 +33,7 @@ function AccountSidebar() {
         />
         <div className='flex flex-col'>
           <span className='text-[0.95rem] text-[#333]'>Tài khoản của</span>
-          <strong className='max-w-[150px] truncate text-base font-semibold text-[#333]'>{user?.name}</strong>
+          <strong className='max-w-[150px] truncate text-base font-semibold text-[#333]'>{user?.email}</strong>
         </div>
       </div>
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '../../context/AuthContext';
 import {
@@ -21,48 +21,101 @@ const CURRENT_YEAR = new Date().getFullYear();
 const YEARS = Array.from({ length: 100 }, (_, i) => CURRENT_YEAR - i);
 
 export default function ProfilePage() {
-  const { user, updateAvatar } = useAuth();
+  const { user, isLoading: authLoading, updateAvatar } = useAuth();
 
   const [profile, setProfile] = useState({
-    fullName: 'Trần Thị Nhài',
-    nickname: 'datmin',
-    dob_day: '14',
-    dob_month: '2',
-    dob_year: '2004',
-    gender: 'female',
+    fullName: '',
+    nickname: '',
+    dob_day: '1',
+    dob_month: '1',
+    dob_year: '2000',
+    gender: 'other',
     nationality: 'VN',
-    phone: '0123456789',
-    email: user?.email || 'abc@gmail.com',
+    phone: '',
+    email: user?.email,
   });
+
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
   const [showContactModal, setShowContactModal] = useState(false);
   const [editingField, setEditingField] = useState<'phone' | 'email' | null>(null);
   const [tempValue, setTempValue] = useState('');
 
+  // Tải dữ liệu  từ API
+  useEffect(() => {
+    const loadProfile = async () => {
+      // Chỉ fetch khi đã xác định được ID người dùng từ session
+      if (!user?.id) return;
+
+      try {
+        const response = await fetch(`/api/user/profile?userId=${user.id}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          setProfile({
+            ...data,
+            // Đảm bảo email luôn lấy từ session mới nhất nếu data trả về trống
+            email: user.email || data.email || '',
+          });
+        }
+      } catch (error) {
+        console.error('Lỗi khi fetch hồ sơ:', error);
+      } finally {
+        setIsInitialLoading(false);
+      }
+    };
+
+    if (!authLoading) {
+      loadProfile();
+    }
+  }, [user?.id, user?.email, authLoading]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setProfile((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setProfile((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSaveProfile = (e: React.FormEvent) => {
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Đã lưu thông tin (giả lập)!');
-    console.log('Dữ liệu đã lưu:', profile);
+
+    // Kiểm tra an toàn trước khi gửi
+    if (!user?.id) {
+      alert('Không tìm thấy người dùng. Vui lòng đăng nhập lại.');
+      return;
+    }
+
+    setIsSaving(true);
+
+    try {
+      const response = await fetch('/api/user/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id, // Gửi ID chính xác từ Context
+          ...profile,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert(result.message || 'Cập nhật hồ sơ thành công!');
+      } else {
+        alert(result.error || 'Lỗi: ' + (result.details || 'Không rõ nguyên nhân'));
+      }
+    } catch (error) {
+      alert('Lỗi kết nối máy chủ. Vui lòng thử lại sau.');
+    } finally {
+      setIsSaving(false);
+    }
   };
   const handleAvatarChange = () => {
-    const newAvatarUrl = window.prompt(
-      'Hinh gia lap',
-      'https://www.anhnghethuatdulich.com/wp-content/uploads/2025/07/me-and-logic-long-distance-relationship.jpg',
-    );
+    const newAvatarUrl = window.prompt('Nhập URL hình ảnh mới:', 'https://i.pravatar.cc/150?u=' + user?.id);
 
     if (newAvatarUrl && newAvatarUrl.trim() !== '') {
       updateAvatar(newAvatarUrl);
       alert('Đã cập nhật Avatar!');
-    } else {
-      alert('Đã hủy thay đổi.');
     }
   };
 
@@ -72,30 +125,29 @@ export default function ProfilePage() {
     setShowContactModal(true);
   };
 
-  const handleSaveContact = () => {
+  const handleSaveContact = async () => {
     if (!tempValue) {
       alert('Vui lòng nhập thông tin!');
       return;
     }
 
-    if (editingField === 'phone') {
-      // Giả lập validate số điện thoại
-      if (!/^\d{10,11}$/.test(tempValue)) {
-        alert('Số điện thoại không hợp lệ!');
-        return;
-      }
-      setProfile((prev) => ({ ...prev, phone: tempValue }));
-    } else if (editingField === 'email') {
-      // Giả lập validate email
-      if (!/\S+@\S+\.\S+/.test(tempValue)) {
-        alert('Email không hợp lệ!');
-        return;
-      }
-      setProfile((prev) => ({ ...prev, email: tempValue }));
+    if (editingField === 'phone' && !/^\d{10,11}$/.test(tempValue)) {
+      alert('Số điện thoại không hợp lệ!');
+      return;
+    }
+    if (editingField === 'email' && !/\S+@\S+\.\S+/.test(tempValue)) {
+      alert('Email không hợp lệ!');
+      return;
     }
 
+    setIsSaving(true);
+    await new Promise((r) => setTimeout(r, 1000));
+
+    setProfile((prev) => ({ ...prev, [editingField!]: tempValue }));
+    setIsSaving(false);
     setShowContactModal(false);
     setEditingField(null);
+    alert(`Đã cập nhật ${editingField === 'phone' ? 'số điện thoại' : 'email'} thành công!`);
   };
 
   return (
@@ -129,6 +181,8 @@ export default function ProfilePage() {
                 className='form-input'
                 value={profile.fullName}
                 onChange={handleInputChange}
+                placeholder='Nhập họ và tên'
+                required
               />
             </div>
 
@@ -223,8 +277,8 @@ export default function ProfilePage() {
               </select>
             </div>
 
-            <button type='submit' className='form-button'>
-              Lưu thay đổi
+            <button type='submit' className='form-button' disabled={isSaving}>
+              {isSaving ? 'Đang lưu...' : 'Lưu thay đổi'}
             </button>
           </form>
         </div>
@@ -235,7 +289,7 @@ export default function ProfilePage() {
             <FaPhone className='info-icon' />
             <div className='info-text'>
               <span>Số điện thoại</span>
-              <strong>{profile.phone}</strong>
+              <strong>{profile.phone || 'Chưa cập nhật'}</strong>
             </div>
             <button className='btn-secondary' onClick={() => openEditModal('phone')}>
               Cập nhật
@@ -245,7 +299,7 @@ export default function ProfilePage() {
             <FaEnvelope className='info-icon' />
             <div className='info-text'>
               <span>Địa chỉ email</span>
-              <strong>{user?.email}</strong>
+              <strong>{profile.email}</strong>
             </div>
             <button className='btn-secondary' onClick={() => openEditModal('email')}>
               Cập nhật
@@ -289,8 +343,8 @@ export default function ProfilePage() {
                 />
               </div>
 
-              <button className='btn-save' onClick={handleSaveContact}>
-                Lưu thay đổi
+              <button className='btn-save' onClick={handleSaveContact} disabled={isSaving}>
+                {isSaving ? 'Đang xác thực...' : 'Lưu thay đổi'}
               </button>
 
               <button className='btn-cancel' onClick={() => setShowContactModal(false)}>

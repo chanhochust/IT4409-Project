@@ -136,6 +136,7 @@ export default function BusinessSignupPage({ handleSubmit, isLoading, error, suc
               </label>
               <textarea
                 id='address'
+                defaultValue={user?.address}
                 rows={2}
                 className='w-full rounded-lg border border-gray-300 p-3 text-black outline-none transition-all focus:ring-1 focus:ring-indigo-500'
                 placeholder='Số nhà, tên đường, Phường/Xã, Quận/Huyện, Tỉnh/Thành phố'
@@ -172,6 +173,7 @@ export default function BusinessSignupPage({ handleSubmit, isLoading, error, suc
               <input
                 id='phone'
                 type='tel'
+                defaultValue={user?.phone}
                 className='w-full rounded-lg border border-gray-300 p-3 text-black outline-none transition-all focus:ring-1 focus:ring-indigo-500'
                 placeholder='Để chúng tôi liên hệ xác minh'
                 required
