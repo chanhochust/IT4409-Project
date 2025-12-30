@@ -4,7 +4,7 @@ import { createContext, useContext, ReactNode } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
 
 export type UserRole = 'admin' | 'customer';
-export type ShopStatus = 'active' | 'pending' | 'none';
+export type ShopStatus = 'active' | 'pending' | 'none' | 'disabled' | 'rejected';
 
 export interface MockUser {
   id: string;
@@ -52,21 +52,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     : null;
 
-  const login = async (provider: string, credentials?: LoginCredentials) => {
-    if (provider === 'credentials') {
-      const result = await signIn('credentials', {
-        redirect: false,
-        email: credentials?.email,
-        password: credentials?.password,
-      });
+  const login = async (provider: string, credentials?: any) => {
+    try {
+      if (provider === 'credentials') {
+        const result = await signIn('credentials', {
+          redirect: false, // Rất quan trọng: cho phép trang Sign-in tự điều hướng
+          ...credentials,
+        });
 
-      if (result?.error) {
-        throw new Error(result.error);
+        if (result?.error) {
+          throw new Error(result.error);
+        }
+
+        return result;
       } else {
-        window.location.href = '/';
+        // Đối với Google/Facebook, dùng redirect mặc định về trang chủ
+        await signIn(provider, { callbackUrl: '/' });
       }
-    } else {
-      await signIn(provider, { callbackUrl: '/' });
+    } catch (error) {
+      console.error('AuthContext Login Error:', error);
+      throw error;
     }
   };
 

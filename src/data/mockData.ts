@@ -114,9 +114,17 @@ const initialShops = [
     shopName: 'MiniShop Official Store',
     businessEmail: 'contact@minishop.vn',
     taxCode: '0102030405',
+    businessType: 'Công ty TNHH / Cổ phần',
     warehouseAddress: '456 Đường Láng, Đống Đa, Hà Nội',
     status: 'active',
     logo: 'https://placehold.co/200x200?text=MiniShop',
+    submittedDate: '01/10/2023',
+    representative: {
+      fullName: 'Trần Nam',
+      phone: '0988777666',
+      email: 'seller@test.com',
+      citizenId: '001095123456',
+    },
   },
   {
     shopId: 'SHOP-1102',
@@ -124,9 +132,17 @@ const initialShops = [
     shopName: 'Ngọc Ruby Fashion',
     businessEmail: 'ngoc@fashion.vn',
     taxCode: '0987654321',
+    businessType: 'Cá nhân / Hộ kinh doanh',
     warehouseAddress: '789 Trần Hưng Đạo, Quận 5, TP.HCM',
     status: 'pending',
     logo: 'https://placehold.co/200x200?text=Ruby',
+    submittedDate: '15/12/2024',
+    representative: {
+      fullName: 'Nguyễn Bảo Ngọc',
+      phone: '0909090909',
+      email: 'pending@test.com',
+      citizenId: '079123456789',
+    },
   },
 ];
 
@@ -140,10 +156,9 @@ if (!(global as any).tibikiProfiles) {
 if (!(global as any).tibikiAddresses) {
   (global as any).tibikiAddresses = [...initialAddresses];
 }
-if (!(global as any).tibikiShops) {
+if (!(global as any).tibikiShops || (global as any).tibikiShops.length === 0) {
   (global as any).tibikiShops = [...initialShops];
 }
-
 // 3. Export các biến tham chiếu trực tiếp từ vùng nhớ global
 export const mockUsers = (global as any).tibikiUsers;
 export const mockProfiles = (global as any).tibikiProfiles;
@@ -189,4 +204,23 @@ export const syncAddressDefault = (userId: string, addressId: number) => {
       addr.isDefault = addr.id === addressId;
     }
   });
+};
+
+/**
+ * HÀM TRỢ GIÚP: Thêm hồ sơ đăng ký Shop mới
+ */
+export const addShop = (shopData: any) => {
+  const shops = (global as any).tibikiShops;
+  // Kiểm tra xem user này đã có shop chưa (tránh trùng lặp nếu cần)
+  const existingShop = shops.find((s: any) => s.ownerId === shopData.ownerId);
+
+  if (!existingShop) {
+    shops.push(shopData);
+    console.log(`[MockDB] Đã thêm hồ sơ Shop mới: ${shopData.shopName} (Owner: ${shopData.ownerId})`);
+    return true;
+  } else {
+    console.warn(`[MockDB] User ${shopData.ownerId} đã có hồ sơ Shop.`);
+    // Tùy logic, có thể cho phép cập nhật lại hoặc trả về false
+    return false;
+  }
 };

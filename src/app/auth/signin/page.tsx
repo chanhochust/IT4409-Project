@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { getSession } from 'next-auth/react';
 import { FaGoogle, FaFacebook } from 'react-icons/fa';
 
 export default function SignInPage() {
@@ -26,14 +27,26 @@ export default function SignInPage() {
     setError('');
 
     try {
-      // Gọi hàm login với provider là 'credentials'
+      // 1. Gọi hàm login từ AuthContext
       await login('credentials', { email, password });
+
+      // 2. Lấy session mới nhất để kiểm tra vai trò (Role)
+      const session = await getSession();
+
+      if (session?.user) {
+        const userRole = (session.user as any).role;
+        // 3. Logic điều hướng thông minh
+        if (userRole === 'admin') {
+          router.push('/admin');
+        } else {
+          router.push('/');
+        }
+      }
     } catch (err: any) {
       setIsLoading(false);
-      setError('Email hoặc mật khẩu không đúng');
+      setError('Email hoặc mật khẩu không chính xác. Vui lòng kiểm tra lại!');
     }
   };
-
   // Đăng nhập bằng FB hoặc GG
   const handleSocialLogin = (provider: string) => {
     setIsLoading(true);
