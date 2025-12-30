@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
 
 export type UserRole = 'admin' | 'customer';
@@ -26,15 +26,17 @@ interface AuthContextType {
   isLoggedIn: boolean;
   user: MockUser | null;
   isLoading: boolean;
-  login: (provider: string, credentials?: LoginCredentials) => Promise<void>;
+  login: (provider: string, credentials?: LoginCredentials) => Promise<any>;
   logout: () => void;
   updateAvatar: (newAvatarUrl: string) => void;
+  refreshUser: () => Promise<void>; // Thêm định nghĩa hàm refresh vào Type
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const { data: session, status } = useSession();
+  // Destructure 'update' từ hook useSession của NextAuth
+  const { data: session, status, update } = useSession();
 
   const isLoggedIn = status === 'authenticated';
   const isLoading = status === 'loading';
@@ -51,6 +53,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         address: (session.user as any).address || '',
       }
     : null;
+
+  const refreshUser = async () => {
+    try {
+      if (update) {
+        await update();
+        console.log('[Auth] NextAuth session đã được đồng bộ với Database.');
+      }
+    } catch (err) {
+      console.error('Lỗi khi làm mới dữ liệu người dùng:', err);
+    }
+  };
 
   const login = async (provider: string, credentials?: any) => {
     try {
@@ -81,11 +94,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const updateAvatar = (newAvatarUrl: string) => {
-    alert('Tính năng cập nhật Avatar cần Database để lưu trữ vĩnh viễn.');
+    // Trong thực tế, bạn sẽ gọi API PUT/PATCH vào MongoDB trước,
+    // sau đó gọi refreshUser() để UI cập nhật ảnh mới.
+    console.log('Tính năng cập nhật Avatar cần API Backend để lưu trữ vĩnh viễn.');
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, isLoading, updateAvatar }}>
+    <AuthContext.Provider
+      value={{
+        isLoggedIn,
+        user,
+        login,
+        logout,
+        isLoading,
+        updateAvatar,
+        refreshUser, // Đã thêm refreshUser vào Provider
+      }}>
       {children}
     </AuthContext.Provider>
   );

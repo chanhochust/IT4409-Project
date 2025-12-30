@@ -33,7 +33,7 @@ const REJECT_REASONS = [
 /**
  * COMPONENT TAB
  */
-const TabItem = ({ id, label, active, set }: any) => {
+const TabItem = ({ id, label, count, active, set }: any) => {
   const isActive = active === id;
   return (
     <button
@@ -41,7 +41,7 @@ const TabItem = ({ id, label, active, set }: any) => {
       className={`border-b-3 cursor-pointer px-4 py-2.5 text-[16px] font-semibold transition-all ${
         isActive ? 'border-[#046d9e] text-[#0646ac]' : 'border-transparent text-gray-500 hover:text-gray-700'
       }`}>
-      {label}
+      {label} {count !== undefined && `(${count})`}
     </button>
   );
 };
@@ -49,6 +49,7 @@ const TabItem = ({ id, label, active, set }: any) => {
 export default function ShopsPage() {
   const [activeTab, setActiveTab] = useState<'pending' | 'active' | 'rejected'>('pending');
   const [shops, setShops] = useState<any[]>([]);
+  const [allShops, setAllShops] = useState<any[]>([]); // Lưu tất cả shops để đếm
   const [selectedShop, setSelectedShop] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -58,6 +59,18 @@ export default function ShopsPage() {
   const [otherReason, setOtherReason] = useState('');
   const [shopToReject, setShopToReject] = useState<string | null>(null);
 
+  // Fetch all shops để đếm số lượng mỗi tab
+  const fetchAllShops = async () => {
+    try {
+      const res = await fetch('/api/admin/shops');
+      const data = await res.json();
+      setAllShops(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error('Error fetching all shops:', error);
+    }
+  };
+
+  // Fetch shops theo status của tab hiện tại
   const fetchShops = async () => {
     setIsLoading(true);
     try {
@@ -66,66 +79,124 @@ export default function ShopsPage() {
       setShops(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching shops:', error);
+      setShops([]);
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchShops();
+    fetchAllShops(); // Fetch all để đếm
+    fetchShops(); // Fetch theo tab
   }, [activeTab]);
 
   const handleApproveShop = async (shopId: string) => {
     if (!confirm('Xác nhận phê duyệt hồ sơ này?')) return;
+
     try {
       const res = await fetch(`/api/admin/shops/${shopId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'active' }),
       });
+
       if (res.ok) {
-        fetchShops();
+        alert('Đã phê duyệt shop thành công!');
+        await fetchAllShops(); // Refresh counts
+        await fetchShops(); // Refresh current tab
         setSelectedShop(null);
+      } else {
+        const error = await res.json();
+        alert(`Lỗi: ${error.error || 'Không thể phê duyệt shop'}`);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error('Error approving shop:', error);
+      alert('Có lỗi xảy ra khi phê duyệt shop');
+    }
   };
 
   const handleRejectShop = async () => {
-    if (!rejectReason) return;
-    const finalReason = rejectReason === 'Lý do khác' ? otherReason : rejectReason;
+    // Validate
+    if (!rejectReason) {
+      alert('Vui lòng chọn lý do từ chối!');
+      return;
+    }
+
+    if (rejectReason === 'Lý do khác' && !otherReason.trim()) {
+      alert('Vui lòng nhập lý do từ chối cụ thể!');
+      return;
+    }
+
+    const finalReason = rejectReason === 'Lý do khác' ? otherReason.trim() : rejectReason;
+
     try {
       const res = await fetch(`/api/admin/shops/${shopToReject}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'rejected', rejectReason: finalReason }),
       });
+
       if (res.ok) {
-        fetchShops();
+        alert('Đã từ chối hồ sơ!');
+
+        // Reset modal state
         setShowRejectModal(false);
         setShopToReject(null);
+        setRejectReason('');
+        setOtherReason('');
         setSelectedShop(null);
+
+        // Refresh data
+        await fetchAllShops();
+        await fetchShops();
+      } else {
+        const error = await res.json();
+        alert(`Lỗi: ${error.error || 'Không thể từ chối shop'}`);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error('Error rejecting shop:', error);
+      alert('Có lỗi xảy ra khi từ chối shop');
+    }
   };
 
   const handleBanShop = async (shopId: string) => {
     const reason = prompt('Lý do đình chỉ hoạt động:');
-    if (!reason) return;
+    if (!reason || !reason.trim()) return;
+
     try {
       const res = await fetch(`/api/admin/shops/${shopId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'disabled', banReason: reason }),
+        body: JSON.stringify({ status: 'disabled', banReason: reason.trim() }),
       });
-      if (res.ok) fetchShops();
-    } catch (error) {}
+
+      if (res.ok) {
+        alert('Đã khóa shop!');
+        await fetchAllShops();
+        await fetchShops();
+      } else {
+        alert('Không thể khóa shop');
+      }
+    } catch (error) {
+      console.error('Error banning shop:', error);
+      alert('Có lỗi xảy ra');
+    }
   };
 
+  // Filter shops dựa trên search query
   const filteredShops = shops.filter(
     (s) =>
       s.shopName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      s.shopId?.toLowerCase().includes(searchQuery.toLowerCase()),
+      s.shopId?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      s.taxCode?.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+
+  // Đếm số lượng mỗi tab
+  const tabCounts = {
+    pending: allShops.filter((s) => s.status === 'pending').length,
+    active: allShops.filter((s) => s.status === 'active').length,
+    rejected: allShops.filter((s) => s.status === 'rejected').length,
+  };
 
   return (
     <div className='mx-auto w-full max-w-[1440px] space-y-6 px-6 font-sans text-gray-900'>
@@ -148,14 +219,9 @@ export default function ShopsPage() {
 
       {/* TABS */}
       <div className='flex w-full border-b border-gray-200'>
-        <TabItem
-          id='pending'
-          label={`Chờ duyệt (${shops.filter((s) => s.status === 'pending').length})`}
-          active={activeTab}
-          set={setActiveTab}
-        />
-        <TabItem id='active' label='Đang hoạt động' active={activeTab} set={setActiveTab} />
-        <TabItem id='rejected' label='Đã từ chối' active={activeTab} set={setActiveTab} />
+        <TabItem id='pending' label='Chờ duyệt' count={tabCounts.pending} active={activeTab} set={setActiveTab} />
+        <TabItem id='active' label='Đang hoạt động' count={tabCounts.active} active={activeTab} set={setActiveTab} />
+        <TabItem id='rejected' label='Đã từ chối' count={tabCounts.rejected} active={activeTab} set={setActiveTab} />
       </div>
 
       {/* SHOP LIST  */}
@@ -232,6 +298,8 @@ export default function ShopsPage() {
                       onClick={() => {
                         setShopToReject(shop.shopId);
                         setShowRejectModal(true);
+                        setRejectReason('');
+                        setOtherReason('');
                       }}
                       icon={<XCircle size={14} />}
                       label='Từ Chối'
@@ -248,17 +316,27 @@ export default function ShopsPage() {
                     color='bg-red-600 text-white hover:bg-red-800'
                   />
                 )}
+
+                {activeTab === 'rejected' && shop.rejectReason && (
+                  <div className='mt-2 rounded border border-red-200 bg-red-50 p-2'>
+                    <p className='text-xs font-semibold text-red-800'>Lý do từ chối:</p>
+                    <p className='mt-1 text-xs text-red-700'>{shop.rejectReason}</p>
+                  </div>
+                )}
               </div>
             </div>
           ))
         ) : (
           <div className='rounded-xl border border-dashed border-gray-300 bg-white py-20 text-center'>
             <Store size={40} className='mx-auto mb-3 text-gray-300' />
-            <p className='text-sm font-medium text-gray-500'>Danh sách trống</p>
+            <p className='text-sm font-medium text-gray-500'>
+              {searchQuery ? 'Không tìm thấy kết quả' : 'Danh sách trống'}
+            </p>
           </div>
         )}
       </div>
 
+      {/* MODAL CHI TIẾT SHOP */}
       {selectedShop && (
         <div className='fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm'>
           <div className='flex max-h-[90vh] w-full max-w-4xl flex-col rounded-lg bg-white shadow-2xl'>
@@ -275,7 +353,7 @@ export default function ShopsPage() {
               </button>
             </div>
 
-            {/* Modal Content - Cấu trúc dọc giống Form */}
+            {/* Modal Content */}
             <div className='flex-1 overflow-y-auto bg-[#f8f9fb] p-8'>
               {/* SECTION 1: THÔNG TIN CỬA HÀNG */}
               <div className='mb-8'>
@@ -342,6 +420,9 @@ export default function ShopsPage() {
                     onClick={() => {
                       setShopToReject(selectedShop.shopId);
                       setShowRejectModal(true);
+                      setSelectedShop(null);
+                      setRejectReason('');
+                      setOtherReason('');
                     }}
                     className='cursor-pointer rounded-lg border border-rose-200 bg-rose-50 px-6 py-2.5 text-sm font-bold text-rose-600 transition-all hover:bg-rose-100'>
                     Từ chối
@@ -365,14 +446,19 @@ export default function ShopsPage() {
             <div className='border-b border-gray-200 bg-gray-50 px-6 py-4 font-bold text-gray-800'>
               Lý do từ chối hồ sơ
             </div>
-            <div className='space-y-3 p-6'>
+            <div className='max-h-[60vh] space-y-3 overflow-y-auto p-6'>
               {REJECT_REASONS.map((reason) => (
-                <label key={reason} className='flex cursor-pointer items-center gap-3 rounded p-2 hover:bg-gray-50'>
+                <label
+                  key={reason}
+                  className={`flex cursor-pointer items-center gap-3 rounded border p-3 transition-colors ${
+                    rejectReason === reason ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:bg-gray-50'
+                  }`}>
                   <input
                     type='radio'
                     name='rejectReason'
-                    className='h-4 w-4 accent-rose-600'
+                    className='h-4 w-4 accent-blue-600'
                     value={reason}
+                    checked={rejectReason === reason}
                     onChange={(e) => setRejectReason(e.target.value)}
                   />
                   <span className='text-sm text-gray-700'>{reason}</span>
@@ -380,9 +466,9 @@ export default function ShopsPage() {
               ))}
               {rejectReason === 'Lý do khác' && (
                 <textarea
-                  className='mt-2 w-full rounded border border-gray-300 p-3 text-sm outline-none focus:border-[#0f50ac]'
+                  className='mt-2 w-full rounded border border-gray-300 p-3 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                   rows={3}
-                  placeholder='Nhập nội dung...'
+                  placeholder='Nhập lý do từ chối cụ thể...'
                   value={otherReason}
                   onChange={(e) => setOtherReason(e.target.value)}
                 />
@@ -390,14 +476,20 @@ export default function ShopsPage() {
             </div>
             <div className='flex justify-end gap-3 border-t border-gray-200 bg-gray-50 px-6 py-4'>
               <button
-                onClick={() => setShowRejectModal(false)}
+                onClick={() => {
+                  setShowRejectModal(false);
+                  setShopToReject(null);
+                  setRejectReason('');
+                  setOtherReason('');
+                }}
                 className='cursor-pointer px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-700'>
                 Hủy
               </button>
               <button
                 onClick={handleRejectShop}
-                className='cursor-pointer rounded-lg bg-blue-600 px-6 py-2 text-sm font-bold text-white hover:bg-blue-800'>
-                Xác nhận
+                className='cursor-pointer rounded-lg bg-blue-600 px-6 py-2 text-sm font-bold text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:bg-gray-400'
+                disabled={!rejectReason || (rejectReason === 'Lý do khác' && !otherReason.trim())}>
+                Xác nhận từ chối
               </button>
             </div>
           </div>
@@ -406,6 +498,7 @@ export default function ShopsPage() {
     </div>
   );
 }
+
 /** --- ATOMIC COMPONENTS --- **/
 
 const InfoRow = ({ label, value, icon, isTruncate }: any) => (

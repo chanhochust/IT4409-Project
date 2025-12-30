@@ -1,35 +1,71 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
-import { Users, Store, Clock, TrendingUp, Settings } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Users, Store, Clock, TrendingUp, Settings, Loader2 } from 'lucide-react';
 
 export default function AdminDashboard() {
+  const [data, setData] = useState({
+    totalUsers: 0,
+    activeShops: 0,
+    pendingShops: 0,
+    revenue: '128M', // Doanh thu tạm thời để tĩnh hoặc lấy từ API khác
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch dữ liệu từ các API Admin để lấy con số thực tế
+  useEffect(() => {
+    const fetchStats = async () => {
+      setIsLoading(true);
+      try {
+        // Gọi song song các API để tối ưu tốc độ
+        const [usersRes, shopsRes] = await Promise.all([fetch('/api/admin/users'), fetch('/api/admin/shops')]);
+
+        const users = await usersRes.json();
+        const shops = await shopsRes.json();
+
+        if (Array.isArray(users) && Array.isArray(shops)) {
+          setData({
+            totalUsers: users.length,
+            activeShops: shops.filter((s: any) => s.status === 'active').length,
+            pendingShops: shops.filter((s: any) => s.status === 'pending').length,
+            revenue: '128M',
+          });
+        }
+      } catch (error) {
+        console.error('Lỗi khi đồng bộ số liệu Dashboard:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
   const stats = [
     {
       label: 'Tổng người dùng',
-      value: '4',
+      value: data.totalUsers,
       icon: Users,
       color: 'bg-blue-500',
       change: '+12%',
     },
     {
       label: 'Shop đang hoạt động',
-      value: '1',
+      value: data.activeShops,
       icon: Store,
       color: 'bg-green-500',
       change: '+8%',
     },
     {
       label: 'Chờ duyệt shop',
-      value: '1',
+      value: data.pendingShops,
       icon: Clock,
       color: 'bg-orange-500',
-      change: 'Mới',
+      change: data.pendingShops > 0 ? 'Mới' : 'Trống',
     },
     {
       label: 'Doanh thu tháng',
-      value: '128M',
+      value: data.revenue,
       icon: TrendingUp,
       color: 'bg-purple-500',
       change: '+25%',
@@ -47,8 +83,15 @@ export default function AdminDashboard() {
             <div className='flex items-center justify-between'>
               <div>
                 <p className='mb-1 text-sm text-gray-600'>{stat.label}</p>
-                <p className='text-3xl font-bold text-gray-800'>{stat.value}</p>
-                <p className='mt-2 text-sm font-medium text-green-600'>{stat.change}</p>
+                {isLoading ? (
+                  <div className='h-9 w-12 animate-pulse rounded bg-gray-50'></div>
+                ) : (
+                  <p className='text-3xl font-bold text-gray-800'>{stat.value}</p>
+                )}
+                <p
+                  className={`mt-2 text-sm font-medium ${stat.label === 'Chờ duyệt shop' && data.pendingShops > 0 ? 'text-orange-500' : 'text-green-600'}`}>
+                  {stat.change}
+                </p>
               </div>
               <div className={`${stat.color} rounded-lg p-4`}>
                 <stat.icon className='h-8 w-8 text-white' />
@@ -62,35 +105,35 @@ export default function AdminDashboard() {
       <div className='rounded-xl border border-gray-100 bg-white p-6 shadow-sm'>
         <h2 className='mb-4 text-xl font-bold text-gray-800'>Thao tác nhanh</h2>
         <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
-          <Link
+          <a
             href='/admin/shops'
-            className='flex items-center gap-3 rounded-lg border border-orange-200 bg-orange-50 p-4 transition-colors hover:bg-orange-100'>
+            className='flex items-center gap-3 rounded-lg border border-orange-200 bg-orange-50 p-4 no-underline transition-colors hover:bg-orange-100'>
             <Clock className='h-6 w-6 text-orange-600' />
             <div className='text-left'>
               <p className='font-semibold text-gray-800'>Duyệt Shop</p>
-              <p className='text-sm text-gray-600'>1 shop chờ xét duyệt</p>
+              <p className='text-sm text-gray-600'>{isLoading ? '...' : `${data.pendingShops} shop chờ xét duyệt`}</p>
             </div>
-          </Link>
+          </a>
 
-          <Link
+          <a
             href='/admin/users'
-            className='flex items-center gap-3 rounded-lg border border-blue-200 bg-blue-50 p-4 transition-colors hover:bg-blue-100'>
+            className='flex items-center gap-3 rounded-lg border border-blue-200 bg-blue-50 p-4 no-underline transition-colors hover:bg-blue-100'>
             <Users className='h-6 w-6 text-blue-600' />
             <div className='text-left'>
               <p className='font-semibold text-gray-800'>Quản lý Người dùng</p>
-              <p className='text-sm text-gray-600'>4 người dùng</p>
+              <p className='text-sm text-gray-600'>{isLoading ? '...' : `${data.totalUsers} người dùng`}</p>
             </div>
-          </Link>
+          </a>
 
-          <Link
+          <a
             href='/admin/settings'
-            className='flex items-center gap-3 rounded-lg border border-purple-200 bg-purple-50 p-4 transition-colors hover:bg-purple-100'>
+            className='flex items-center gap-3 rounded-lg border border-purple-200 bg-purple-50 p-4 no-underline transition-colors hover:bg-purple-100'>
             <Settings className='h-6 w-6 text-purple-600' />
             <div className='text-left'>
               <p className='font-semibold text-gray-800'>Cấu hình sàn</p>
               <p className='text-sm text-gray-600'>Điều chỉnh hệ thống</p>
             </div>
-          </Link>
+          </a>
         </div>
       </div>
 
