@@ -43,7 +43,7 @@ export default function App() {
                   </div>
                   <button
                     type='button'
-                    className='absolute -bottom-2 -right-2 cursor-pointer rounded-xl bg-blue-600 p-2.5 text-white shadow-lg transition-all hover:bg-blue-700 active:scale-90'>
+                    className='absolute -bottom-2 -right-2 cursor-pointer rounded-xl bg-sky-600 p-2.5 text-white shadow-lg transition-all hover:bg-blue-700 active:scale-90'>
                     <FaCamera size={14} />
                   </button>
                 </div>
@@ -55,7 +55,7 @@ export default function App() {
                     <input
                       type='text'
                       defaultValue='MiniShop'
-                      className='w-full rounded-xl border-none bg-slate-50 p-3 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-500'
+                      className='w-full rounded-xl border-none bg-slate-50 p-3 text-sm font-bold text-slate-700 outline-none focus:ring-1 focus:ring-blue-500'
                     />
                   </div>
                   <div>
@@ -65,7 +65,7 @@ export default function App() {
                     <textarea
                       rows={3}
                       defaultValue='Chuyên cung cấp các sản phẩm thời trang nam nữ cao cấp, cam kết chất lượng 100%.'
-                      className='w-full resize-none rounded-xl border-none bg-slate-50 p-3 text-sm font-medium text-slate-700 outline-none focus:ring-2 focus:ring-blue-500'
+                      className='w-full resize-none rounded-xl border-none bg-slate-50 p-3 text-sm font-medium text-slate-700 outline-none focus:ring-1 focus:ring-blue-500'
                     />
                   </div>
                 </div>
@@ -79,7 +79,7 @@ export default function App() {
                   <input
                     type='email'
                     defaultValue='support@minishop.vn'
-                    className='w-full rounded-xl border-none bg-slate-50 p-3 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-500'
+                    className='w-full rounded-xl border-none bg-slate-50 p-3 text-sm font-bold text-slate-700 outline-none focus:ring-1 focus:ring-blue-500'
                   />
                 </div>
                 <div>
@@ -89,7 +89,7 @@ export default function App() {
                   <input
                     type='tel'
                     defaultValue='0988 123 456'
-                    className='w-full rounded-xl border-none bg-slate-50 p-3 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-500'
+                    className='w-full rounded-xl border-none bg-slate-50 p-3 text-sm font-bold text-slate-700 outline-none focus:ring-1 focus:ring-blue-500'
                   />
                 </div>
               </div>
@@ -100,7 +100,7 @@ export default function App() {
           {activeTab === 'address' && (
             <div className='animate-in slide-in-from-bottom-2 space-y-8 duration-300'>
               <div className='flex items-start gap-3 rounded-2xl border border-blue-100 bg-blue-50 p-4'>
-                <div className='mt-0.5 text-blue-600'>
+                <div className='mt-0.5 text-sky-700'>
                   <FaMapMarkerAlt />
                 </div>
                 <p className='text-xs font-medium leading-relaxed text-blue-800'>
@@ -116,14 +116,14 @@ export default function App() {
                   <input
                     type='text'
                     defaultValue='Nguyễn Văn Admin'
-                    className='w-full rounded-xl border-none bg-slate-50 p-3 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-500'
+                    className='w-full rounded-xl border-none bg-slate-50 p-3 text-sm font-bold text-slate-700 outline-none focus:ring-1 focus:ring-blue-500'
                   />
                 </div>
                 <div>
                   <label className='mb-2 block text-[11px] font-black uppercase tracking-widest text-slate-500'>
                     Tỉnh / Thành phố
                   </label>
-                  <select className='w-full cursor-pointer rounded-xl border-none bg-slate-50 p-3 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-500'>
+                  <select className='w-full cursor-pointer rounded-xl border-none bg-slate-50 p-3 text-sm font-bold text-slate-700 outline-none focus:ring-1 focus:ring-blue-500'>
                     <option>TP. Hồ Chí Minh</option>
                     <option>Hà Nội</option>
                     <option>Đà Nẵng</option>
@@ -136,7 +136,7 @@ export default function App() {
                   <input
                     type='text'
                     defaultValue='Quận 1'
-                    className='w-full rounded-xl border-none bg-slate-50 p-3 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-500'
+                    className='w-full rounded-xl border-none bg-slate-50 p-3 text-sm font-bold text-slate-700 outline-none focus:ring-1 focus:ring-blue-500'
                   />
                 </div>
                 <div className='md:col-span-2'>
@@ -146,7 +146,7 @@ export default function App() {
                   <input
                     type='text'
                     defaultValue='123 Lê Lợi, Phường Bến Nghé'
-                    className='w-full rounded-xl border-none bg-slate-50 p-3 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-500'
+                    className='w-full rounded-xl border-none bg-slate-50 p-3 text-sm font-bold text-slate-700 outline-none focus:ring-1 focus:ring-blue-500'
                   />
                 </div>
               </div>
@@ -170,7 +170,7 @@ export default function App() {
                   <input
                     type='text'
                     defaultValue='Vietcombank (VCB)'
-                    className='w-full rounded-xl border-none bg-slate-50 p-3 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-500'
+                    className='w-full rounded-xl border-none bg-slate-50 p-3 text-sm font-bold text-slate-700 outline-none focus:ring-1 focus:ring-blue-500'
                   />
                 </div>
                 <div>
@@ -180,7 +180,7 @@ export default function App() {
                   <input
                     type='text'
                     defaultValue='0071000123456'
-                    className='w-full rounded-xl border-none bg-slate-50 p-3 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-500'
+                    className='w-full rounded-xl border-none bg-slate-50 p-3 text-sm font-bold text-slate-700 outline-none focus:ring-1 focus:ring-blue-500'
                   />
                 </div>
                 <div>
@@ -190,7 +190,7 @@ export default function App() {
                   <input
                     type='text'
                     defaultValue='NGUYEN VAN ADMIN'
-                    className='w-full rounded-xl border-none bg-slate-50 p-3 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-500'
+                    className='w-full rounded-xl border-none bg-slate-50 p-3 text-sm font-bold text-slate-700 outline-none focus:ring-1 focus:ring-blue-500'
                   />
                 </div>
               </div>
@@ -202,7 +202,7 @@ export default function App() {
             <button
               type='submit'
               disabled={isSaving}
-              className='flex cursor-pointer items-center gap-2 rounded-2xl bg-blue-600 px-10 py-3.5 text-sm font-black text-white shadow-lg shadow-blue-900/20 transition-all hover:bg-blue-700 active:scale-95 disabled:bg-slate-300'>
+              className='flex cursor-pointer items-center gap-2 rounded-2xl bg-blue-600 px-10 py-3.5 text-sm font-black text-white transition-all hover:bg-blue-700 active:scale-95 disabled:bg-slate-300'>
               {isSaving ? (
                 'Đang lưu...'
               ) : (
@@ -225,10 +225,10 @@ const TabBtn = ({ id, label, active, set, icon }: any) => {
     <button
       type='button'
       onClick={() => set(id)}
-      className={`flex cursor-pointer items-center gap-2 rounded-xl px-6 py-2.5 text-xs font-black transition-all ${
-        isActive ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-600'
+      className={`flex cursor-pointer items-center gap-2 rounded-xl px-6 py-2.5 text-xs font-extrabold transition-all ${
+        isActive ? 'bg-white text-sky-700 shadow-sm' : 'text-slate-500 hover:text-slate-600'
       }`}>
-      <span className={isActive ? 'text-blue-600' : 'text-slate-400'}>{icon}</span>
+      <span className={isActive ? 'text-sky-700' : 'text-slate-400'}>{icon}</span>
       <span className='uppercase tracking-widest'>{label}</span>
     </button>
   );

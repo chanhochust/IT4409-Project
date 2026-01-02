@@ -32,7 +32,7 @@ const MOCK_ORDERS = [
   {
     id: 'TIBI-99002',
     shopName: 'Thời Trang Hè',
-    status: 'pending',
+    status: 'shipping',
     statusText: 'Đang giao hàng',
     purchaseDate: '2025-12-24',
     totalPrice: 320000,
@@ -224,10 +224,10 @@ export default function OrdersPage() {
                     <button className='mr-4 flex-1 cursor-pointer rounded-xl border border-gray-300 bg-white px-8 py-2.5 text-[13px] font-bold text-gray-500 transition-all hover:bg-gray-50 sm:flex-none'>
                       Xem chi tiết
                     </button>
-                    <button className='mr-4 flex-1 cursor-pointer rounded-xl bg-sky-500 px-10 py-3 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-sky-100 transition-all hover:bg-sky-600 active:scale-95 sm:flex-none'>
+                    <button className='mr-4 flex-1 cursor-pointer rounded-xl bg-sky-500 px-10 py-3 text-[12px] font-black uppercase tracking-widest text-white shadow-lg shadow-sky-100 transition-all hover:bg-sky-600 active:scale-95 sm:flex-none'>
                       Mua Lại
                     </button>
-                    <button className='flex-1 cursor-pointer rounded-xl border-2 border-[#00bcd4]/20 bg-white px-8 py-3 text-xs font-black uppercase text-[#077bbe] transition-all hover:bg-cyan-50 active:scale-95 sm:flex-none'>
+                    <button className='flex-1 cursor-pointer rounded-xl border-2 border-[#00bcd4]/20 bg-white px-8 py-3 text-[13px] font-black text-[#077bbe] transition-all hover:bg-cyan-50 active:scale-95 sm:flex-none'>
                       Đánh Giá
                     </button>
                   </div>
@@ -240,7 +240,7 @@ export default function OrdersPage() {
                 )}
 
                 {order.status === 'cancelled' && (
-                  <button className='flex-1 cursor-pointer rounded-xl bg-sky-500 px-10 py-3 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-sky-100 transition-all hover:bg-sky-600 sm:flex-none'>
+                  <button className='flex-1 cursor-pointer rounded-xl bg-sky-500 px-10 py-3 text-[12px] font-black uppercase tracking-widest text-white shadow-lg shadow-sky-100 transition-all hover:bg-sky-600 sm:flex-none'>
                     Mua Lại
                   </button>
                 )}

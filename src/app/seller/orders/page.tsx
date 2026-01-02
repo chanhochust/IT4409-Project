@@ -117,9 +117,7 @@ export default function SellerOrdersPage() {
               setCurrentPage(1);
             }}
             className={`cursor-pointer border-b-2 px-4 py-3 text-sm font-bold transition-all ${
-              activeTab === tab
-                ? 'border-blue-600 text-blue-600'
-                : 'border-transparent text-gray-400 hover:text-gray-600'
+              activeTab === tab ? 'border-sky-900 text-sky-800' : 'border-transparent text-gray-400 hover:text-gray-600'
             }`}>
             {tab === 'all' ? 'Tất cả đơn' : getStatusInfo(tab as any).label}
           </button>
@@ -132,7 +130,7 @@ export default function SellerOrdersPage() {
           <input
             type='text'
             placeholder='Tìm theo Mã đơn hoặc Tên khách...'
-            className='w-full rounded-lg border border-gray-200 py-2.5 pl-10 pr-4 text-sm text-black transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20'
+            className='w-full rounded-lg border border-gray-200 py-2.5 pl-10 pr-4 text-sm text-black transition-all focus:border-sky-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20'
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
@@ -179,7 +177,7 @@ export default function SellerOrdersPage() {
               ) : (
                 displayedOrders.map((order) => (
                   <tr key={order.id} className='transition-colors hover:bg-gray-50/50'>
-                    <td className='px-6 py-4 text-sm font-bold text-blue-600'>{order.id}</td>
+                    <td className='px-6 py-4 text-sm font-bold text-blue-800'>{order.id}</td>
                     <td className='px-6 py-4 text-sm font-semibold text-gray-700'>{order.receiverName}</td>
                     <td className='px-6 py-4 text-sm font-medium text-gray-500'>{order.date}</td>
                     <td className='px-6 py-4 text-center'>
@@ -246,7 +244,7 @@ export default function SellerOrdersPage() {
               {/* CẬP NHẬT TRẠNG THÁI */}
               <div className='rounded-2xl border border-blue-100 bg-blue-50/50 p-5'>
                 <h3 className='mb-4 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-blue-600'>
-                  <FaCheckCircle className='text-green-500' /> Trạng thái xử lý
+                  <FaCheckCircle className='text-blue-600' /> Trạng thái xử lý
                 </h3>
                 <div className='flex flex-wrap gap-2'>
                   {['pending', 'processing', 'shipped', 'delivered', 'cancelled'].map((val) => (
@@ -278,7 +276,7 @@ export default function SellerOrdersPage() {
                     <p className='mb-1 text-[11px] font-bold uppercase tracking-widest text-gray-400'>
                       Phương thức thanh toán
                     </p>
-                    <p className='text-xs font-semibold text-indigo-600'>{selectedOrder.paymentMethod}</p>
+                    <p className='text-xs font-semibold text-sky-700'>{selectedOrder.paymentMethod}</p>
                   </div>
                 </div>
 
@@ -322,10 +320,10 @@ export default function SellerOrdersPage() {
                     <tbody className='divide-y divide-gray-50'>
                       {selectedOrder.items.map((item, idx) => (
                         <tr key={idx}>
-                          <td className='px-4 py-3 text-xs font-bold text-gray-800'>{item.name}</td>
-                          <td className='px-4 py-3 text-center font-bold text-gray-600'>{item.quantity}</td>
-                          <td className='px-4 py-3 text-right font-medium text-gray-500'>{formatPrice(item.price)}</td>
-                          <td className='px-4 py-3 text-right font-black text-gray-900'>
+                          <td className='px-4 py-3 text-xs font-bold text-gray-700'>{item.name}</td>
+                          <td className='px-4 py-3 text-center font-medium text-gray-700'>{item.quantity}</td>
+                          <td className='px-4 py-3 text-right font-medium text-gray-700'>{formatPrice(item.price)}</td>
+                          <td className='px-4 py-3 text-right font-black text-gray-700'>
                             {formatPrice(item.price * item.quantity)}
                           </td>
                         </tr>
@@ -345,9 +343,9 @@ export default function SellerOrdersPage() {
                   <span className='font-medium text-gray-500'>Phí vận chuyển:</span>
                   <span className='font-bold text-emerald-600'>Miễn phí</span>
                 </div>
-                <div className='mt-2 flex w-full justify-between border-t border-dashed border-gray-200 pt-2 text-lg font-black text-gray-900 md:w-72'>
+                <div className='mt-2 flex w-full justify-between border-t border-dashed border-gray-200 pt-2 text-lg font-extrabold text-gray-900 md:w-72'>
                   <span>Tổng thanh toán:</span>
-                  <span className='text-red-600'>{formatPrice(selectedOrder.total)}</span>
+                  <span className='text-blue-500'>{formatPrice(selectedOrder.total)}</span>
                 </div>
               </div>
             </div>

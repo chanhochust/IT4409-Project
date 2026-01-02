@@ -31,15 +31,39 @@ export default function SignUpPage() {
       return;
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    if (password.length < 6) {
+      setError('Mật khẩu quá ngắn! Vui lòng nhập ít nhất 6 ký tự.');
+      setIsLoading(false);
+      return;
+    }
 
-    console.log('Giả lập đăng ký thành công:', { email, password });
-    setIsLoading(false);
-    setSuccess('Đăng ký thành công! Sẽ chuyển đến trang đăng nhập sau 2 giây...');
+    try {
+      // Gọi API đăng ký đã cấu hình trước đó
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
 
-    setTimeout(() => {
-      router.push('/signin');
-    }, 2000);
+      const data = await response.json();
+      if (response.ok) {
+        setSuccess('Đăng ký thành công! Đang chuyển hướng sang đăng nhập...');
+
+        // Xóa form sau khi thành công
+        setEmail('');
+        setPassword('');
+        setConfirmPassword('');
+        setTimeout(() => {
+          router.push('/auth/signin');
+        }, 2000);
+      } else {
+        setError(data.error || 'Có lỗi xảy ra trong quá trình đăng ký.');
+      }
+    } catch (err) {
+      setError('Không thể kết nối đến máy chủ Tibiki. Vui lòng thử lại!');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

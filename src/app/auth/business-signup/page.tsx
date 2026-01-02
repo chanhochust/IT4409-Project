@@ -1,6 +1,80 @@
-import React from 'react';
+'use client';
 
-export default function BusinessSignupPage({ handleSubmit, isLoading, error, success }: any) {
+import { useState } from 'react';
+import React from 'react';
+import { FaExclamationCircle } from 'react-icons/fa';
+import { useAuth } from 'src/app/context/AuthContext';
+
+export default function BusinessSignupPage() {
+  const { user, isLoggedIn, isLoading: authLoading } = useAuth();
+
+  // States quản lý trạng thái gửi form
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  const onFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError('');
+    setSuccess('');
+
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+
+    console.log('Form data:', data); // Debug: Xem dữ liệu form
+
+    try {
+      const response = await fetch('/api/shop/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...data,
+          userId: user?.id,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setSuccess(result.message);
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 3000);
+      } else {
+        setError(result.error || 'Có lỗi xảy ra, vui lòng thử lại.');
+      }
+    } catch (err) {
+      setError('Không thể kết nối đến hệ thống. Vui lòng kiểm tra lại mạng.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Trạng thái chờ khi đang xác thực session
+  if (authLoading) {
+    return (
+      <div className='flex min-h-screen items-center justify-center bg-white'>
+        <div className='h-10 w-10 animate-spin rounded-full border-4 border-blue-700 border-t-transparent'></div>
+      </div>
+    );
+  }
+
+  // Nếu chưa đăng nhập
+  if (!isLoggedIn) {
+    return (
+      <div className='flex min-h-screen flex-col items-center justify-center bg-[#f4f5f7] p-4 text-center'>
+        <h2 className='text-xl font-bold text-gray-800'>Bạn cần đăng nhập trước</h2>
+        <p className='mt-2 text-gray-500'>Vui lòng đăng nhập tài khoản của bạn để đăng ký bán hàng.</p>
+        <a
+          href='/auth/signin'
+          className='mt-6 rounded-xl bg-blue-700 px-8 py-3 text-[13px] font-bold uppercase tracking-widest text-white hover:bg-sky-800'>
+          Đăng nhập ngay
+        </a>
+      </div>
+    );
+  }
+
   return (
     <div className='flex min-h-screen flex-col items-center justify-center bg-[#f4f5f7] px-4 py-12 font-sans'>
       {/* Header hướng dẫn */}
@@ -9,35 +83,21 @@ export default function BusinessSignupPage({ handleSubmit, isLoading, error, suc
           Đăng ký Bán hàng cùng <span className='text-indigo-600'>Tibiki</span>
         </h1>
         <p className='mt-3 text-gray-600'>
-          Cung cấp thông tin doanh nghiệp của bạn. Sau khi phê duyệt, chúng tôi sẽ gửi tài khoản và mật khẩu truy cập về
-          email đăng ký trong vòng <span className='font-bold text-indigo-700'>24h</span>.
+          Cung cấp thông tin Shop của bạn để trở thành{' '}
+          <span className='font-bold text-indigo-700'>Đối Tác Bán Hàng</span>.
         </p>
       </div>
 
       <form
         className='box-border flex w-full max-w-[750px] flex-col rounded-xl border border-gray-100 bg-white p-10 shadow-lg'
-        onSubmit={handleSubmit}>
+        onSubmit={onFormSubmit}>
         {/* THÔNG BÁO QUY TRÌNH */}
         <div className='mb-10 flex items-start gap-3 border-l-4 border-blue-500 bg-blue-50 p-4'>
-          <div className='mt-0.5 text-blue-500'>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              width='20'
-              height='20'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              strokeWidth='2'
-              strokeLinecap='round'
-              strokeLinejoin='round'>
-              <circle cx='12' cy='12' r='10' />
-              <line x1='12' y1='16' x2='12' y2='12' />
-              <line x1='12' y1='8' x2='12.01' y2='8' />
-            </svg>
+          <div className='mt-0.5 text-blue-800'>
+            <FaExclamationCircle />
           </div>
           <p className='text-sm leading-relaxed text-blue-800'>
-            Bạn không cần thiết lập mật khẩu lúc này. Hệ thống sẽ tự động khởi tạo tài khoản an toàn cho bạn sau khi hồ
-            sơ được kiểm duyệt thành công.
+            Hồ sơ đăng ký sẽ được đội ngũ Tibiki phê duyệt trong vòng 24h.
           </p>
         </div>
 
@@ -51,12 +111,13 @@ export default function BusinessSignupPage({ handleSubmit, isLoading, error, suc
           <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
             <div className='md:col-span-2'>
               <label className='mb-2 block text-sm font-bold text-gray-700' htmlFor='businessName'>
-                Tên Shop (Amazing/Ladada/ShopBee)
+                Tên Shop (Amazing/Ladada/ShopBee) <span className='text-red-500'>*</span>
               </label>
               <input
                 id='businessName'
+                name='businessName'
                 type='text'
-                className='w-full rounded-lg border border-gray-300 p-3 text-black outline-none transition-all focus:ring-2 focus:ring-indigo-500'
+                className='w-full rounded-lg border border-gray-300 p-3 text-black outline-none transition-all focus:ring-1 focus:ring-indigo-500'
                 placeholder='Ví dụ: TikiShop'
                 required
               />
@@ -64,13 +125,15 @@ export default function BusinessSignupPage({ handleSubmit, isLoading, error, suc
 
             <div className='md:col-span-2'>
               <label className='mb-2 block text-sm font-bold text-gray-700' htmlFor='email'>
-                Email đăng ký (Email nhận mật khẩu)
+                Email đăng ký <span className='text-red-500'>*</span>
               </label>
               <input
                 id='email'
+                name='email'
                 type='email'
-                className='w-full rounded-lg border border-gray-300 bg-indigo-50/30 p-3 text-black outline-none transition-all focus:ring-2 focus:ring-indigo-500'
-                placeholder='quanly@business.com'
+                defaultValue={user?.email}
+                className='w-full rounded-lg border border-gray-300 bg-indigo-50/30 p-3 text-black outline-none transition-all focus:ring-1 focus:ring-indigo-500'
+                placeholder='Nhập email của bạn'
                 required
               />
             </div>
@@ -81,8 +144,9 @@ export default function BusinessSignupPage({ handleSubmit, isLoading, error, suc
               </label>
               <input
                 id='taxCode'
+                name='taxCode'
                 type='text'
-                className='w-full rounded-lg border border-gray-300 p-3 text-black outline-none transition-all focus:ring-2 focus:ring-indigo-500'
+                className='w-full rounded-lg border border-gray-300 p-3 text-black outline-none transition-all focus:ring-1 focus:ring-indigo-500'
                 placeholder='Nhập MST để xác minh nhanh hơn'
               />
             </div>
@@ -91,7 +155,10 @@ export default function BusinessSignupPage({ handleSubmit, isLoading, error, suc
               <label className='mb-2 block text-sm font-bold text-gray-700' htmlFor='businessType'>
                 Loại hình kinh doanh
               </label>
-              <select className='w-full cursor-pointer rounded-lg border border-gray-300 bg-white p-3 text-black outline-none transition-all focus:ring-2 focus:ring-indigo-500'>
+              <select
+                id='businessType'
+                name='businessType'
+                className='w-full cursor-pointer rounded-lg border border-gray-300 bg-white p-3 text-black outline-none transition-all focus:ring-1 focus:ring-indigo-500'>
                 <option>Cá nhân / Hộ kinh doanh</option>
                 <option>Công ty TNHH / Cổ phần</option>
                 <option>Thương hiệu Quốc tế</option>
@@ -100,12 +167,14 @@ export default function BusinessSignupPage({ handleSubmit, isLoading, error, suc
 
             <div className='md:col-span-2'>
               <label className='mb-2 block text-sm font-bold text-gray-700' htmlFor='address'>
-                Địa chỉ trụ sở / Kho hàng
+                Địa chỉ trụ sở / Kho hàng <span className='text-red-500'>*</span>
               </label>
               <textarea
                 id='address'
+                name='address'
+                defaultValue={user?.address}
                 rows={2}
-                className='w-full rounded-lg border border-gray-300 p-3 text-black outline-none transition-all focus:ring-2 focus:ring-indigo-500'
+                className='w-full rounded-lg border border-gray-300 p-3 text-black outline-none transition-all focus:ring-1 focus:ring-indigo-500'
                 placeholder='Số nhà, tên đường, Phường/Xã, Quận/Huyện, Tỉnh/Thành phố'
                 required></textarea>
             </div>
@@ -122,24 +191,28 @@ export default function BusinessSignupPage({ handleSubmit, isLoading, error, suc
           <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
             <div>
               <label className='mb-2 block text-sm font-bold text-gray-700' htmlFor='fullName'>
-                Họ và tên
+                Họ và tên <span className='text-red-500'>*</span>
               </label>
               <input
                 id='fullName'
+                name='fullName'
                 type='text'
-                className='w-full rounded-lg border border-gray-300 p-3 text-black outline-none transition-all focus:ring-2 focus:ring-indigo-500'
+                defaultValue={user?.name}
+                className='w-full rounded-lg border border-gray-300 p-3 text-black outline-none transition-all focus:ring-1 focus:ring-indigo-500'
                 placeholder='Tên người liên hệ chính'
                 required
               />
             </div>
             <div>
               <label className='mb-2 block text-sm font-bold text-gray-700' htmlFor='phone'>
-                Số điện thoại
+                Số điện thoại <span className='text-red-500'>*</span>
               </label>
               <input
                 id='phone'
+                name='phone'
                 type='tel'
-                className='w-full rounded-lg border border-gray-300 p-3 text-black outline-none transition-all focus:ring-2 focus:ring-indigo-500'
+                defaultValue={user?.phone}
+                className='w-full rounded-lg border border-gray-300 p-3 text-black outline-none transition-all focus:ring-1 focus:ring-indigo-500'
                 placeholder='Để chúng tôi liên hệ xác minh'
                 required
               />
@@ -174,8 +247,8 @@ export default function BusinessSignupPage({ handleSubmit, isLoading, error, suc
         <button
           type='submit'
           className='cursor-pointer rounded-xl bg-indigo-700 py-4 text-lg font-bold text-white shadow-xl shadow-indigo-100 transition-all hover:bg-indigo-800 active:scale-[0.98] disabled:bg-gray-400'
-          disabled={isLoading}>
-          {isLoading ? 'Đang gửi hồ sơ...' : 'Gửi yêu cầu xét duyệt'}
+          disabled={isSubmitting}>
+          {isSubmitting ? 'Đang gửi hồ sơ...' : 'Gửi yêu cầu xét duyệt'}
         </button>
       </form>
 

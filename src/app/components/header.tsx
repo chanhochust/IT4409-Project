@@ -32,10 +32,34 @@ export function Header() {
       router.push('/auth/signin');
       return;
     }
-    switch (user?.shopStatus) {
-      case 'active': router.push('seller/dashboard'); break;
-      case 'pending': alert('Hồ sơ đang kiểm duyệt...'); break;
-      default: router.push('/auth/business-signup'); break;
+
+    // Kiểm tra trạng thái cửa hàng của Customer
+    const shopStatus = user?.shopStatus;
+
+    switch (shopStatus) {
+      case 'active':
+        // Shop đã được duyệt -> Cho vào Dashboard
+        router.push('/seller/dashboard'); // ✅ Đã thêm dấu /
+        break;
+
+      case 'pending':
+        // Shop đang chờ duyệt -> Hiển thị thông báo
+        alert('Hồ sơ đăng ký bán hàng của bạn đang trong quá trình kiểm duyệt. Vui lòng đợi trong 24h!');
+        // Có thể redirect về trang profile để xem trạng thái
+        // router.push('/account/profile');
+        break;
+
+      case 'rejected':
+        // Shop bị từ chối -> Cho phép gửi lại hồ sơ
+        if (confirm('Hồ sơ của bạn đã bị từ chối. Bạn có muốn gửi lại hồ sơ không?')) {
+          router.push('/auth/business-signup');
+        }
+        break;
+
+      default:
+        // Trường hợp 'none' hoặc chưa có shopStatus -> Redirect đăng ký
+        router.push('/auth/business-signup');
+        break;
     }
   };
 
