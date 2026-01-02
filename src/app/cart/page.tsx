@@ -2,12 +2,13 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { FaSpinner, FaArrowRight } from 'react-icons/fa';
+import { FaSpinner, FaArrowRight, FaTrashAlt } from 'react-icons/fa';
 import { useCartStore } from '@/store/cart_actions';
 import { useRouter } from 'next/navigation';
+
+const GRID_LAYOUT = "grid grid-cols-[50px_1fr_150px_150px_150px_100px] items-center gap-4";
 
 function EmptyCart() {
   useEffect(() => {
@@ -60,7 +61,7 @@ function HasCart() {
   const { increase, decrease, remove } = useCartStore();
   const cart = useCartStore((s) => s.cart);
   const [selected, setSelected] = useState<string[]>([]);
-  const router = useRouter(); // Next.js router
+  const router = useRouter();
 
   const toggleItem = (id: string) => {
     setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
@@ -79,89 +80,113 @@ function HasCart() {
     .reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
-    <div className='flex justify-center'>
-      <div className='m-2.5 w-[1200px] rounded-xl bg-white p-6 shadow-[0_2px_10px_rgba(0,0,0,0.05)]'>
-        <h2 className='mb-4 text-[22px] font-semibold'>Giỏ hàng của bạn</h2>
+    <div className='flex justify-center bg-[#f5f5fa] min-h-screen py-8'>
+      <div className='w-full max-w-[1200px] px-4'>
+        <div className='bg-white rounded-xl p-6 shadow-sm'>
+          <h2 className='mb-6 text-xl font-bold text-gray-800'>Giỏ hàng của bạn</h2>
 
-        {/* Header */}
-        <div className='grid grid-cols-[1fr_6fr_2fr_2fr_2fr_2fr] border-b-2 border-[#eee] pb-2.5 text-center font-semibold text-[#555]'>
-          <div className='flex items-center gap-1.5'>
-            <input
-              type='checkbox'
-              checked={selected.length === cart.length}
-              onChange={toggleAll}
-              className='h-[18px] w-[18px]'
-            />
-          </div>
-          <div>Sản phẩm</div>
-          <div>Đơn giá</div>
-          <div>Số lượng</div>
-          <div>Số tiền</div>
-          <div>Thao tác</div>
-        </div>
-
-        {/* Item */}
-        <div>
-          {cart.map((item) => (
-            <div className='grid grid-cols-[1fr_6fr_2fr_2fr_2fr_2fr] border-b border-[#eee] py-4' key={item.id}>
-              <div className='flex items-center justify-start'>
-                <input
-                  type='checkbox'
-                  checked={selected.includes(item.id)}
-                  onChange={() => toggleItem(item.id)}
-                  className='h-[18px] w-[18px]'
-                />
-              </div>
-
-              <div className='flex items-center justify-center gap-[30px]'>
-                <Image src={item.image} width={90} height={90} alt={item.name} />
-                <h3>{item.name}</h3>
-              </div>
-
-              <div className='flex items-center justify-center font-medium text-[#222]'>
-                {item.price.toLocaleString()}₫
-              </div>
-
-              <div className='flex items-center justify-center overflow-hidden'>
-                <button
-                  onClick={() => decrease(item.id)}
-                  className='cursor-pointer border border-gray-300 bg-gray-50 px-3 py-1.5 hover:bg-gray-200'>
-                  –
-                </button>
-                <span className='border border-gray-300 px-3 py-1.5'>{item.quantity}</span>
-                <button
-                  onClick={() => increase(item.id)}
-                  className='cursor-pointer border border-gray-300 bg-gray-50 px-3 py-1.5 hover:bg-gray-200'>
-                  +
-                </button>
-              </div>
-
-              <div className='flex items-center justify-center text-[15px] font-semibold text-[#d70018]'>
-                {(item.quantity * item.price).toLocaleString()}₫
-              </div>
-
-              <div className='flex items-center justify-center'>
-                <button
-                  onClick={() => remove(item.id)}
-                  className='cursor-pointer rounded-md border-0 bg-[#ffe5e5] px-3 py-1.5 text-[#d70018]'>
-                  Xóa
-                </button>
-              </div>
+          {/* Header - Sử dụng GRID_LAYOUT */}
+          <div className={`${GRID_LAYOUT} border-b border-gray-200 pb-4 text-sm font-semibold text-gray-500 uppercase tracking-wider`}>
+            <div className='flex justify-center'>
+              <input
+                type='checkbox'
+                checked={selected.length === cart.length && cart.length > 0}
+                onChange={toggleAll}
+                className='h-5 w-5 cursor-pointer'
+              />
             </div>
-          ))}
-        </div>
+            <div className='text-left ml-4'>Sản phẩm</div>
+            <div className='text-center'>Đơn giá</div>
+            <div className='text-center'>Số lượng</div>
+            <div className='text-center'>Số tiền</div>
+            <div className='text-center'>Thao tác</div>
+          </div>
 
-        {/* Payment */}
-        <div className='mt-6 flex items-center justify-between'>
-          <span className='text-[20px] font-semibold text-[#d70018]'>
-            Tổng cộng ({selected.length} sản phẩm): {selectedTotal.toLocaleString()}₫
-          </span>
-          <button
-            className='cursor-pointer rounded-md border-0 bg-[#d70018] px-5 py-2.5 text-[16px] font-semibold text-white disabled:opacity-50'
-            disabled={selected.length === 0}
-            onClick={() => router.push('/checkout?items=' + JSON.stringify(selected))}>
-            Thanh toán
-          </button>
+          {/* Items List */}
+          <div className='divide-y divide-gray-100'>
+            {cart.map((item) => (
+              <div className={`${GRID_LAYOUT} py-5 hover:bg-gray-50 transition-colors`} key={item.id}>
+                {/* Checkbox */}
+                <div className='flex justify-center'>
+                  <input
+                    type='checkbox'
+                    checked={selected.includes(item.id)}
+                    onChange={() => toggleItem(item.id)}
+                    className='h-5 w-5 cursor-pointer'
+                  />
+                </div>
+
+                {/* Sản phẩm */}
+                <div className='flex items-center gap-4'>
+                  <div className='relative h-20 w-20 shrink-0 rounded-md overflow-hidden'>
+                    <Image 
+                      src={item.image} 
+                      alt={item.name} 
+                      fill 
+                      className='object-contain p-1'
+                    />
+                  </div>
+                  <Link href={`/products/${item.id}`} className='hover:text-red-600 transition-colors'>
+                    <h3 className='font-medium line-clamp-2'>{item.name}</h3>
+                  </Link>
+                </div>
+
+                {/* Đơn giá */}
+                <div className='text-center font-medium text-gray-700'>
+                  {item.price.toLocaleString()}₫
+                </div>
+
+                {/* Số lượng */}
+                <div className='flex justify-center'>
+                  <div className='flex items-center border border-gray-300 rounded-md overflow-hidden'>
+                    <button
+                      onClick={() => decrease(item.id)}
+                      className='px-3 py-1 bg-gray-50 hover:bg-gray-200 text-lg transition-colors border-r border-gray-300'>
+                      –
+                    </button>
+                    <span className='px-4 py-1 bg-white text-sm font-semibold'>{item.quantity}</span>
+                    <button
+                      onClick={() => increase(item.id)}
+                      className='px-3 py-1 bg-gray-50 hover:bg-gray-200 text-lg transition-colors border-l border-gray-300'>
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                {/* Tổng tiền item */}
+                <div className='text-center font-bold text-red-600'>
+                  {(item.quantity * item.price).toLocaleString()}₫
+                </div>
+
+                {/* Thao tác */}
+                <div className='flex justify-center'>
+                  <button
+                    onClick={() => remove(item.id)}
+                    className='p-2 text-gray-400 hover:text-red-600 transition-colors'
+                    title="Xóa sản phẩm"
+                  >
+                    <FaTrashAlt size={18} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Footer Thanh toán */}
+          <div className='mt-8 flex flex-col md:flex-row items-center justify-between border-t border-gray-200 pt-6 gap-4'>
+            <div className='text-lg'>
+              Tổng cộng ({selected.length} sản phẩm): 
+              <span className='ml-2 text-2xl font-bold text-red-600'>
+                {selectedTotal.toLocaleString()}₫
+              </span>
+            </div>
+            <button
+              className='w-full md:w-auto px-10 py-3 bg-red-600 text-white rounded-lg font-bold text-lg hover:bg-red-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md active:scale-95'
+              disabled={selected.length === 0}
+              onClick={() => router.push('/checkout?items=' + JSON.stringify(selected))}>
+              Tiến hành thanh toán
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -19,6 +19,7 @@ const ProductList: FC<ProductListProps> = ({ products }) => {
           price={p.price}
           oldPrice={p.oldPrice}
           rating={p.rating}
+          category={p.category} // <-- Thêm dòng này để truyền category xuống
         />
       ))}
     </>

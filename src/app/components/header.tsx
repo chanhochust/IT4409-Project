@@ -5,194 +5,179 @@ import { useAuth } from '../context/AuthContext';
 import { UserMenu } from './UserMenu';
 import { useRouter } from 'next/navigation';
 import { NotiDropdown } from './NotiDropdown';
-import { FaGlobe, FaMoon, FaSearch, FaShoppingCart, FaUser } from 'react-icons/fa';
+import { FaBars, FaTimes, FaSearch, FaShoppingCart, FaUser } from 'react-icons/fa';
 import { useCartStore } from '@/store/cart_actions';
 
 export function Header() {
   const router = useRouter();
   const [searchValue, setSearchValue] = useState('');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const cart = useCartStore((state) => state.cart);
+  const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const { isLoggedIn, user, isLoading } = useAuth();
 
   const handleSearch = () => {
     if (!searchValue.trim()) return;
     router.push(`/search?q=${encodeURIComponent(searchValue)}`);
   };
 
-  // cho phép Enter để tìm kiếm
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') handleSearch();
   };
 
-  const cart = useCartStore((state) => state.cart);
-  const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-  const { isLoggedIn, user, isLoading } = useAuth();
   const handleSellerChannelClick = (e: React.MouseEvent) => {
     e.preventDefault();
-
     if (!isLoggedIn) {
       router.push('/auth/signin');
       return;
     }
-
-    // Kiểm tra trạng thái cửa hàng của Customer
     switch (user?.shopStatus) {
-      case 'active':
-        router.push('seller/dashboard');
-        break;
-      case 'pending':
-        alert('Hồ sơ đăng ký bán hàng của bạn đang trong quá trình kiểm duyệt. Vui lòng đợi trong 24h!');
-        break;
-      default:
-        // Mặc định là 'none' hoặc chưa có shop
-        router.push('/auth/business-signup');
-        break;
+      case 'active': router.push('seller/dashboard'); break;
+      case 'pending': alert('Hồ sơ đang kiểm duyệt...'); break;
+      default: router.push('/auth/business-signup'); break;
     }
   };
 
   const renderAuthStatus = () => {
-    if (isLoading) {
-      return (
-        <div
-          className='flex items-center justify-center text-[#555]'
-          style={{ width: '24px', height: '24px' }}
-          aria-label='Đang tải...'></div>
-      );
-    }
-
-    if (isLoggedIn && user) {
-      return <UserMenu user={user} />;
-    }
-
+    if (isLoading) return <div className="w-6 h-6" />;
+    if (isLoggedIn && user) return <UserMenu user={user} />;
     return (
-      <Link
-        href='/auth/signin'
-        className='flex items-center justify-center text-[24px] text-[#555] hover:text-sky-500'
-        aria-label='Tài khoản'>
+      <Link href='/auth/signin' className='text-[24px] text-[#555] hover:text-sky-500 transition-colors'>
         <FaUser />
       </Link>
     );
   };
 
-  return (
-    <header>
-      {/* Header Top */}
-      <div className='flex items-center justify-between border-b border-[#e6e6e6] bg-[#f8f8f8] px-[8%] py-2 text-[1em] text-[#555]'>
-        <div className='flex items-center'>
-          <img src='/freeship.png' alt='Miễn phí ship logo' className='mr-2 h-6' />
-          <p className='m-0 text-[#555]'>
-            <b className='mr-1 text-sky-700'>Miễn phí ship</b>đơn chỉ từ 45k
-          </p>
-        </div>
-        <div className='flex items-center gap-3.5'>
-          <div
-            className='flex cursor-pointer items-center justify-center border-0 bg-transparent text-[24px] text-[#555] hover:text-sky-500'
-            aria-label='Xem thông báo'>
-            <NotiDropdown />
-          </div>
-          <button
-            onClick={handleSellerChannelClick}
-            className='flex cursor-pointer items-center gap-0.5 text-[1em] text-[#555] hover:text-sky-600'>
-            Kênh người bán
-          </button>
-        </div>
-      </div>
+  const navLinks = [
+    { name: 'Trang chủ', href: '/' },
+    { name: 'Sản phẩm', href: '/products' },
+    { name: 'Khuyến mãi', href: '/sale' },
+    { name: 'Giới thiệu', href: '/about' },
+    { name: 'Liên hệ', href: '/contact' },
+    { name: 'Hỗ trợ', href: '/faq' },
+  ];
 
-      {/* Header Main */}
-      <div className='border-b border-[#ddd] bg-white'>
-        <div className='mx-auto my-5 flex max-w-full items-center justify-between px-5'>
-          {/* Logo */}
-          <div className='mr-[60px]'>
-            <Link href='/'>
-              <img src='/assets/images/logo.png' alt='Logo' className='h-[60px]' />
+  return (
+    <header className="w-full bg-white border-b border-[#ddd] sticky top-0 z-50">
+      {/* KHỐI HEADER CHÍNH (Gộp Top + Main) */}
+      <div className="mx-auto max-w-[1440px] px-4 py-4 md:px-[8%]">
+        <div className="flex items-center justify-between gap-4 md:gap-10">
+          
+          {/* 1. Nhóm Logo & Menu Mobile */}
+          <div className="flex items-center gap-4 shrink-0">
+            <button className="md:hidden text-2xl text-[#333]" onClick={() => setIsMenuOpen(true)}>
+              <FaBars />
+            </button>
+            <Link href="/" className="shrink-0">
+              <img src="/assets/images/logo.png" alt="Logo" className="h-8 md:h-[55px]" />
             </Link>
           </div>
 
-          {/* Search Bar */}
-          <div className='mx-5 flex flex-1 scale-90 items-center'>
-            <label htmlFor='search' className='sr-only'></label>
+          {/* 2. Thanh Tìm Kiếm (Nằm giữa) */}
+          <div className="hidden md:flex flex-1 items-center">
             <input
-              type='text'
-              id='search'
-              placeholder='Tìm kiếm sản phẩm...'
+              type="text"
+              placeholder="Tìm kiếm sản phẩm..."
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               onKeyDown={onKeyDown}
-              className='h-[45px] w-full rounded-l-[10px] border border-[#ccc] px-4 text-[18px] focus:border-[rgb(25,122,173)] focus:outline-none'
+              className="h-[45px] w-full rounded-l-[10px] border border-[#ccc] px-4 text-[16px] focus:border-[rgb(25,122,173)] outline-none"
             />
             <button
-              id='btnSearch'
-              aria-label='Tìm kiếm'
               onClick={handleSearch}
-              className='flex h-[45px] items-center justify-center rounded-r-[10px] border border-[#ccc] bg-sky-500 px-4 text-white hover:bg-sky-700'>
+              className="flex h-[45px] items-center justify-center rounded-r-[10px] border border-[#ccc] bg-sky-500 px-5 text-white hover:bg-sky-700 transition-colors"
+            >
               <FaSearch />
             </button>
           </div>
 
-          {/* Các nút biểu tượng */}
-          <div className='flex items-center gap-8'>
-            <Link
-              href='/cart'
-              className='relative flex items-center text-[24px] text-[#333] no-underline'
-              aria-label='Giỏ hàng'>
-              <FaShoppingCart className='hover:text-sky-500' />
-              <span className='absolute -right-2.5 -top-1.5 rounded-full bg-red-600 px-1.5 py-0.5 text-[11px] font-bold text-white'>
-                {totalQuantity}
-              </span>
+          {/* 3. Nhóm Icon & Actions */}
+          <div className="flex items-center gap-5 md:gap-7 shrink-0">
+            {/* Nút Kênh người bán chuyển xuống đây */}
+            <button
+              onClick={handleSellerChannelClick}
+              className="hidden lg:block text-[15px] font-semibold text-[#555] hover:text-sky-600 transition-colors"
+            >
+              Kênh người bán
+            </button>
+
+            {/* Thông báo */}
+            <div className="text-[24px] text-[#333] hover:text-sky-500 transition-colors cursor-pointer">
+              <NotiDropdown />
+            </div>
+
+            {/* Giỏ hàng */}
+            <Link href="/cart" className="relative flex items-center text-[24px] text-[#333] hover:text-sky-500 bg-transparent p-2 transition-all -right-2">
+              <FaShoppingCart />
+              {totalQuantity > 0 && (
+                <span className='absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white bg-red-500 text-[8px] font-black text-white shadow-sm'>
+                  {totalQuantity}
+                </span>
+              )}
             </Link>
-            {renderAuthStatus()}
+
+            {/* Tài khoản */}
+            <div className="flex items-center">
+              {renderAuthStatus()}
+            </div>
+          </div>
+        </div>
+
+        {/* Thanh Search cho Mobile */}
+        <div className="md:hidden mt-2 pb-1">
+          <div className="flex items-center w-full">
+            <input
+              type="text"
+              placeholder="Tìm kiếm..."
+              className="h-10 flex-1 rounded-l-lg border border-[#ccc] px-4 text-sm outline-none"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onKeyDown={onKeyDown}
+            />
+            <button onClick={handleSearch} className="bg-sky-500 text-white px-4 h-10 rounded-r-lg">
+              <FaSearch />
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Navigation */}
-      <nav>
-        <ul
-          id='menuItems'
-          className='m-0 flex list-none flex-row items-center justify-center gap-[70px] bg-[rgba(200,236,255,0.4)] font-sans'>
-          <li>
-            <Link
-              className='block px-5 py-[15px] font-semibold text-[rgb(1,62,95)] no-underline hover:bg-[rgb(163,218,248)]'
-              href='/'>
-              Trang chủ
-            </Link>
-          </li>
-          <li>
-            <Link
-              className='block px-5 py-[15px] font-semibold text-[rgb(1,62,95)] no-underline hover:bg-[rgb(163,218,248)]'
-              href='/products'>
-              Sản phẩm
-            </Link>
-          </li>
-          <li>
-            <Link
-              className='block px-5 py-[15px] font-semibold text-[rgb(1,62,95)] no-underline hover:bg-[rgb(163,218,248)]'
-              href='/sale'>
-              Khuyến mãi
-            </Link>
-          </li>
-          <li>
-            <Link
-              className='block px-5 py-[15px] font-semibold text-[rgb(1,62,95)] no-underline hover:bg-[rgb(163,218,248)]'
-              href='/about'>
-              Giới thiệu
-            </Link>
-          </li>
-          <li>
-            <Link
-              className='block px-5 py-[15px] font-semibold text-[rgb(1,62,95)] no-underline hover:bg-[rgb(163,218,248)]'
-              href='/contact'>
-              Liên hệ
-            </Link>
-          </li>
-          <li>
-            <Link
-              className='block px-5 py-[15px] font-semibold text-[rgb(1,62,95)] no-underline hover:bg-[rgb(163,218,248)]'
-              href='/faq'>
-              Hỗ trợ
-            </Link>
-          </li>
+      {/* 3. Navigation Desktop */}
+      <nav className="hidden md:block">
+        <ul className='m-0 flex list-none flex-row items-center justify-center gap-4 lg:gap-[60px] bg-[rgba(200,236,255,0.4)]'>
+          {navLinks.map((link) => (
+            <li key={link.name}>
+              <Link
+                className='block px-5 py-[15px] font-semibold text-[rgb(1,62,95)] no-underline hover:bg-[rgb(163,218,248)] transition-all'
+                href={link.href}>
+                {link.name}
+              </Link>
+            </li>
+          ))}
         </ul>
       </nav>
+
+      {/* Sidebar Mobile giữ nguyên... */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-[100] flex">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsMenuOpen(false)} />
+          <div className="relative w-72 bg-white h-full shadow-2xl flex flex-col animate-in slide-in-from-left duration-300">
+            <div className="p-5 border-b flex justify-between items-center text-sky-700 font-bold">
+               <span>DANH MỤC</span>
+               <FaTimes className="cursor-pointer text-xl" onClick={() => setIsMenuOpen(false)} />
+            </div>
+            <ul className="flex flex-col list-none p-0 overflow-y-auto">
+               {navLinks.map((link) => (
+                 <li key={link.name} className="border-b">
+                   <Link href={link.href} className="block px-6 py-4 font-semibold text-[#333]" onClick={() => setIsMenuOpen(false)}>
+                     {link.name}
+                   </Link>
+                 </li>
+               ))}
+            </ul>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
