@@ -50,9 +50,9 @@ export function NotiDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState(MOCK_NOTIFICATIONS);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const unreadCount = notifications.filter((n) => n.isUnread).length; // Chưa đọc
+  const unreadCount = notifications.filter((n) => n.isUnread).length;
 
-  // Nếu click chuột ngoài vùng thông báo thì đóng
+  // Click outside -> close
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (isOpen && dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -71,6 +71,7 @@ export function NotiDropdown() {
 
   return (
     <div className='relative inline-block' ref={dropdownRef}>
+      {/* Bell button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`relative flex cursor-pointer items-center justify-center rounded-full border-none bg-transparent p-2 transition-all ${
@@ -84,8 +85,10 @@ export function NotiDropdown() {
         )}
       </button>
 
+      {/* Dropdown */}
       {isOpen && (
-        <div className='animate-in fade-in slide-in-from-top-2 absolute right-0 top-full z-[110] mt-3 w-[360px] overflow-hidden rounded-2xl border border-[#eee] bg-white shadow-[0_15px_40px_rgba(0,0,0,0.15)] duration-300'>
+        <div className='animate-in fade-in slide-in-from-top-2 absolute right-0 top-full z-[110] mt-3 w-[360px] overflow-hidden rounded-2xl border border-[#eee] bg-white shadow-[0_15px_40px_rgba(0,0,0,0.15)] duration-300 max-sm:fixed max-sm:inset-x-0 max-sm:top-16 max-sm:mt-0 max-sm:w-full max-sm:rounded-none'>
+          {/* Header */}
           <div className='flex items-center justify-between border-b border-[#f0f0f0] bg-[#fcfcfd] px-5 py-4'>
             <h3 className='text-sm font-bold tracking-widest text-gray-800'>Thông báo mới</h3>
             {unreadCount > 0 && (
@@ -100,11 +103,14 @@ export function NotiDropdown() {
             )}
           </div>
 
-          <div className='scrollbar-thin max-h-[400px] overflow-y-auto'>
+          {/* List */}
+          <div className='scrollbar-thin max-h-[400px] overflow-y-auto max-sm:max-h-[65vh]'>
             {notifications.map((notif) => (
               <div
                 key={notif.id}
-                className={`flex cursor-pointer gap-4 border-b border-gray-100 p-4 transition-colors last:border-none hover:bg-sky-50 ${notif.isUnread ? 'bg-cyan-100/30' : ''}`}>
+                className={`flex cursor-pointer gap-4 border-b border-gray-100 p-4 transition-colors last:border-none hover:bg-sky-50 ${
+                  notif.isUnread ? 'bg-cyan-100/30' : ''
+                }`}>
                 <div
                   className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
                     notif.type === 'order'
@@ -117,12 +123,13 @@ export function NotiDropdown() {
                   }`}>
                   {notif.type === 'order' && <FaShoppingBasket />}
                   {notif.type === 'voucher' && <FaGift />}
-                  {notif.type === 'product' && <FaTag />}
-                  {notif.type === 'offer' && <FaTag />}
+                  {(notif.type === 'product' || notif.type === 'offer') && <FaTag />}
                 </div>
                 <div className='min-w-0 flex-1'>
                   <p
-                    className={`truncate text-[13px] leading-snug ${notif.isUnread ? 'font-bold text-gray-900' : 'text-gray-600'}`}>
+                    className={`truncate text-[13px] leading-snug ${
+                      notif.isUnread ? 'font-bold text-gray-900' : 'text-gray-600'
+                    }`}>
                     {notif.title}
                   </p>
                   <p className='mt-1 line-clamp-2 text-[11px] leading-relaxed text-gray-400'>{notif.desc}</p>
@@ -132,6 +139,7 @@ export function NotiDropdown() {
             ))}
           </div>
 
+          {/* Footer */}
           <div className='border-t border-gray-100 p-3 text-center'>
             <Link
               href='/account/notifications'

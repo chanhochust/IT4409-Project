@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { FaShoppingCart, FaTag, FaGift, FaCheckDouble, FaTrash } from 'react-icons/fa';
+import { ShoppingBag, Tag, Gift, CheckCheck, Trash2, BellOff } from 'lucide-react';
 
 // Dữ liệu giả lập
 const INITIAL_NOTIFICATIONS = [
@@ -82,24 +82,24 @@ export default function NotificationsPage() {
   };
 
   return (
-    <div className='animate-in fade-in overflow-hidden bg-white shadow-sm duration-700'>
-      {/* Header trang thông báo */}
-      <div className='flex flex-col items-center justify-between gap-4 border-b border-slate-100 bg-slate-50/30 px-8 py-6 md:flex-row'>
-        <h1 className='text-xl font-bold tracking-tight text-slate-800'>Thông báo của tôi</h1>
+    <div className='animate-in fade-in overflow-hidden bg-white shadow-sm duration-500'>
+      {/* Header trang thông báo: Tối ưu khoảng cách trên Mobile */}
+      <div className='flex flex-row  justify-between gap-3 border-b border-slate-100 bg-slate-50/30 px-4 py-5 md:px-8 md:py-6'>
+        <h1 className='text-lg font-medium tracking-tight text-[#333] md:text-[1.2rem]'>Thông báo của tôi</h1>
         <button
           onClick={markAllAsRead}
-          className='flex cursor-pointer items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#00bcd4] transition-all hover:underline'>
-          <FaCheckDouble /> Đánh dấu đã đọc tất cả
+          className='flex cursor-pointer items-center gap-2 text-[9px] font-bold uppercase tracking-widest text-[#00bcd4] transition-all hover:underline active:scale-95 md:text-xs'>
+          <CheckCheck size={14} /> Đánh dấu đã đọc tất cả
         </button>
       </div>
 
-      {/* Tabs lọc */}
-      <div className='flex border-b border-slate-50 px-8'>
+      {/* Tabs lọc: Dàn đều 3 cột trên Mobile */}
+      <div className='flex border-b border-slate-50 px-2 md:px-8'>
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`relative px-6 py-4 text-sm font-bold transition-all ${
+            className={`relative flex-1 cursor-pointer px-2 py-4 text-xs font-semibold uppercase transition-all md:flex-none md:px-6 md:text-sm ${
               activeTab === tab.id ? 'text-sky-600' : 'text-slate-400 hover:text-slate-600'
             }`}>
             {tab.label}
@@ -110,18 +110,18 @@ export default function NotificationsPage() {
         ))}
       </div>
 
-      {/* Danh sách thông báo */}
-      <div className='divide-y divide-slate-100'>
+      {/* Danh sách thông báo: Tối ưu padding và gap */}
+      <div className='min-h-[400px] divide-y divide-slate-100'>
         {filteredNotifications.length > 0 ? (
           filteredNotifications.map((notif) => (
             <div
               key={notif.id}
-              className={`group relative flex items-start gap-6 p-8 transition-all hover:bg-sky-50/50 ${
+              className={`group relative flex items-start gap-3 p-4 transition-all hover:bg-sky-50/50 md:gap-6 md:p-8 ${
                 !notif.isRead ? 'bg-[#00bcd4]/5' : ''
               }`}>
-              {/* Icon đại diện loại thông báo */}
+              {/* Icon: Nhỏ hơn trên Mobile */}
               <div
-                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-sm ${
+                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl shadow-sm md:h-12 md:w-12 ${
                   notif.type === 'order'
                     ? 'bg-orange-100 text-orange-600'
                     : notif.type === 'voucher'
@@ -130,58 +130,60 @@ export default function NotificationsPage() {
                         ? 'bg-blue-100 text-blue-600'
                         : 'bg-rose-100 text-rose-600'
                 }`}>
-                {notif.type === 'order' && <FaShoppingCart />}
-                {notif.type === 'voucher' && <FaGift />}
-                {['product', 'offer'].includes(notif.type) && <FaTag />}
+                {notif.type === 'order' && <ShoppingBag size={18} className='md:h-5 md:w-5' />}
+                {notif.type === 'voucher' && <Gift size={18} className='md:h-5 md:w-5' />}
+                {['product', 'offer'].includes(notif.type) && <Tag size={18} className='md:h-5 md:w-5' />}
               </div>
 
               {/* Nội dung thông báo */}
-              <div className='flex-1 space-y-1'>
-                <div className='flex items-start justify-between gap-4'>
+              <div className='min-w-0 flex-1 space-y-1'>
+                <div className='flex flex-col justify-between gap-1 md:flex-row md:items-start'>
                   <h3
-                    className={`text-base leading-snug ${!notif.isRead ? 'font-bold text-slate-900' : 'font-bold text-slate-700'}`}>
+                    className={`truncate text-sm leading-tight md:whitespace-normal md:text-base md:leading-snug ${!notif.isRead ? 'font-bold text-slate-900' : 'font-bold text-slate-700'}`}>
                     {notif.title}
                   </h3>
-                  <span className='whitespace-nowrap pt-1 text-[10px] font-medium uppercase tracking-widest text-slate-400'>
+                  <span className='whitespace-nowrap text-[9px] font-medium uppercase tracking-widest text-slate-400 md:text-[10px]'>
                     {notif.time}
                   </span>
                 </div>
                 <p
-                  className={`max-w-2xl text-sm leading-relaxed ${!notif.isRead ? 'font-medium text-slate-600' : 'text-slate-500'}`}>
+                  className={`line-clamp-2 max-w-2xl text-[12px] leading-relaxed md:line-clamp-none md:text-sm ${!notif.isRead ? 'font-medium text-slate-600' : 'text-slate-500'}`}>
                   {notif.desc}
                 </p>
 
-                {/* Nút hành động cho từng mục */}
-                <div className='flex gap-4 pt-3'>
-                  <button className='text-[11px] font-bold uppercase tracking-wider text-[#00bcd4] transition-all hover:underline'>
+                {/* Nút hành động: Hiển thị rõ ràng trên Mobile (vì không có hover) */}
+                <div className='flex gap-4 pt-2 md:pt-3'>
+                  <button className='text-[10px] font-bold uppercase tracking-wider text-[#00bcd4] transition-all hover:underline md:text-[11px]'>
                     Xem chi tiết
                   </button>
                   <button
                     onClick={() => deleteNotification(notif.id)}
-                    className='flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-300 opacity-0 transition-all hover:text-rose-500 group-hover:opacity-100'>
-                    <FaTrash /> Xóa
+                    className='flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 transition-all hover:text-rose-500 md:text-[11px] md:opacity-0 md:group-hover:opacity-100'>
+                    <Trash2 size={12} /> Xóa
                   </button>
                 </div>
               </div>
 
-              {/* Dấu chấm báo chưa đọc */}
+              {/* Dấu chấm báo chưa đọc: Nhỏ hơn và căn chỉnh lại */}
               {!notif.isRead && (
-                <div className='absolute right-8 top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full bg-[#00bcd4] shadow-[0_0_10px_rgba(0,188,212,0.5)]'></div>
+                <div className='absolute right-2 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-[#00bcd4] shadow-[0_0_10px_rgba(0,188,212,0.5)] md:right-8 md:h-2.5 md:w-2.5'></div>
               )}
             </div>
           ))
         ) : (
-          <div className='flex flex-col items-center justify-center space-y-4 p-20 text-center'>
-            <div className='flex h-20 w-20 items-center justify-center rounded-full bg-slate-50 text-slate-200'>
-              <FaShoppingCart />
+          <div className='flex flex-col items-center justify-center space-y-4 p-10 text-center md:p-20'>
+            <div className='flex h-16 w-16 items-center justify-center rounded-full bg-slate-50 text-slate-200 md:h-20 md:w-20'>
+              <BellOff size={32} />
             </div>
             <div>
-              <p className='text-sm font-black uppercase tracking-widest text-slate-800'>Hộp thư trống</p>
-              <p className='mt-1 text-xs text-slate-400'>Bạn hiện không có thông báo nào trong danh mục này.</p>
+              <p className='text-xs font-black uppercase tracking-widest text-slate-800 md:text-sm'>Hộp thư trống</p>
+              <p className='mt-1 text-[10px] text-slate-400 md:text-xs'>
+                Bạn hiện không có thông báo nào trong danh mục này.
+              </p>
             </div>
             <button
               onClick={() => setActiveTab('all')}
-              className='rounded-xl bg-slate-900 px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-white transition-all hover:bg-slate-800 active:scale-95'>
+              className='rounded-xl bg-slate-900 px-5 py-2 text-[10px] font-bold uppercase tracking-widest text-white transition-all hover:bg-slate-800 active:scale-95 md:px-6 md:py-2.5 md:text-xs'>
               Quay lại tất cả
             </button>
           </div>
@@ -189,8 +191,8 @@ export default function NotificationsPage() {
       </div>
 
       {/* Footer trang */}
-      <div className='border-t border-slate-50 bg-slate-50/50 p-6 text-center'>
-        <p className='text-[10px] font-bold uppercase tracking-[0.2em] text-sky-700'>
+      <div className='border-t border-slate-50 bg-slate-50/50 p-4 text-center md:p-6'>
+        <p className='text-[9px] font-bold uppercase tracking-[0.2em] text-sky-700 md:text-[10px]'>
           Cảm ơn bạn đã đồng hành cùng Tibiki
         </p>
       </div>

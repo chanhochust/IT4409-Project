@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { FaStore, FaTruck, FaCheck, FaTimes, FaComment, FaEye, FaShieldAlt } from 'react-icons/fa';
+import { Store, Truck, Check, X, Eye, ShieldCheck, ChevronRight, Search } from 'lucide-react';
 
 // Dữ liệu giả lập
 const MOCK_ORDERS = [
@@ -18,14 +18,14 @@ const MOCK_ORDERS = [
         oldPrice: 250000,
         price: 150000,
         quantity: 1,
-        image: 'https://placehold.co/80x80?text=Ao+Thun',
+        image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=150&q=80',
       },
       {
         name: 'Tất cổ cao thể thao - Đen',
         oldPrice: 120000,
         price: 95000,
         quantity: 1,
-        image: 'https://placehold.co/80x80?text=Tat',
+        image: 'https://images.unsplash.com/photo-1582966772640-31044541c39c?auto=format&fit=crop&w=150&q=80',
       },
     ],
   },
@@ -42,7 +42,7 @@ const MOCK_ORDERS = [
         oldPrice: 450000,
         price: 320000,
         quantity: 1,
-        image: 'https://placehold.co/80x80?text=Shorts',
+        image: 'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?auto=format&fit=crop&w=150&q=80',
       },
     ],
   },
@@ -59,11 +59,12 @@ const MOCK_ORDERS = [
         oldPrice: 1550000,
         price: 1250000,
         quantity: 1,
-        image: 'https://placehold.co/80x80?text=Coffee',
+        image: 'https://images.unsplash.com/photo-1510972527921-ce03766a1cf1?auto=format&fit=crop&w=150&q=80',
       },
     ],
   },
 ];
+
 const CANCEL_REASONS = [
   'Tôi muốn thay đổi địa chỉ nhận hàng/số điện thoại.',
   'Tôi muốn thay đổi phương thức thanh toán.',
@@ -72,6 +73,7 @@ const CANCEL_REASONS = [
   'Đổi ý không mua nữa.',
   'Lý do khác.',
 ];
+
 export default function OrdersPage() {
   const [activeTab, setActiveTab] = useState('all');
   const [cancelOrderId, setCancelOrderId] = useState<string | null>(null);
@@ -87,109 +89,114 @@ export default function OrdersPage() {
     { id: 'cancelled', label: 'Đã hủy' },
   ];
 
-  // Co the tra hang trong vong 30 ngay
-  const canReturn = (dateStr: string) => {
-    const purchaseDate = new Date(dateStr);
-    const today = new Date();
-    const diffTime = Math.abs(today.getTime() - purchaseDate.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays <= 30;
-  };
-
   const filteredOrders = activeTab === 'all' ? MOCK_ORDERS : MOCK_ORDERS.filter((o) => o.status === activeTab);
 
   return (
-    <div className='animate-in fade-in mx-auto mt-4 max-w-[1100px] space-y-4 pb-10 font-sans text-black duration-500'>
+    <div className='animate-in fade-in mx-auto max-w-[1100px] space-y-3 pb-10 font-sans text-slate-900 duration-500 md:mt-4 md:space-y-4'>
       {/* Tabs Navigation */}
-      <div className='sticky top-0 z-20 overflow-hidden rounded-xl border border-gray-300 bg-white shadow-sm'>
+      <div className='sticky top-0 z-20 overflow-hidden border-b border-gray-200 bg-white md:rounded-xl md:border md:shadow-sm'>
         <div className='scrollbar-hide flex overflow-x-auto whitespace-nowrap'>
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`relative flex-1 cursor-pointer px-6 py-4 text-[15px] font-medium transition-all ${
-                activeTab === tab.id ? 'text-[#09a0d2]' : 'text-gray-500 hover:text-gray-700'
+              className={`relative flex-1 cursor-pointer px-5 py-3.5 text-sm font-medium transition-all md:px-6 md:py-4 md:text-[15px] ${
+                activeTab === tab.id ? 'text-sky-600' : 'text-gray-500 hover:text-gray-700'
               }`}>
               {tab.label}
               {activeTab === tab.id && (
-                <div className='absolute bottom-0 left-0 right-0 mx-4 h-[3px] rounded-full bg-[#09a0d2]'></div>
+                <div className='absolute bottom-0 left-0 right-0 mx-auto h-[2.5px] w-full bg-sky-600 md:mx-4 md:rounded-full'></div>
               )}
             </button>
           ))}
         </div>
       </div>
 
+      {/* Search Placeholder */}
+      <div className='px-4 md:hidden'>
+        <div className='flex cursor-pointer items-center gap-2 rounded-lg bg-gray-100 px-3 py-2 text-gray-400'>
+          <Search size={16} />
+          <span className='text-xs'>Tìm kiếm đơn hàng...</span>
+        </div>
+      </div>
+
       {/* Orders List */}
-      <div className='space-y-4'>
+      <div className='space-y-3 md:space-y-4'>
         {filteredOrders.map((order) => (
           <div
             key={order.id}
-            className='overflow-hidden rounded-2xl border border-gray-300 bg-white shadow-sm transition-all duration-300 hover:shadow-md'>
+            className='border-y border-gray-200 bg-white shadow-sm transition-all md:rounded-2xl md:border md:hover:shadow-md'>
             {/* Header: Shop & Status */}
-            <div className='flex items-center justify-between border-b border-gray-50 bg-white px-6 py-3'>
-              <div className='flex items-center gap-3'>
-                <div className='group flex cursor-pointer items-center gap-1.5'>
-                  <div className='text-[#074262]'>
-                    <FaStore />
-                  </div>
-                  <span className='text-[13px] font-black uppercase tracking-tight text-gray-800 transition-colors group-hover:text-[#00bcd4]'>
+            <div className='flex flex-wrap items-center justify-between gap-2 border-b border-gray-50 px-4 py-3 md:px-6'>
+              <div className='flex items-center gap-2 md:gap-3'>
+                {/* Tên Shop - Có thể nhấn để chuyển hướng */}
+                <a
+                  href={`/shop/${order.shopName}`}
+                  className='group flex cursor-pointer items-center gap-1.5 no-underline'>
+                  <Store size={16} className='text-sky-700' />
+                  <span className='text-[12px] font-bold uppercase tracking-tight text-slate-800 transition-colors group-hover:text-sky-600 md:text-[13px]'>
                     {order.shopName}
                   </span>
-                </div>
-                <div className='ml-1 flex items-center gap-2'>
-                  <button className='flex cursor-pointer items-center gap-1 rounded bg-sky-500 px-3 py-1 text-[10px] font-black uppercase text-white shadow-sm transition-colors hover:bg-sky-600 active:scale-95'>
-                    <FaComment /> Chat
-                  </button>
-                  <button className='flex cursor-pointer items-center gap-1 rounded border border-gray-200 px-3 py-1 text-[10px] font-bold uppercase text-gray-500 transition-all hover:bg-gray-50 active:scale-95'>
-                    <FaEye /> Xem Shop
-                  </button>
-                </div>
+                  <ChevronRight size={14} className='text-gray-400 group-hover:text-sky-600' />
+                </a>
               </div>
 
-              <div className='flex items-center gap-2'>
+              <div className='flex items-center gap-1.5'>
                 <div
                   className={
                     order.status === 'delivered'
-                      ? 'text-[#029b3f]'
+                      ? 'text-emerald-600'
                       : order.status === 'cancelled'
                         ? 'text-rose-500'
                         : 'text-orange-500'
                   }>
                   {order.status === 'delivered' ? (
-                    <FaCheck />
+                    <Check size={14} />
                   ) : order.status === 'cancelled' ? (
-                    <FaTimes />
+                    <X size={14} />
                   ) : (
-                    <FaTruck />
+                    <Truck size={14} />
                   )}
                 </div>
                 <span
-                  className={`text-[11px] font-black uppercase tracking-widest ${order.status === 'delivered' ? 'text-[#0c9c45]' : order.status === 'cancelled' ? 'text-rose-500' : 'text-orange-500'}`}>
+                  className={`text-[10px] font-bold uppercase tracking-wide md:text-[11px] ${
+                    order.status === 'delivered'
+                      ? 'text-emerald-600'
+                      : order.status === 'cancelled'
+                        ? 'text-rose-500'
+                        : 'text-orange-500'
+                  }`}>
                   {order.statusText}
                 </span>
               </div>
             </div>
 
             {/* Product Details */}
-            <div className='divide-y divide-gray-200 px-6'>
+            <div className='divide-y divide-gray-100 px-4 md:px-6'>
               {order.items.map((item, idx) => (
-                <div key={idx} className='flex gap-4 py-5'>
+                <div
+                  key={idx}
+                  className='flex cursor-pointer gap-3 py-4 transition-colors hover:bg-slate-50/50 md:gap-4 md:py-5'>
                   <img
                     src={item.image}
                     alt={item.name}
-                    className='h-20 w-20 shrink-0 rounded-xl border border-gray-400 object-cover'
+                    className='h-16 w-16 shrink-0 rounded-lg border border-gray-200 object-cover md:h-20 md:w-20'
                   />
-                  <div className='flex flex-1 flex-col justify-between overflow-hidden py-1'>
-                    <div className='space-y-0.5'>
-                      <h3 className='line-clamp-1 text-[15px] font-bold leading-snug text-gray-800'>{item.name}</h3>
-                      <p className='mt-1 text-[13px] font-black text-gray-700'>x{item.quantity}</p>
+                  <div className='flex flex-1 flex-col justify-between overflow-hidden'>
+                    <div className='space-y-1'>
+                      <h3 className='line-clamp-2 text-sm font-medium leading-tight text-slate-800 md:line-clamp-1 md:text-[15px]'>
+                        {item.name}
+                      </h3>
+                      <p className='text-xs text-slate-500 md:font-medium md:text-gray-700'>x{item.quantity}</p>
                     </div>
                     <div className='flex items-center justify-end gap-2 text-right'>
-                      <span className='text-[12px] text-gray-400 line-through'>
-                        {(item.oldPrice || 0).toLocaleString()} đ
-                      </span>
-                      <span className='text-[16px] font-bold italic text-[#077bbe]'>
-                        {item.price.toLocaleString()} đ
+                      {item.oldPrice && (
+                        <span className='text-[11px] text-gray-400 line-through md:text-[12px]'>
+                          {item.oldPrice.toLocaleString()}đ
+                        </span>
+                      )}
+                      <span className='text-sm font-semibold text-sky-700 md:text-[16px]'>
+                        {item.price.toLocaleString()}đ
                       </span>
                     </div>
                   </div>
@@ -198,56 +205,46 @@ export default function OrdersPage() {
             </div>
 
             {/* Footer: Summary & Actions */}
-            <div className='border-t border-gray-200 bg-[#fffcf5]/40 px-6 py-5'>
-              <div className='mb-4 flex items-center justify-end gap-3'>
-                <div className='flex items-center gap-1 text-[#074262] opacity-70'>
-                  <FaShieldAlt />
-                  <span className='text-[11px] font-bold uppercase tracking-tight'>Thành tiền:</span>
+            <div className='border-t border-gray-100 bg-slate-50/30 px-4 py-4 md:px-6 md:py-5'>
+              <div className='mb-4 flex items-center justify-end gap-2'>
+                <div className='flex items-center gap-1 text-slate-500'>
+                  <ShieldCheck size={14} className='text-sky-600' />
+                  <span className='text-[11px] font-medium'>Thành tiền:</span>
                 </div>
-                <span className='text-lg font-extrabold tracking-tight text-[#077bbe]'>
-                  {order.totalPrice.toLocaleString()} đ
+                <span className='text-base font-bold text-sky-700 md:text-lg'>
+                  {order.totalPrice.toLocaleString()}đ
                 </span>
               </div>
 
-              {/* Actions Row - Chỉ giữ các nút chính, bỏ Liên Hệ */}
-              <div className='flex flex-wrap items-center justify-end gap-3'>
+              {/* Actions Row */}
+              <div className='flex flex-col gap-2 sm:flex-row sm:justify-end md:gap-3'>
                 {order.status === 'pending' && (
                   <button
                     onClick={() => setCancelOrderId(order.id)}
-                    className='flex-1 cursor-pointer rounded-xl border-2 border-rose-200 bg-white px-8 py-2.5 text-xs font-black uppercase text-rose-500 transition-all hover:bg-rose-50 sm:flex-none'>
-                    Hủy mua hàng
+                    className='w-full cursor-pointer rounded-lg border border-rose-200 bg-white px-6 py-2 text-xs font-bold uppercase text-rose-500 transition-all active:scale-95 sm:w-auto'>
+                    Hủy đơn hàng
                   </button>
                 )}
 
                 {order.status === 'delivered' && (
-                  <div>
-                    <button className='mr-4 flex-1 cursor-pointer rounded-xl border border-gray-300 bg-white px-8 py-2.5 text-[13px] font-bold text-gray-500 transition-all hover:bg-gray-50 sm:flex-none'>
-                      Xem chi tiết
-                    </button>
-                    <button className='mr-4 flex-1 cursor-pointer rounded-xl bg-sky-500 px-10 py-3 text-[12px] font-black uppercase tracking-widest text-white shadow-lg shadow-sky-100 transition-all hover:bg-sky-600 active:scale-95 sm:flex-none'>
+                  <>
+                    <button className='w-full cursor-pointer rounded-lg bg-sky-600 px-8 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-all hover:bg-sky-800 active:scale-95 sm:w-auto'>
                       Mua Lại
                     </button>
-                    <button className='flex-1 cursor-pointer rounded-xl border-2 border-[#00bcd4]/20 bg-white px-8 py-3 text-[13px] font-black text-[#077bbe] transition-all hover:bg-cyan-50 active:scale-95 sm:flex-none'>
+                    <button className='w-full cursor-pointer rounded-lg border border-sky-200 bg-white px-6 py-2.5 text-xs font-bold uppercase text-sky-700 transition-all hover:bg-slate-50 active:scale-95 sm:w-auto'>
                       Đánh Giá
                     </button>
-                  </div>
+                  </>
                 )}
 
                 {(order.status === 'cancelled' || order.status === 'returned') && (
-                  <button className='flex-1 cursor-pointer rounded-xl border border-gray-300 bg-white px-8 py-2.5 text-[13px] font-bold text-gray-500 shadow-sm transition-all hover:bg-gray-50 sm:flex-none'>
-                    Xem Chi Tiết
+                  <button className='w-full cursor-pointer rounded-lg border border-gray-200 bg-white px-6 py-2 text-xs font-bold uppercase text-gray-500 transition-all hover:bg-slate-50 sm:w-auto'>
+                    Chi Tiết Hủy
                   </button>
                 )}
 
-                {order.status === 'cancelled' && (
-                  <button className='flex-1 cursor-pointer rounded-xl bg-sky-500 px-10 py-3 text-[12px] font-black uppercase tracking-widest text-white shadow-lg shadow-sky-100 transition-all hover:bg-sky-600 sm:flex-none'>
-                    Mua Lại
-                  </button>
-                )}
-
-                {/* Chỉ hiện nút Theo dõi cho đơn đang giao/chuẩn bị */}
                 {(order.status === 'shipping' || order.status === 'preparing') && (
-                  <button className='flex-1 cursor-pointer rounded-xl bg-sky-500 px-10 py-3 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-sky-100 transition-all hover:bg-sky-600 sm:flex-none'>
+                  <button className='w-full cursor-pointer rounded-lg bg-sky-600 px-8 py-2.5 text-xs font-bold uppercase text-white shadow-sm transition-all hover:bg-sky-800 sm:w-auto'>
                     Theo Dõi
                   </button>
                 )}
@@ -259,33 +256,29 @@ export default function OrdersPage() {
 
       {/* MODAL HỦY ĐƠN */}
       {cancelOrderId && (
-        <div className='fixed inset-0 z-[100] flex items-center justify-center p-4'>
+        <div className='fixed inset-0 z-[100] flex items-end justify-center p-0 sm:items-center sm:p-4'>
           <div
-            className='animate-in fade-in absolute inset-0 bg-slate-900/60 backdrop-blur-sm'
+            className='animate-in fade-in absolute inset-0 cursor-pointer bg-slate-900/40 backdrop-blur-[2px]'
             onClick={() => {
               setCancelOrderId(null);
               setCancelReason('');
             }}></div>
-          <div className='animate-in zoom-in-95 relative z-10 w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl duration-200'>
+          <div className='animate-in slide-in-from-bottom sm:zoom-in-95 relative z-10 w-full max-w-lg overflow-hidden rounded-t-2xl bg-white shadow-2xl duration-300 sm:rounded-2xl'>
             {/* Modal Header */}
-            <div className='flex items-center justify-between border-b border-slate-100 px-8 py-6'>
-              <h2 className='text-xl font-black text-gray-900'>Lý do hủy đơn hàng</h2>
+            <div className='flex items-center justify-between border-b border-slate-100 px-6 py-4'>
+              <h2 className='text-base font-bold text-slate-800'>Lý do hủy đơn hàng</h2>
               <button
-                onClick={() => {
-                  setCancelOrderId(null);
-                  setCancelReason('');
-                }}
-                className='text-gray-400 hover:text-gray-600'>
-                <FaTimes />
+                onClick={() => setCancelOrderId(null)}
+                className='cursor-pointer p-1 text-slate-400 hover:text-slate-600'>
+                <X size={20} />
               </button>
             </div>
 
             {/* Modal Body */}
-            <div className='space-y-2 p-8'>
-              <div className='mb-4 border-l-4 border-amber-400 bg-amber-50 p-4'>
-                <p className='text-xs font-medium italic leading-relaxed text-amber-700'>
-                  Lưu ý: Bạn chỉ có thể hủy đơn hàng 01 lần duy nhất cho mỗi đơn hàng. Quyết định hủy đơn sẽ không thể
-                  hoàn tác.
+            <div className='max-h-[60vh] space-y-4 overflow-y-auto p-6'>
+              <div className='rounded-lg border border-amber-100 bg-amber-50 p-3'>
+                <p className='text-[11px] italic leading-relaxed text-amber-700'>
+                  Lưu ý: Bạn chỉ có thể hủy đơn hàng 01 lần duy nhất. Thao tác này không thể hoàn tác.
                 </p>
               </div>
 
@@ -293,16 +286,14 @@ export default function OrdersPage() {
                 {CANCEL_REASONS.map((reason, index) => (
                   <label
                     key={index}
-                    className={`flex cursor-pointer items-center gap-4 rounded-2xl border p-4 transition-all ${
-                      cancelReason === reason
-                        ? 'border-[#0885a8] bg-cyan-50/50'
-                        : 'border-transparent hover:bg-slate-50'
+                    className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3.5 transition-all ${
+                      cancelReason === reason ? 'border-sky-500 bg-sky-50' : 'border-slate-100 hover:bg-slate-50'
                     }`}>
                     <div
-                      className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all ${
-                        cancelReason === reason ? 'border-[#068cb8]' : 'border-slate-300'
+                      className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-all ${
+                        cancelReason === reason ? 'border-sky-600 bg-sky-600' : 'border-slate-300'
                       }`}>
-                      {cancelReason === reason && <div className='h-2.5 w-2.5 rounded-full bg-[#0681ab]'></div>}
+                      {cancelReason === reason && <div className='h-1.5 w-1.5 rounded-full bg-white'></div>}
                     </div>
                     <input
                       type='radio'
@@ -312,37 +303,25 @@ export default function OrdersPage() {
                       onChange={(e) => setCancelReason(e.target.value)}
                     />
                     <span
-                      className={`text-[14px] font-semibold ${cancelReason === reason ? 'text-[#0172a2]' : 'text-gray-700'}`}>
+                      className={`text-sm ${cancelReason === reason ? 'font-semibold text-sky-800' : 'text-slate-600'}`}>
                       {reason}
                     </span>
                   </label>
                 ))}
               </div>
-
-              {/* Ô nhập lý do khác nếu chọn Lý do khác */}
-              {cancelReason === 'Lý do khác.' && (
-                <div className='animate-in slide-in-from-top-2 mt-4 duration-200'>
-                  <textarea
-                    className='min-h-[100px] w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm font-medium text-black outline-none transition-all focus:ring-4 focus:ring-sky-200'
-                    placeholder='Vui lòng chia sẻ thêm lý do của bạn...'></textarea>
-                </div>
-              )}
             </div>
 
             {/* Modal Footer */}
-            <div className='flex gap-3 px-8 pb-8 pt-4'>
+            <div className='flex gap-3 border-t border-slate-50 p-6'>
               <button
-                onClick={() => {
-                  setCancelOrderId(null);
-                  setCancelReason('');
-                }}
-                className='flex-1 cursor-pointer rounded-2xl bg-slate-200 py-4 text-sm font-bold text-slate-600 transition-all active:scale-95'>
-                Hủy bỏ
+                onClick={() => setCancelOrderId(null)}
+                className='flex-1 cursor-pointer rounded-xl bg-slate-100 py-3 text-sm font-semibold text-slate-600 active:scale-95'>
+                Quay lại
               </button>
               <button
                 disabled={!cancelReason}
-                className='flex-1 cursor-pointer rounded-2xl bg-rose-500 py-4 text-sm font-black uppercase text-white shadow-lg shadow-rose-100 transition-all active:scale-95 disabled:opacity-50 disabled:shadow-none'>
-                Hủy đơn hàng
+                className='flex-1 cursor-pointer rounded-xl bg-rose-500 py-3 text-sm font-bold uppercase text-white shadow-md transition-all active:scale-95 disabled:opacity-50'>
+                Hủy đơn
               </button>
             </div>
           </div>

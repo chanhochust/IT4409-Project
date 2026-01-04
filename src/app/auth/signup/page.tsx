@@ -67,69 +67,75 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className='flex min-h-screen flex-col items-center justify-center bg-[#f4f5f7] py-5'>
+    <div className='flex min-h-screen flex-col items-center justify-center bg-[#f4f5f7] px-4 py-5 md:px-0'>
       <form
-        className='box-border flex w-full max-w-[400px] flex-col rounded-lg bg-white p-10 shadow-lg'
+        className='box-border flex w-full max-w-[400px] flex-col rounded-lg bg-white p-6 shadow-lg md:p-10'
         onSubmit={handleSubmit}>
-        <h1 className='mb-4 text-center text-xl font-bold'>Đăng ký tài khoản</h1>
+        <h1 className='mb-4 text-center text-lg font-bold md:text-xl'>Đăng ký tài khoản</h1>
 
-        <label className='mb-2 text-base text-[#333]' htmlFor='email'>
+        <label className='mb-2 text-sm text-[#333] md:text-base' htmlFor='email'>
           Email
         </label>
         <input
           id='email'
           type='email'
-          className='mb-4 box-border w-full rounded-lg border border-gray-300 p-2.5 text-black focus:border-gray-600 focus:outline-none'
+          className='mb-4 box-border w-full rounded-lg border border-gray-300 p-2 text-sm text-black focus:border-gray-600 focus:outline-none md:p-2.5 md:text-base'
           placeholder='Nhập email của bạn'
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
 
-        <label className='mb-2 text-base text-[#333]' htmlFor='password'>
+        <label className='mb-2 text-sm text-[#333] md:text-base' htmlFor='password'>
           Mật khẩu
         </label>
         <input
           id='password'
           type='password'
-          className='mb-4 box-border w-full rounded-lg border border-gray-300 p-2.5 text-black focus:border-gray-600 focus:outline-none'
-          placeholder='Nhập mật khẩu'
+          className='mb-4 box-border w-full rounded-lg border border-gray-300 p-2 text-sm text-black focus:border-gray-600 focus:outline-none md:p-2.5 md:text-base'
+          placeholder='Nhập mật khẩu (tối thiểu 6 ký tự)'
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
 
-        <label className='mb-2 text-base text-[#333]' htmlFor='confirmPassword'>
+        <label className='mb-2 text-sm text-[#333] md:text-base' htmlFor='confirmPassword'>
           Xác nhận mật khẩu
         </label>
         <input
           id='confirmPassword'
           type='password'
-          className='mb-4 box-border w-full rounded-lg border border-gray-300 p-2.5 text-black focus:border-gray-600 focus:outline-none'
+          className='mb-4 box-border w-full rounded-lg border border-gray-300 p-2 text-sm text-black focus:border-gray-600 focus:outline-none md:p-2.5 md:text-base'
           placeholder='Nhập lại mật khẩu'
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
         />
 
-        {error && <p className='mb-4 text-center text-sm text-red-500'>{error}</p>}
-        {success && <p className='mb-4 text-center text-sm text-green-600'>{success}</p>}
+        {error && <p className='mb-4 text-center text-xs text-red-500 md:text-sm'>{error}</p>}
+        {success && <p className='mb-4 text-center text-xs text-green-600 md:text-sm'>{success}</p>}
 
         <button
           type='submit'
-          className='cursor-pointer rounded-lg bg-blue-600 py-3 text-base font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400'
+          className='cursor-pointer rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400 md:py-3 md:text-base'
           disabled={isLoading}>
           {isLoading ? 'Đang đăng ký...' : 'Đăng ký'}
         </button>
 
-        <div className='mt-4 flex flex-col items-center'>
-          <p className='mb-1 mt-5 text-base text-[#525252]'>Đã có tài khoản?</p>
+        <div className='mt-4 flex flex-col items-center gap-1 md:mt-5 md:gap-2'>
+          <p className='text-xs text-[#525252] md:text-sm'>Đã có tài khoản?</p>
           <Link
             href='/auth/signin'
-            className='inline-block text-base font-bold text-blue-600 hover:text-blue-700 hover:underline'>
+            className='inline-block text-sm font-bold text-blue-600 hover:text-blue-700 hover:underline md:text-base'>
             Đăng nhập ngay
           </Link>
         </div>
+
+        <Link
+          href='/'
+          className='mt-3 block w-full text-center text-xs font-bold text-blue-600 hover:text-blue-700 hover:underline md:text-base'>
+          Trang chủ
+        </Link>
       </form>
     </div>
   );

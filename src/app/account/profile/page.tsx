@@ -13,7 +13,6 @@ import {
   FaTrash,
   FaShieldAlt,
 } from 'react-icons/fa';
-import 'src/app/account/profile/profile.css';
 
 const DAYS = Array.from({ length: 31 }, (_, i) => i + 1);
 const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
@@ -42,10 +41,9 @@ export default function ProfilePage() {
   const [editingField, setEditingField] = useState<'phone' | 'email' | null>(null);
   const [tempValue, setTempValue] = useState('');
 
-  // Tải dữ liệu  từ API
+  // Tải dữ liệu từ API
   useEffect(() => {
     const loadProfile = async () => {
-      // Chỉ fetch khi đã xác định được ID người dùng từ session
       if (!user?.id) return;
 
       try {
@@ -55,7 +53,6 @@ export default function ProfilePage() {
         if (response.ok) {
           setProfile({
             ...data,
-            // Đảm bảo email luôn lấy từ session mới nhất nếu data trả về trống
             email: user.email || data.email || '',
           });
         }
@@ -79,7 +76,6 @@ export default function ProfilePage() {
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Kiểm tra an toàn trước khi gửi
     if (!user?.id) {
       alert('Không tìm thấy người dùng. Vui lòng đăng nhập lại.');
       return;
@@ -92,7 +88,7 @@ export default function ProfilePage() {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId: user.id, // Gửi ID chính xác từ Context
+          userId: user.id,
           ...profile,
         }),
       });
@@ -110,6 +106,7 @@ export default function ProfilePage() {
       setIsSaving(false);
     }
   };
+
   const handleAvatarChange = () => {
     const newAvatarUrl = window.prompt('Nhập URL hình ảnh mới:', 'https://i.pravatar.cc/150?u=' + user?.id);
 
@@ -151,34 +148,44 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className='profile-page-content'>
-      <h1>Thông tin tài khoản</h1>
+    <div>
+      {/* Page Title */}
+      <h1 className='m-0 mb-6 border-b border-[#eee] pb-4 text-xl font-semibold md:mb-2 md:pb-3 md:text-2xl'>
+        Thông tin tài khoản
+      </h1>
 
-      <div className='account-layout-grid'>
-        <div className='profile-card'>
-          <h2>Thông tin cá nhân</h2>
+      {/* Grid Layout - 1 cột mobile, 2 cột desktop */}
+      <div className='grid grid-cols-1 gap-6 md:grid-cols-[3fr_2fr] md:gap-8'>
+        {/* Left Column - Profile Card */}
+        <div className='bg-white p-5 md:border-r md:border-[#eee] md:p-6'>
+          <h2 className='mb-4 text-base font-semibold md:mb-6 md:text-lg'>Thông tin cá nhân</h2>
 
-          {/* Avatar */}
-          <div className='avatar-section'>
+          {/* Avatar Section */}
+          <div className='mb-6 flex flex-col items-center md:mb-8'>
             <img
               src={user?.avatar || 'https://placehold.co/100x100?text=...'}
               alt='Avatar'
-              className='profile-avatar-image'
+              className='md:border-3 mb-3 h-20 w-20 rounded-full border-2 border-[#eee] object-cover md:mb-4 md:h-24 md:w-24'
             />
-            <button className='btn-upload-avatar' onClick={handleAvatarChange}>
+            <button
+              onClick={handleAvatarChange}
+              className='cursor-pointer rounded border border-[#ccc] bg-none px-4 py-2 text-sm text-[#555] hover:bg-[#f5f5f5] md:text-base'>
               Chọn ảnh
             </button>
           </div>
 
-          {/* Form thông tin */}
-          <form className='profile-form' onSubmit={handleSaveProfile}>
-            <div className='form-group'>
-              <label htmlFor='fullName'>Họ & Tên</label>
+          {/* Form */}
+          <form onSubmit={handleSaveProfile} className='space-y-4 md:space-y-5'>
+            {/* Full Name */}
+            <div className='flex flex-col gap-2 md:flex-row md:items-center md:gap-3'>
+              <label htmlFor='fullName' className='w-full font-medium text-[#585858] md:w-32 md:text-left'>
+                Họ & Tên
+              </label>
               <input
                 type='text'
                 id='fullName'
                 name='fullName'
-                className='form-input'
+                className='flex-1 rounded-lg border border-gray-300 p-2 text-sm text-black md:p-2.5 md:text-base'
                 value={profile.fullName}
                 onChange={handleInputChange}
                 placeholder='Nhập họ và tên'
@@ -186,37 +193,53 @@ export default function ProfilePage() {
               />
             </div>
 
-            <div className='form-group'>
-              <label htmlFor='nickname'>Nickname</label>
+            {/* Nickname */}
+            <div className='flex flex-col gap-2 md:flex-row md:items-center md:gap-3'>
+              <label htmlFor='nickname' className='w-full font-medium text-[#585858] md:w-32 md:text-left'>
+                Nickname
+              </label>
               <input
                 type='text'
                 id='nickname'
                 name='nickname'
-                className='form-input'
+                className='flex-1 rounded-lg border border-gray-300 p-2 text-sm text-black md:p-2.5 md:text-base'
                 value={profile.nickname}
                 onChange={handleInputChange}
+                placeholder='Tên hiển thị'
               />
             </div>
 
-            {/* Ngày sinh */}
-            <div className='form-group'>
-              <label>Ngày sinh</label>
-              <div className='dob-group'>
-                <select name='dob_day' value={profile.dob_day} onChange={handleInputChange} className='form-input'>
+            {/* Date of Birth */}
+            <div className='flex flex-col gap-2 md:flex-row md:items-center md:gap-3'>
+              <label className='w-full font-medium text-[#585858] md:w-32 md:text-left'>Ngày sinh</label>
+              <div className='flex flex-1 gap-2 md:gap-2.5'>
+                <select
+                  name='dob_day'
+                  value={profile.dob_day}
+                  onChange={handleInputChange}
+                  className='flex-1 rounded-lg border border-gray-300 p-2 text-sm text-black md:p-2.5 md:text-base'>
                   {DAYS.map((day) => (
                     <option key={day} value={day}>
                       {day}
                     </option>
                   ))}
                 </select>
-                <select name='dob_month' value={profile.dob_month} onChange={handleInputChange} className='form-input'>
+                <select
+                  name='dob_month'
+                  value={profile.dob_month}
+                  onChange={handleInputChange}
+                  className='flex-1 rounded-lg border border-gray-300 p-2 text-sm text-black md:p-2.5 md:text-base'>
                   {MONTHS.map((month) => (
                     <option key={month} value={month}>
                       Tháng {month}
                     </option>
                   ))}
                 </select>
-                <select name='dob_year' value={profile.dob_year} onChange={handleInputChange} className='form-input'>
+                <select
+                  name='dob_year'
+                  value={profile.dob_year}
+                  onChange={handleInputChange}
+                  className='flex-1 rounded-lg border border-gray-300 p-2 text-sm text-black md:p-2.5 md:text-base'>
                   {YEARS.map((year) => (
                     <option key={year} value={year}>
                       {year}
@@ -226,116 +249,152 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Giới tính */}
-            <div className='form-group'>
-              <label>Giới tính</label>
-              <div className='radio-group'>
-                <label>
+            {/* Gender */}
+            <div className='flex flex-col gap-2 md:flex-row md:items-center md:gap-3'>
+              <label className='w-full font-medium text-[#585858] md:w-32 md:text-left'>Giới tính</label>
+              <div className='flex flex-1 gap-4 md:gap-5'>
+                <label className='flex items-center gap-2'>
                   <input
                     type='radio'
                     name='gender'
                     value='male'
                     checked={profile.gender === 'male'}
                     onChange={handleInputChange}
-                  />{' '}
-                  Nam
+                    className='h-4 w-4'
+                  />
+                  <span className='text-sm md:text-base'>Nam</span>
                 </label>
-                <label>
+                <label className='flex items-center gap-2'>
                   <input
                     type='radio'
                     name='gender'
                     value='female'
                     checked={profile.gender === 'female'}
                     onChange={handleInputChange}
-                  />{' '}
-                  Nữ
+                    className='h-4 w-4'
+                  />
+                  <span className='text-sm md:text-base'>Nữ</span>
                 </label>
-                <label>
+                <label className='flex items-center gap-2'>
                   <input
                     type='radio'
                     name='gender'
                     value='other'
                     checked={profile.gender === 'other'}
                     onChange={handleInputChange}
-                  />{' '}
-                  Khác
+                    className='h-4 w-4'
+                  />
+                  <span className='text-sm md:text-base'>Khác</span>
                 </label>
               </div>
             </div>
 
-            <div className='form-group'>
-              <label htmlFor='nationality'>Quốc tịch</label>
+            {/* Nationality */}
+            <div className='flex flex-col gap-2 md:flex-row md:items-center md:gap-3'>
+              <label htmlFor='nationality' className='w-full font-medium text-[#585858] md:w-32 md:text-left'>
+                Quốc tịch
+              </label>
               <select
                 id='nationality'
                 name='nationality'
                 value={profile.nationality}
                 onChange={handleInputChange}
-                className='form-input'>
+                className='flex-1 rounded-lg border border-gray-300 p-2 text-sm text-black md:p-2.5 md:text-base'>
                 <option value='VN'>Việt Nam</option>
                 <option value='US'>Mỹ</option>
                 <option value='JP'>Nhật Bản</option>
               </select>
             </div>
 
-            <button type='submit' className='form-button' disabled={isSaving}>
-              {isSaving ? 'Đang lưu...' : 'Lưu thay đổi'}
-            </button>
+            {/* Submit Button */}
+            <div className='flex flex-col gap-2 md:flex-row md:items-center md:gap-3'>
+              <div className='hidden md:block md:w-32'></div>
+              <button
+                type='submit'
+                disabled={isSaving}
+                className='w-full cursor-pointer rounded-lg border-none bg-[#2563eb] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#1d4ed8] disabled:cursor-not-allowed disabled:bg-[#9ca3af] md:w-40 md:text-base'>
+                {isSaving ? 'Đang lưu...' : 'Lưu thay đổi'}
+              </button>
+            </div>
           </form>
         </div>
 
-        <div className='security-card'>
-          <h2>Số điện thoại và Email</h2>
-          <div className='info-box'>
-            <FaPhone className='info-icon' />
-            <div className='info-text'>
-              <span>Số điện thoại</span>
-              <strong>{profile.phone || 'Chưa cập nhật'}</strong>
+        {/* Right Column - Security Card */}
+        <div className='bg-white p-5 md:p-6'>
+          <h2 className='mb-4 mt-0 text-base font-semibold md:mb-6 md:text-lg'>Số điện thoại và Email</h2>
+
+          {/* Phone */}
+          <div className='flex items-center border-b border-[#f0f0f0] py-4 md:py-5'>
+            <FaPhone className='mr-4 w-7 flex-shrink-0 text-xl text-[#999] md:mr-5 md:text-2xl' />
+            <div className='flex-1'>
+              <span className='block text-sm text-[#777] md:text-base'>Số điện thoại</span>
+              <strong className='text-sm font-medium text-black md:text-base'>
+                {profile.phone || 'Chưa cập nhật'}
+              </strong>
             </div>
-            <button className='btn-secondary' onClick={() => openEditModal('phone')}>
-              Cập nhật
-            </button>
-          </div>
-          <div className='info-box'>
-            <FaEnvelope className='info-icon' />
-            <div className='info-text'>
-              <span>Địa chỉ email</span>
-              <strong>{profile.email}</strong>
-            </div>
-            <button className='btn-secondary' onClick={() => openEditModal('email')}>
+            <button
+              onClick={() => openEditModal('phone')}
+              className='ml-2 whitespace-nowrap rounded-lg border border-[#2563eb] bg-white px-3 py-2 text-xs font-semibold text-[#2563eb] hover:bg-[#f0f5ff] md:px-4 md:text-sm'>
               Cập nhật
             </button>
           </div>
 
-          <h2>Bảo mật</h2>
-          <div className='info-box'>
-            <FaShieldAlt className='info-icon' />
-            <div className='info-text'>
-              <span>Thiết lập mã PIN</span>
+          {/* Email */}
+          <div className='flex items-center border-b border-[#f0f0f0] py-4 md:py-5'>
+            <FaEnvelope className='mr-4 w-7 flex-shrink-0 text-xl text-[#999] md:mr-5 md:text-2xl' />
+            <div className='min-w-0 flex-1'>
+              <span className='block text-sm text-[#777] md:text-base'>Địa chỉ email</span>
+              <strong className='block truncate text-sm font-medium text-black md:text-base'>{profile.email}</strong>
             </div>
-            <button className='btn-secondary'>Cập nhật</button>
+            <button
+              onClick={() => openEditModal('email')}
+              className='ml-2 whitespace-nowrap rounded-lg border border-[#2563eb] bg-white px-3 py-2 text-xs font-semibold text-[#2563eb] hover:bg-[#f0f5ff] md:px-4 md:text-sm'>
+              Cập nhật
+            </button>
           </div>
-          <div className='info-box'>
-            <FaTrash className='info-icon' />
-            <div className='info-text'>
-              <span>Yêu cầu xóa tài khoản</span>
+
+          <h2 className='mb-4 mt-6 text-base font-semibold md:mb-6 md:mt-8 md:text-lg'>Bảo mật</h2>
+
+          {/* PIN */}
+          <div className='flex items-center border-b border-[#f0f0f0] py-4 md:py-5'>
+            <FaShieldAlt className='mr-4 w-7 flex-shrink-0 text-xl text-[#999] md:mr-5 md:text-2xl' />
+            <div className='flex-1'>
+              <span className='block text-sm text-[#777] md:text-base'>Thiết lập mã PIN</span>
             </div>
-            <button className='btn-secondary'>Yêu cầu</button>
+            <button className='ml-2 whitespace-nowrap rounded-lg border border-[#2563eb] bg-white px-3 py-2 text-xs font-semibold text-[#2563eb] hover:bg-[#f0f5ff] md:px-4 md:text-sm'>
+              Cập nhật
+            </button>
+          </div>
+
+          {/* Delete Account */}
+          <div className='flex items-center py-4 md:py-5'>
+            <FaTrash className='mr-4 w-7 flex-shrink-0 text-xl text-[#999] md:mr-5 md:text-2xl' />
+            <div className='flex-1'>
+              <span className='block text-sm text-[#777] md:text-base'>Yêu cầu xóa tài khoản</span>
+            </div>
+            <button className='ml-2 whitespace-nowrap rounded-lg border border-[#2563eb] bg-white px-3 py-2 text-xs font-semibold text-[#2563eb] hover:bg-[#f0f5ff] md:px-4 md:text-sm'>
+              Yêu cầu
+            </button>
           </div>
         </div>
       </div>
-      {showContactModal && (
-        <div className='contact-modal-overlay'>
-          <div className='contact-modal-content'>
-            <div className='contact-modal-body'>
-              <h3 className='contact-modal-title'>{editingField === 'phone' ? 'Số điện thoại' : 'Địa chỉ Email'}</h3>
 
-              <div className='contact-input-wrapper'>
-                {editingField === 'phone' && <FaPhone className='contact-input-icon' />}
-                {editingField === 'email' && <FaEnvelope className='contact-input-icon' />}
+      {/* Contact Edit Modal */}
+      {showContactModal && (
+        <div className='animate-in fade-in fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm duration-200 ease-out'>
+          <div className='animate-in fade-in zoom-in-[0.8] w-[400px] max-w-[90%] overflow-hidden rounded-lg bg-white shadow-[0_4px_20px_rgba(0,0,0,0.15)] duration-300 ease-[cubic-bezier(0.175,0.885,0.32,1.275)]'>
+            <div className='flex flex-col gap-5 p-6 md:p-8'>
+              <h3 className='m-0 text-base font-medium text-[#333] md:text-lg'>
+                {editingField === 'phone' ? 'Số điện thoại' : 'Địa chỉ Email'}
+              </h3>
+
+              <div className='relative flex items-center'>
+                {editingField === 'phone' && <FaPhone className='absolute left-3 text-base text-[#999]' />}
+                {editingField === 'email' && <FaEnvelope className='absolute left-3 text-base text-[#999]' />}
 
                 <input
                   type={editingField === 'phone' ? 'tel' : 'email'}
-                  className='contact-input-field'
+                  className='w-full rounded-md border border-[#ddd] py-3 pl-10 pr-3 text-sm outline-none transition-all focus:border-[#2563eb] focus:shadow-[0_0_0_3px_rgba(37,99,235,0.1)] md:text-base'
                   value={tempValue}
                   onChange={(e) => setTempValue(e.target.value)}
                   placeholder={editingField === 'phone' ? 'Nhập số điện thoại mới' : 'Nhập email mới'}
@@ -343,17 +402,43 @@ export default function ProfilePage() {
                 />
               </div>
 
-              <button className='btn-save' onClick={handleSaveContact} disabled={isSaving}>
+              <button
+                onClick={handleSaveContact}
+                disabled={isSaving}
+                className='cursor-pointer rounded-md border-none bg-[#0d6efd] px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-[#0b5ed7] md:text-base'>
                 {isSaving ? 'Đang xác thực...' : 'Lưu thay đổi'}
               </button>
 
-              <button className='btn-cancel' onClick={() => setShowContactModal(false)}>
+              <button
+                onClick={() => setShowContactModal(false)}
+                className='cursor-pointer rounded-md border border-[#eee] bg-none px-4 py-3 text-sm text-[#777] hover:opacity-90 md:text-base'>
                 Hủy bỏ
               </button>
             </div>
           </div>
         </div>
       )}
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        @keyframes popIn {
+          from {
+            transform: scale(0.8);
+            opacity: 0;
+          }
+          to {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+      `}</style>
     </div>
   );
 }

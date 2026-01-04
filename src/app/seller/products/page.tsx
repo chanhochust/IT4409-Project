@@ -37,20 +37,15 @@ const initialFormState: Product = {
 };
 
 export default function AdminProductsPage() {
-  // State sản phẩm khởi tạo rỗng, sẽ được điền bởi useEffect
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Product>(initialFormState);
   const [searchTerm, setSearchTerm] = useState('');
-
-  // Phân trang
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 5;
 
-  // Gọi API lấy danh sách sản phẩm
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -58,11 +53,10 @@ export default function AdminProductsPage() {
   const fetchProducts = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('/api/products'); // Gọi API
+      const res = await fetch('/api/products');
       if (!res.ok) throw new Error('Failed to fetch');
       const data = await res.json();
 
-      // Map dữ liệu API để đảm bảo có đủ các trường dữ liệu
       const mappedData = data.map((p: any) => ({
         ...p,
         category: p.category || 'Chưa phân loại',
@@ -76,21 +70,14 @@ export default function AdminProductsPage() {
       setIsLoading(false);
     }
   };
+
   const getPaginationItems = (current: number, total: number) => {
-    // Nếu tổng trang ít (<= 5), hiện tất cả
     if (total <= 5) return Array.from({ length: total }, (_, i) => i + 1);
-
-    // Nếu đang ở những trang đầu
     if (current <= 3) return [1, 2, 3, 4, '...', total];
-
-    // Nếu đang ở những trang cuối
     if (current >= total - 3) return [1, '...', total - 3, total - 2, total - 1, total];
-
-    // Nếu đang ở giữa
     return [1, '...', current - 1, current, current + 1, '...', total];
   };
 
-  // Các hàm xử lý CRUD
   const handleAddNew = () => {
     setFormData({ ...initialFormState, id: Date.now().toString() });
     setIsEditing(false);
@@ -103,7 +90,7 @@ export default function AdminProductsPage() {
     setShowModal(true);
   };
 
-  const handleSave = async (e: React.FormEvent) => {
+  const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
 
     const finalFormData = {
@@ -115,7 +102,7 @@ export default function AdminProductsPage() {
       setProducts((prev) => prev.map((p) => (p.id === formData.id ? formData : p)));
       alert(`Đã cập nhật (giả lập): ${formData.name}`);
     } else {
-      setProducts((prev) => [formData, ...prev]); // Thêm vào đầu danh sách
+      setProducts((prev) => [formData, ...prev]);
       alert(`Đã thêm mới (giả lập): ${formData.name}`);
     }
 
@@ -148,7 +135,6 @@ export default function AdminProductsPage() {
     );
   };
 
-  // Filter & pagination
   const allFilteredProducts = products.filter(
     (p) =>
       p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -159,7 +145,6 @@ export default function AdminProductsPage() {
   const startIndex = (currentPage - 1) * productsPerPage;
   const endIndex = startIndex + productsPerPage;
 
-  // Danh sách sản phẩm hiển thị trên trang hiện tại
   const displayedProducts = allFilteredProducts.slice(startIndex, endIndex);
 
   const goToPage = (page: number) => {
@@ -171,39 +156,40 @@ export default function AdminProductsPage() {
   const formatPrice = (price: number) => price?.toLocaleString('vi-VN') + ' VNĐ';
 
   if (isLoading) {
-    return <div className='p-8 text-center'>Đang tải dữ liệu sản phẩm...</div>;
+    return <div className='p-4 text-center md:p-8'>Đang tải dữ liệu sản phẩm...</div>;
   }
 
   return (
     <div className='p-0'>
-      <h1 className='mb-6 border-b border-gray-200 pb-4 text-2xl font-bold text-gray-800'>Quản lý Sản phẩm</h1>
+      <h1 className='mb-4 border-b border-gray-200 px-4 pb-3 text-xl font-bold text-gray-800 md:mb-6 md:px-0 md:pb-4 md:text-2xl'>
+        Quản lý Sản phẩm
+      </h1>
 
-      <div className='mb-6 flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4 shadow-sm'>
-        {/* Search */}
-        <div className='relative w-full max-w-96'>
+      {/* Search & Add Button - Responsive */}
+      <div className='mx-4 mb-4 flex flex-col items-stretch justify-between gap-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm sm:flex-row sm:items-center md:mx-0 md:mb-6 md:p-4'>
+        <div className='relative w-full sm:max-w-96'>
           <input
             type='text'
-            placeholder='Tìm kiếm theo tên sản phẩm...'
+            placeholder='Tìm kiếm sản phẩm...'
             className='w-full rounded-lg border border-gray-300 py-2 pl-10 pr-4 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500'
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
-              setCurrentPage(1); // Reset trang khi search
+              setCurrentPage(1);
             }}
           />
           <FaSearch className='absolute left-3 top-1/2 -translate-y-1/2 text-base text-gray-400' />
         </div>
 
-        {/* Add New Button */}
         <button
           onClick={handleAddNew}
-          className='flex cursor-pointer items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700'>
+          className='flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700'>
           <FaPlus /> Thêm Sản phẩm
         </button>
       </div>
 
-      {/* --- BẢNG DANH SÁCH SẢN PHẨM --- */}
-      <div className='overflow-x-auto rounded-lg border border-gray-200 bg-white p-5 shadow'>
+      {/* Table - Desktop View */}
+      <div className='mx-4 hidden overflow-x-auto rounded-lg border border-gray-200 bg-white p-5 shadow md:mx-0 lg:block'>
         <table className='w-full border-collapse'>
           <thead className='bg-gray-50'>
             <tr>
@@ -299,82 +285,152 @@ export default function AdminProductsPage() {
         </table>
       </div>
 
-      {/* --- Phân trang --- */}
+      {/* Card View - Mobile/Tablet */}
+      <div className='space-y-3 px-4 md:px-0 lg:hidden'>
+        {displayedProducts.length === 0 ? (
+          <div className='rounded-lg border border-gray-200 bg-white p-6 text-center text-gray-500'>
+            Không tìm thấy sản phẩm nào.
+          </div>
+        ) : (
+          displayedProducts.map((product) => (
+            <div key={product.id} className='rounded-lg border border-gray-200 bg-white p-4 shadow-sm'>
+              {/* Header with image and name */}
+              <div className='mb-3 flex items-start gap-3'>
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className='h-16 w-16 shrink-0 rounded object-cover sm:h-20 sm:w-20'
+                />
+                <div className='min-w-0 flex-1'>
+                  <h3 className='mb-1 line-clamp-2 text-sm font-semibold text-gray-800 sm:text-base'>{product.name}</h3>
+                  <div className='flex items-center gap-2 text-xs text-gray-500'>
+                    <span className='rounded bg-gray-100 px-2 py-0.5'>{product.category}</span>
+                    <span className='text-gray-400'>#{product.id}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Price and Rating */}
+              <div className='mb-3 flex items-center justify-between border-b border-gray-100 pb-3'>
+                <div>
+                  {product.oldPrice && (
+                    <div className='mb-0.5 text-xs text-gray-400 line-through'>{formatPrice(product.oldPrice)}</div>
+                  )}
+                  <div className='text-base font-bold text-red-500 sm:text-lg'>{formatPrice(product.price)}</div>
+                </div>
+                <div className='flex items-center gap-1 text-sm text-amber-500'>
+                  <FaStar />
+                  <span className='font-medium'>{product.rating?.toFixed(1) || 0}</span>
+                </div>
+              </div>
+
+              {/* Stock and Actions */}
+              <div className='flex items-center justify-between'>
+                <div className='text-xs text-gray-600'>
+                  Tồn kho:{' '}
+                  <span
+                    className={`ml-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
+                      (product.stock || 0) > 50
+                        ? 'bg-emerald-100 text-emerald-800'
+                        : (product.stock || 0) > 0
+                          ? 'bg-amber-100 text-amber-700'
+                          : 'bg-red-100 text-red-800'
+                    }`}>
+                    {product.stock}
+                  </span>
+                </div>
+                <div className='flex gap-2'>
+                  <button
+                    onClick={() => handleEdit(product)}
+                    className='cursor-pointer rounded p-2 text-blue-600 hover:bg-blue-50 active:bg-blue-100'
+                    title='Chỉnh sửa'>
+                    <FaEdit className='text-base' />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(product.id, product.name)}
+                    className='cursor-pointer rounded p-2 text-red-500 hover:bg-red-50 active:bg-red-100'
+                    title='Xóa'>
+                    <FaTrash className='text-base' />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Pagination - Responsive */}
       {totalPages > 1 && (
-        <div className='mt-5 flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4 shadow-sm'>
-          <span className='text-sm text-gray-500'>
+        <div className='mx-4 mt-4 flex flex-col items-center justify-between gap-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm sm:flex-row md:mx-0 md:mt-5 md:p-4'>
+          <span className='text-center text-xs text-gray-500 sm:text-left sm:text-sm'>
             Hiển thị {startIndex + 1} - {Math.min(endIndex, allFilteredProducts.length)} / {allFilteredProducts.length}{' '}
             sản phẩm
           </span>
-          <div className='flex gap-2'>
-            {/* Nút Previous */}
+          <div className='flex flex-wrap justify-center gap-1 sm:gap-2'>
             <button
               onClick={() => goToPage(currentPage - 1)}
               disabled={currentPage === 1}
-              className='flex h-9 w-9 cursor-pointer items-center justify-center rounded border border-gray-300 text-sm font-medium text-gray-600 transition hover:border-gray-400 hover:bg-gray-100 hover:text-gray-800 disabled:cursor-not-allowed disabled:border-gray-200 disabled:opacity-40'
+              className='flex h-8 w-8 cursor-pointer items-center justify-center rounded border border-gray-300 text-sm font-medium text-gray-600 transition hover:border-gray-400 hover:bg-gray-100 hover:text-gray-800 disabled:cursor-not-allowed disabled:border-gray-200 disabled:opacity-40 sm:h-9 sm:w-9'
               title='Trang trước'>
-              <FaChevronLeft />
+              <FaChevronLeft className='text-xs' />
             </button>
 
-            {/* Render các nút số trang thông minh */}
             {getPaginationItems(currentPage, totalPages).map((item, index) =>
               typeof item === 'number' ? (
                 <button
                   key={index}
                   onClick={() => goToPage(item)}
-                  className={`flex h-9 w-9 cursor-pointer items-center justify-center rounded border border-gray-300 text-sm font-medium text-gray-600 transition hover:border-gray-400 hover:bg-gray-100 hover:text-gray-800 ${currentPage === item ? 'pointer-events-none border-blue-600 bg-blue-600 font-semibold text-white' : ''}`}>
+                  className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded border border-gray-300 text-xs font-medium text-gray-600 transition hover:border-gray-400 hover:bg-gray-100 hover:text-gray-800 sm:h-9 sm:w-9 sm:text-sm ${currentPage === item ? 'pointer-events-none border-blue-600 bg-blue-600 font-semibold text-white' : ''}`}>
                   {item}
                 </button>
               ) : (
                 <span
                   key={index}
-                  className='flex h-8 w-8 select-none items-end justify-center pb-1.5 font-bold text-gray-400'>
+                  className='hidden h-8 w-8 select-none items-end justify-center pb-1.5 font-bold text-gray-400 sm:flex sm:h-8 sm:w-8'>
                   ...
                 </span>
               ),
             )}
 
-            {/* Nút Next */}
             <button
               onClick={() => goToPage(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className='flex h-9 w-9 cursor-pointer items-center justify-center rounded border border-gray-300 text-sm font-medium text-gray-600 transition hover:border-gray-400 hover:bg-gray-100 hover:text-gray-800 disabled:cursor-not-allowed disabled:border-gray-200 disabled:opacity-40'
+              className='flex h-8 w-8 cursor-pointer items-center justify-center rounded border border-gray-300 text-sm font-medium text-gray-600 transition hover:border-gray-400 hover:bg-gray-100 hover:text-gray-800 disabled:cursor-not-allowed disabled:border-gray-200 disabled:opacity-40 sm:h-9 sm:w-9'
               title='Trang sau'>
-              <FaChevronRight />
+              <FaChevronRight className='text-xs' />
             </button>
           </div>
         </div>
       )}
 
-      {/* --- Modal thêm/sửa sản phẩm --- */}
+      {/* Modal - Responsive */}
       {showModal && (
-        <div className='z-9999 fixed inset-0 flex items-center justify-center bg-black/50'>
-          <div className='max-h-[110vh] w-[94%] max-w-[640px] scale-[0.92] overflow-hidden rounded-xl bg-white shadow-2xl'>
-            <div className='flex items-center justify-between border-b border-gray-200 px-6 py-4'>
-              <h2 className='flex items-center gap-2 text-xl font-bold text-gray-800'>
-                <FaBox style={{ color: '#3b82f6' }} />
-                {isEditing ? 'Cập nhật Sản phẩm' : 'Thêm Sản phẩm mới'}
+        <div className='fixed inset-0 z-[1000] flex items-center justify-center bg-black/50 p-4'>
+          <div className='max-h-[83vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white shadow-2xl'>
+            <div className='sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3 sm:px-6 sm:py-4'>
+              <h2 className='flex items-center gap-2 text-lg font-bold text-gray-800 sm:text-xl'>
+                <FaBox style={{ color: '#3b82f6' }} className='text-base sm:text-xl' />
+                <span className='text-base sm:text-xl'>{isEditing ? 'Cập nhật Sản phẩm' : 'Thêm Sản phẩm mới'}</span>
               </h2>
               <button
                 onClick={() => setShowModal(false)}
-                className='cursor-pointer text-xl text-gray-400 hover:text-gray-600'>
+                className='cursor-pointer p-1 text-xl text-gray-400 hover:text-gray-600'>
                 <FaTimes />
               </button>
             </div>
 
-            <form onSubmit={handleSave} className='p-6'>
-              <div className='grid grid-cols-1 gap-5 sm:grid-cols-2'>
+            <div className='p-4 sm:p-6'>
+              <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5'>
                 <div className='sm:col-span-2'>
                   <label
                     htmlFor='name'
-                    className='mb-1.5 block text-[11px] text-sm font-bold uppercase tracking-wide text-gray-700'>
+                    className='mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-gray-700'>
                     Tên Sản phẩm
                   </label>
                   <input
                     type='text'
                     name='name'
                     id='name'
-                    required
                     value={formData.name}
                     onChange={handleChange}
                     placeholder='Ví dụ: Áo thun Polo cao cấp'
@@ -385,14 +441,13 @@ export default function AdminProductsPage() {
                 <div>
                   <label
                     htmlFor='price'
-                    className='mb-1.5 block text-[11px] text-sm font-bold uppercase tracking-wide text-gray-700'>
+                    className='mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-gray-700'>
                     Giá bán (VNĐ)
                   </label>
                   <input
                     type='number'
                     name='price'
                     id='price'
-                    required
                     value={formData.price || ''}
                     onChange={handleChange}
                     className='w-full rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm text-black transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20'
@@ -402,7 +457,7 @@ export default function AdminProductsPage() {
                 <div>
                   <label
                     htmlFor='oldPrice'
-                    className='mb-1.5 block text-[11px] text-sm font-bold uppercase tracking-wide text-gray-700'>
+                    className='mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-gray-700'>
                     Giá gốc (nếu có)
                   </label>
                   <input
@@ -419,13 +474,12 @@ export default function AdminProductsPage() {
                 <div>
                   <label
                     htmlFor='category'
-                    className='mb-1.5 block text-[11px] text-sm font-bold uppercase tracking-wide text-gray-700'>
+                    className='mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-gray-700'>
                     Danh mục
                   </label>
                   <select
                     name='category'
                     id='category'
-                    required
                     value={formData.category}
                     onChange={handleChange}
                     className='w-full cursor-pointer rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm font-medium text-black transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20'>
@@ -439,31 +493,29 @@ export default function AdminProductsPage() {
                 <div>
                   <label
                     htmlFor='stock'
-                    className='mb-1.5 block text-[11px] text-sm font-bold uppercase tracking-wide text-gray-700'>
+                    className='mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-gray-700'>
                     Tồn kho
                   </label>
                   <input
                     type='number'
                     name='stock'
                     id='stock'
-                    required
                     value={formData.stock || ''}
                     onChange={handleChange}
-                    className='w-full rounded-xl border border-gray-200 border-gray-300 bg-gray-50 p-3 text-sm text-black transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20'
+                    className='w-full rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm text-black transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20'
                     min='0'
                   />
                 </div>
                 <div className='sm:col-span-2'>
                   <label
                     htmlFor='rating'
-                    className='mb-1.5 block text-[11px] text-sm font-bold uppercase tracking-wide text-gray-700'>
+                    className='mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-gray-700'>
                     Đánh giá (0.0 - 5.0)
                   </label>
                   <input
                     type='number'
                     name='rating'
                     id='rating'
-                    required
                     value={formData.rating || ''}
                     onChange={handleChange}
                     className='w-full rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm text-black transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20'
@@ -475,14 +527,13 @@ export default function AdminProductsPage() {
                 <div className='sm:col-span-2'>
                   <label
                     htmlFor='image'
-                    className='mb-1.5 block text-[11px] text-sm font-bold uppercase tracking-wide text-gray-700'>
+                    className='mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-gray-700'>
                     Link Ảnh Sản phẩm
                   </label>
                   <input
                     type='text'
                     name='image'
                     id='image'
-                    required
                     value={formData.image}
                     onChange={handleChange}
                     className='w-full rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm text-black transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20'
@@ -491,20 +542,20 @@ export default function AdminProductsPage() {
                 </div>
               </div>
 
-              <div className='mt-8 flex justify-end gap-3 border-t border-gray-100 pt-6'>
+              <div className='mt-6 flex flex-col justify-end gap-3 border-t border-gray-100 pt-4 sm:mt-8 sm:flex-row sm:pt-6'>
                 <button
                   type='button'
                   onClick={() => setShowModal(false)}
-                  className='cursor-pointer rounded-xl border border-gray-200 bg-white px-6 py-2.5 text-sm font-bold text-gray-600 shadow-sm transition-all hover:bg-gray-50 active:scale-[0.98]'>
+                  className='order-2 cursor-pointer rounded-xl border border-gray-200 bg-white px-6 py-2.5 text-sm font-bold text-gray-600 shadow-sm transition-all hover:bg-gray-50 active:scale-[0.98] sm:order-1'>
                   Hủy bỏ
                 </button>
                 <button
-                  type='submit'
-                  className='flex cursor-pointer items-center gap-2 rounded-xl bg-emerald-600 px-8 py-2.5 text-sm font-bold text-white shadow-lg shadow-emerald-900/10 transition-all hover:bg-emerald-700 active:scale-[0.98]'>
+                  onClick={handleSave}
+                  className='order-1 flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-emerald-600 px-8 py-2.5 text-sm font-bold text-white shadow-lg shadow-emerald-900/10 transition-all hover:bg-emerald-700 active:scale-[0.98] sm:order-2'>
                   <FaSave /> {isEditing ? 'Cập nhật' : 'Thêm mới'}
                 </button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       )}

@@ -1,28 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import {
-  Search,
-  Ban,
-  Eye,
-  Loader2,
-  CheckCircle2,
-  XCircle,
-  Clock,
-  User,
-  ShieldCheck,
-  Calendar,
-  Mail,
-  Phone,
-} from 'lucide-react';
+import { Search, Ban, Loader2, CheckCircle2, XCircle, Clock, User, ShieldCheck, Calendar } from 'lucide-react';
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedUser, setSelectedUser] = useState<any>(null);
 
-  // Load danh sách người dùng
   const fetchUsers = async () => {
     setIsLoading(true);
     try {
@@ -40,7 +25,6 @@ export default function AdminUsersPage() {
     fetchUsers();
   }, []);
 
-  // Xử lý Khóa/Mở khóa
   const handleToggleStatus = async (userId: string, currentStatus: string) => {
     const newStatus = currentStatus === 'banned' ? 'active' : 'banned';
     if (!confirm(`Xác nhận ${newStatus === 'banned' ? 'Khóa' : 'Mở khóa'} tài khoản này?`)) return;
@@ -67,10 +51,10 @@ export default function AdminUsersPage() {
   );
 
   return (
-    <div className='w-full space-y-6 font-sans text-slate-900'>
-      {/* HEADER TỐI GIẢN */}
-      <div className='flex flex-col items-center justify-between gap-4 border-b border-slate-200 pb-6 md:flex-row'>
-        <h1 className='text-2xl font-semibold text-gray-800'>Quản lý Người dùng</h1>
+    <div className='w-full space-y-4 font-sans text-slate-900 md:space-y-6'>
+      {/* HEADER */}
+      <div className='flex flex-col gap-3 border-b border-slate-200 pb-4 md:flex-row md:items-center md:justify-between md:gap-4 md:pb-6'>
+        <h1 className='text-xl font-semibold text-gray-800 md:text-2xl'>Quản lý Người dùng</h1>
 
         <div className='relative w-full md:w-96'>
           <Search className='absolute left-3 top-1/2 -translate-y-1/2 text-slate-400' size={16} />
@@ -84,8 +68,8 @@ export default function AdminUsersPage() {
         </div>
       </div>
 
-      {/* BẢNG DỮ LIỆU CHUẨN STYLE SẢN PHẨM */}
-      <div className='overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm'>
+      {/* BẢNG - Desktop */}
+      <div className='hidden overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm md:block'>
         <table className='w-full border-collapse text-left'>
           <thead>
             <tr className='border-b border-slate-200 bg-slate-50'>
@@ -113,7 +97,6 @@ export default function AdminUsersPage() {
             ) : filteredUsers.length > 0 ? (
               filteredUsers.map((user) => (
                 <tr key={user.id} className='transition-colors hover:bg-slate-50/50'>
-                  {/* CỘT 1: THÀNH VIÊN */}
                   <td className='px-10 py-4'>
                     <div className='flex items-center gap-3'>
                       <img
@@ -122,13 +105,12 @@ export default function AdminUsersPage() {
                         alt=''
                       />
                       <div className='min-w-0'>
-                        <p className='text-[14px] font-bold leading-tight text-slate-800'>{user.fullName}</p>
-                        <p className='text-[11px] font-medium text-slate-400'>{user.email}</p>
+                        <p className='text-[14px] font-semibold leading-tight text-slate-800'>{user.fullName}</p>
+                        <p className='text-[11px] font-medium text-slate-500'>{user.email}</p>
                       </div>
                     </div>
                   </td>
 
-                  {/* CỘT 2: NGÀY THAM GIA */}
                   <td className='px-6 py-4 text-sm font-medium text-slate-600'>
                     <div className='flex items-center gap-2'>
                       <Calendar size={14} className='text-slate-300' />
@@ -136,25 +118,22 @@ export default function AdminUsersPage() {
                     </div>
                   </td>
 
-                  {/* CỘT 3: ĐỐI TÁC BÁN HÀNG */}
                   <td className='px-6 py-4'>
                     <ShopStatusBadge status={user.shopStatus} />
                   </td>
 
-                  {/* CỘT 4: TRẠNG THÁI TÀI KHOẢN */}
                   <td className='px-6 py-4'>
                     {user.status === 'banned' ? (
                       <span className='inline-flex items-center gap-1.5 text-[12px] font-bold uppercase text-rose-600'>
                         <XCircle size={14} /> Đã bị khóa
                       </span>
                     ) : (
-                      <span className='inline-flex items-center gap-1.5 text-[12px] font-bold uppercase text-emerald-600'>
+                      <span className='inline-flex items-center gap-1.5 pl-5 text-[12px] font-bold uppercase text-emerald-600'>
                         <CheckCircle2 size={14} /> Hoạt động
                       </span>
                     )}
                   </td>
 
-                  {/* CỘT 5: THAO TÁC */}
                   <td className='space-x-1 px-8 py-4 text-left'>
                     <button
                       onClick={() => handleToggleStatus(user.id, user.status)}
@@ -180,6 +159,67 @@ export default function AdminUsersPage() {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* CARD VIEW - Mobile */}
+      <div className='space-y-3 md:hidden'>
+        {isLoading ? (
+          <div className='py-20 text-center text-slate-400'>
+            <Loader2 className='mx-auto mb-2 animate-spin' size={24} />
+            <p className='text-xs font-medium'>Đang tải danh sách...</p>
+          </div>
+        ) : filteredUsers.length > 0 ? (
+          filteredUsers.map((user) => (
+            <div key={user.id} className='rounded-xl border border-slate-200 bg-white p-4 shadow-sm'>
+              {/* User Header */}
+              <div className='mb-3 flex items-start gap-3 border-b border-slate-100 pb-3'>
+                <img
+                  src={user.avatar}
+                  className='h-12 w-12 shrink-0 rounded-full border border-slate-200 bg-slate-100 object-cover'
+                  alt=''
+                />
+                <div className='min-w-0 flex-1'>
+                  <p className='mb-1 text-sm font-bold leading-tight text-slate-800'>{user.fullName}</p>
+                  <p className='truncate text-xs font-medium text-slate-400'>{user.email}</p>
+                  <div className='mt-1.5 flex items-center gap-1.5 text-xs text-slate-500'>
+                    <Calendar size={12} className='text-slate-400' />
+                    {user.joinDate}
+                  </div>
+                </div>
+              </div>
+
+              {/* Status Badges */}
+              <div className='mb-3 flex flex-wrap items-center gap-2'>
+                <ShopStatusBadge status={user.shopStatus} />
+                {user.status === 'banned' ? (
+                  <span className='inline-flex items-center gap-1.5 text-[11px] font-bold uppercase text-rose-600'>
+                    <XCircle size={12} /> Đã khóa
+                  </span>
+                ) : (
+                  <span className='inline-flex items-center gap-1.5 text-[11px] font-bold uppercase text-emerald-600'>
+                    <CheckCircle2 size={12} /> Hoạt động
+                  </span>
+                )}
+              </div>
+
+              {/* Action Button */}
+              <button
+                onClick={() => handleToggleStatus(user.id, user.status)}
+                className={`flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all ${
+                  user.status === 'banned'
+                    ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100 active:bg-emerald-200'
+                    : 'bg-rose-50 text-rose-600 hover:bg-rose-100 active:bg-rose-200'
+                }`}>
+                <Ban size={16} />
+                {user.status === 'banned' ? 'Mở khóa tài khoản' : 'Khóa tài khoản'}
+              </button>
+            </div>
+          ))
+        ) : (
+          <div className='rounded-xl border border-slate-200 bg-white p-12 text-center'>
+            <p className='text-xs font-bold uppercase tracking-widest text-slate-300'>Không tìm thấy kết quả phù hợp</p>
+          </div>
+        )}
       </div>
     </div>
   );

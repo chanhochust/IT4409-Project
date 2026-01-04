@@ -11,7 +11,31 @@ import {
   FaMapMarker,
   FaUser,
   FaStickyNote,
+  FaBox,
+  FaPhone,
 } from 'react-icons/fa';
+
+interface OrderItem {
+  name: string;
+  quantity: number;
+  price: number;
+}
+
+interface Order {
+  id: string;
+  receiverName: string;
+  receiverPhone: string;
+  province: string;
+  district: string;
+  ward: string;
+  addressDetail: string;
+  date: string;
+  total: number;
+  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  paymentMethod: string;
+  note?: string;
+  items: OrderItem[];
+}
 
 const mockOrders: Order[] = [
   {
@@ -97,18 +121,21 @@ export default function SellerOrdersPage() {
   };
 
   return (
-    <div className='animate-in fade-in space-y-6 p-0 font-sans text-black duration-500'>
+    <div className='animate-in fade-in space-y-4 p-4 font-sans text-black duration-500 md:space-y-6 md:p-0'>
+      {/* Header */}
       <div className='flex flex-col items-start justify-between gap-4 md:flex-row md:items-center'>
         <div>
-          <h1 className='mb-2 border-b border-gray-200 pb-2 text-2xl font-bold uppercase tracking-tight text-gray-800'>
+          <h1 className='mb-2 border-b border-gray-200 pb-2 text-xl font-bold uppercase tracking-tight text-gray-800 md:text-2xl'>
             Quản lý Đơn hàng
           </h1>
-          <p className='text-sm font-medium text-gray-500'>Theo dõi thông tin vận chuyển và thanh toán chi tiết.</p>
+          <p className='text-xs font-medium text-gray-500 md:text-sm'>
+            Theo dõi thông tin vận chuyển và thanh toán chi tiết.
+          </p>
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className='flex flex-wrap gap-2 border-b border-gray-200'>
+      {/* Tabs - Scrollable on mobile */}
+      <div className='scrollbar-hide flex gap-2 overflow-x-auto border-b border-gray-200 pb-0'>
         {['all', 'pending', 'processing', 'shipped', 'delivered', 'cancelled'].map((tab) => (
           <button
             key={tab}
@@ -116,17 +143,17 @@ export default function SellerOrdersPage() {
               setActiveTab(tab);
               setCurrentPage(1);
             }}
-            className={`cursor-pointer border-b-2 px-4 py-3 text-sm font-bold transition-all ${
+            className={`cursor-pointer whitespace-nowrap border-b-2 px-3 py-2.5 text-xs font-bold transition-all md:px-4 md:py-3 md:text-sm ${
               activeTab === tab ? 'border-sky-900 text-sky-800' : 'border-transparent text-gray-400 hover:text-gray-600'
             }`}>
-            {tab === 'all' ? 'Tất cả đơn' : getStatusInfo(tab as any).label}
+            {tab === 'all' ? 'Tất cả' : getStatusInfo(tab as any).label}
           </button>
         ))}
       </div>
 
       {/* Search */}
-      <div className='flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm md:flex-row'>
-        <div className='relative flex-1'>
+      <div className='rounded-xl border border-gray-200 bg-white p-3 shadow-sm md:p-4'>
+        <div className='relative'>
           <input
             type='text'
             placeholder='Tìm theo Mã đơn hoặc Tên khách...'
@@ -143,8 +170,8 @@ export default function SellerOrdersPage() {
         </div>
       </div>
 
-      {/* Bảng đơn hàng */}
-      <div className='overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm'>
+      {/* Table - Desktop */}
+      <div className='hidden overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm md:block'>
         <div className='overflow-x-auto'>
           <table className='w-full border-collapse'>
             <thead>
@@ -158,7 +185,6 @@ export default function SellerOrdersPage() {
                 <th className='px-6 py-4 text-left text-[0.7rem] font-bold uppercase tracking-widest text-gray-500'>
                   Ngày Đặt
                 </th>
-                {/* Đã sửa: Xóa text-left để text-center hoạt động chuẩn xác */}
                 <th className='px-6 py-4 text-center text-[0.7rem] font-bold uppercase tracking-widest text-gray-500'>
                   Trạng Thái
                 </th>
@@ -201,9 +227,59 @@ export default function SellerOrdersPage() {
         </div>
       </div>
 
+      {/* Card View - Mobile */}
+      <div className='space-y-3 md:hidden'>
+        {displayedOrders.length === 0 ? (
+          <div className='rounded-xl border border-gray-200 bg-white p-8 text-center font-medium text-gray-400'>
+            Không tìm thấy đơn hàng nào.
+          </div>
+        ) : (
+          displayedOrders.map((order) => (
+            <div key={order.id} className='rounded-xl border border-gray-200 bg-white p-4 shadow-sm'>
+              {/* Header */}
+              <div className='mb-3 flex items-start justify-between'>
+                <div>
+                  <div className='mb-1 text-sm font-bold text-blue-800'>{order.id}</div>
+                  <div className='text-xs text-gray-500'>{order.date}</div>
+                </div>
+                <span
+                  className={`rounded-full px-2.5 py-1 text-[10px] font-bold uppercase ${getStatusInfo(order.status).color}`}>
+                  {getStatusInfo(order.status).label}
+                </span>
+              </div>
+
+              {/* Customer Info */}
+              <div className='space-y-2 border-b border-t border-gray-100 py-3'>
+                <div className='flex items-center gap-2'>
+                  <FaUser className='text-xs text-gray-400' />
+                  <span className='text-sm font-semibold text-gray-700'>{order.receiverName}</span>
+                </div>
+                <div className='flex items-center gap-2'>
+                  <FaPhone className='text-xs text-gray-400' />
+                  <span className='text-sm text-gray-600'>{order.receiverPhone}</span>
+                </div>
+              </div>
+
+              {/* Total and Action */}
+              <div className='mt-3 flex items-center justify-between'>
+                <div>
+                  <div className='mb-0.5 text-xs text-gray-500'>Tổng tiền</div>
+                  <div className='text-base font-bold text-blue-600'>{formatPrice(order.total)}</div>
+                </div>
+                <button
+                  onClick={() => setSelectedOrder(order)}
+                  className='cursor-pointer rounded-lg bg-blue-50 px-4 py-2 text-sm font-bold text-blue-600 hover:bg-blue-100 active:bg-blue-200'>
+                  Chi tiết
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className='flex items-center justify-between rounded-xl border border-gray-200 bg-white p-4 shadow-sm'>
+        <div className='flex flex-col items-center justify-between gap-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm sm:flex-row md:p-4'>
           <span className='font-sans text-xs font-bold uppercase tracking-widest text-gray-400'>
             Trang {currentPage} / {totalPages}
           </span>
@@ -224,13 +300,16 @@ export default function SellerOrdersPage() {
         </div>
       )}
 
-      {/* Modal Chi tiết đơn hàng */}
+      {/* Modal Chi tiết đơn hàng - Responsive */}
       {selectedOrder && (
-        <div className='fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 p-4 font-sans backdrop-blur-sm'>
-          <div className='animate-in zoom-in-95 flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl duration-200'>
-            <div className='flex items-center justify-between border-b border-gray-100 bg-gray-50 px-6 py-4'>
+        <div className='fixed inset-0 z-[1000] flex items-center justify-center bg-black/50 p-4 font-sans'>
+          <div className='animate-in zoom-in-95 flex max-h-[83vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl duration-200'>
+            {/* Modal Header */}
+            <div className='flex items-center justify-between border-b border-gray-100 bg-gray-50 px-4 py-3 md:px-6 md:py-4'>
               <div>
-                <h2 className='text-xl font-bold leading-tight text-gray-900'>Thông tin đơn hàng {selectedOrder.id}</h2>
+                <h2 className='text-base font-bold leading-tight text-gray-900 md:text-xl'>
+                  Đơn hàng {selectedOrder.id}
+                </h2>
                 <p className='mt-1 text-xs text-gray-500'>Đặt ngày: {selectedOrder.date}</p>
               </div>
               <button
@@ -240,10 +319,11 @@ export default function SellerOrdersPage() {
               </button>
             </div>
 
-            <div className='space-y-6 overflow-y-auto p-6'>
+            {/* Modal Body */}
+            <div className='space-y-4 overflow-y-auto p-4 md:space-y-6 md:p-6'>
               {/* CẬP NHẬT TRẠNG THÁI */}
-              <div className='rounded-2xl border border-blue-100 bg-blue-50/50 p-5'>
-                <h3 className='mb-4 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-blue-600'>
+              <div className='rounded-2xl border border-blue-100 bg-blue-50/50 p-4 md:p-5'>
+                <h3 className='mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-blue-600 md:mb-4'>
                   <FaCheckCircle className='text-blue-600' /> Trạng thái xử lý
                 </h3>
                 <div className='flex flex-wrap gap-2'>
@@ -307,7 +387,9 @@ export default function SellerOrdersPage() {
               {/* DANH SÁCH SẢN PHẨM */}
               <div className='space-y-3'>
                 <h3 className='text-[11px] font-bold uppercase tracking-widest text-gray-400'>Sản phẩm trong đơn</h3>
-                <div className='overflow-hidden rounded-xl border border-gray-100 shadow-sm'>
+
+                {/* Desktop Table */}
+                <div className='hidden overflow-hidden rounded-xl border border-gray-100 shadow-sm sm:block'>
                   <table className='w-full text-left text-sm'>
                     <thead className='bg-gray-50 text-[10px] font-bold uppercase text-gray-500'>
                       <tr>
@@ -331,26 +413,47 @@ export default function SellerOrdersPage() {
                     </tbody>
                   </table>
                 </div>
+
+                {/* Mobile Cards */}
+                <div className='space-y-2 sm:hidden'>
+                  {selectedOrder.items.map((item, idx) => (
+                    <div key={idx} className='rounded-lg border border-gray-100 bg-white p-3'>
+                      <div className='mb-2 flex items-start justify-between'>
+                        <div className='flex-1'>
+                          <p className='mb-1 text-sm font-bold text-gray-800'>{item.name}</p>
+                          <p className='text-xs text-gray-500'>Số lượng: {item.quantity}</p>
+                        </div>
+                      </div>
+                      <div className='flex items-center justify-between border-t border-gray-50 pt-2'>
+                        <span className='text-xs text-gray-500'>{formatPrice(item.price)}</span>
+                        <span className='text-sm font-bold text-gray-800'>
+                          {formatPrice(item.price * item.quantity)}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {/* TỔNG KẾT CHI TIẾT */}
               <div className='flex flex-col items-end gap-2 border-t border-gray-100 pt-4'>
-                <div className='flex w-full justify-between text-sm md:w-72'>
+                <div className='flex w-full justify-between text-sm'>
                   <span className='font-medium text-gray-500'>Tạm tính (Tiền hàng):</span>
                   <span className='font-bold text-gray-800'>{formatPrice(selectedOrder.total)}</span>
                 </div>
-                <div className='flex w-full justify-between text-sm md:w-72'>
+                <div className='flex w-full justify-between text-sm'>
                   <span className='font-medium text-gray-500'>Phí vận chuyển:</span>
                   <span className='font-bold text-emerald-600'>Miễn phí</span>
                 </div>
-                <div className='mt-2 flex w-full justify-between border-t border-dashed border-gray-200 pt-2 text-lg font-extrabold text-gray-900 md:w-72'>
+                <div className='mt-2 flex w-full justify-between border-t border-dashed border-gray-200 pt-2 text-base font-extrabold text-gray-900 md:text-lg'>
                   <span>Tổng thanh toán:</span>
                   <span className='text-blue-500'>{formatPrice(selectedOrder.total)}</span>
                 </div>
               </div>
             </div>
 
-            <div className='flex justify-end gap-3 border-t border-gray-100 bg-gray-50 p-4'>
+            {/* Modal Footer */}
+            <div className='flex flex-col-reverse justify-end gap-3 border-t border-gray-100 bg-gray-50 p-4 sm:flex-row'>
               <button
                 onClick={() => setSelectedOrder(null)}
                 className='cursor-pointer rounded-lg px-6 py-2 text-sm font-bold text-gray-500 transition-colors hover:bg-gray-200'>

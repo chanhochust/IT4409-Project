@@ -8,16 +8,14 @@ export default function AdminDashboard() {
     totalUsers: 0,
     activeShops: 0,
     pendingShops: 0,
-    revenue: '128M', // Doanh thu tạm thời để tĩnh hoặc lấy từ API khác
+    revenue: '128M',
   });
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch dữ liệu từ các API Admin để lấy con số thực tế
   useEffect(() => {
     const fetchStats = async () => {
       setIsLoading(true);
       try {
-        // Gọi song song các API để tối ưu tốc độ
         const [usersRes, shopsRes] = await Promise.all([fetch('/api/admin/users'), fetch('/api/admin/shops')]);
 
         const users = await usersRes.json();
@@ -73,28 +71,28 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className='space-y-6'>
+    <div className='space-y-4 md:space-y-6'>
       {/* Stats Cards */}
-      <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4'>
+      <div className='grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-6 lg:grid-cols-4'>
         {stats.map((stat, index) => (
           <div
             key={index}
-            className='rounded-xl border border-gray-100 bg-white p-6 shadow-sm transition-shadow hover:shadow-md'>
+            className='rounded-xl border border-gray-100 bg-white p-4 shadow-sm transition-shadow hover:shadow-md md:p-6'>
             <div className='flex items-center justify-between'>
-              <div>
-                <p className='mb-1 text-sm text-gray-600'>{stat.label}</p>
+              <div className='min-w-0 flex-1'>
+                <p className='mb-1 truncate text-xs text-gray-600 md:text-sm'>{stat.label}</p>
                 {isLoading ? (
-                  <div className='h-9 w-12 animate-pulse rounded bg-gray-50'></div>
+                  <div className='h-8 w-12 animate-pulse rounded bg-gray-50 md:h-9'></div>
                 ) : (
-                  <p className='text-3xl font-bold text-gray-800'>{stat.value}</p>
+                  <p className='text-2xl font-bold text-gray-800 md:text-3xl'>{stat.value}</p>
                 )}
                 <p
-                  className={`mt-2 text-sm font-medium ${stat.label === 'Chờ duyệt shop' && data.pendingShops > 0 ? 'text-orange-500' : 'text-green-600'}`}>
+                  className={`mt-1 text-xs font-medium md:mt-2 md:text-sm ${stat.label === 'Chờ duyệt shop' && data.pendingShops > 0 ? 'text-orange-500' : 'text-green-600'}`}>
                   {stat.change}
                 </p>
               </div>
-              <div className={`${stat.color} rounded-lg p-4`}>
-                <stat.icon className='h-8 w-8 text-white' />
+              <div className={`${stat.color} shrink-0 rounded-lg p-3 md:p-4`}>
+                <stat.icon className='h-6 w-6 text-white md:h-8 md:w-8' />
               </div>
             </div>
           </div>
@@ -102,45 +100,49 @@ export default function AdminDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className='rounded-xl border border-gray-100 bg-white p-6 shadow-sm'>
-        <h2 className='mb-4 text-xl font-bold text-gray-800'>Thao tác nhanh</h2>
-        <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
+      <div className='rounded-xl border border-gray-100 bg-white p-4 shadow-sm md:p-6'>
+        <h2 className='mb-3 text-lg font-bold text-gray-800 md:mb-4 md:text-xl'>Thao tác nhanh</h2>
+        <div className='grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-3'>
           <a
             href='/admin/shops'
-            className='flex items-center gap-3 rounded-lg border border-orange-200 bg-orange-50 p-4 no-underline transition-colors hover:bg-orange-100'>
-            <Clock className='h-6 w-6 text-orange-600' />
-            <div className='text-left'>
-              <p className='font-semibold text-gray-800'>Duyệt Shop</p>
-              <p className='text-sm text-gray-600'>{isLoading ? '...' : `${data.pendingShops} shop chờ xét duyệt`}</p>
+            className='flex items-center gap-3 rounded-lg border border-orange-200 bg-orange-50 p-3 no-underline transition-colors hover:bg-orange-100 active:bg-orange-200 md:p-4'>
+            <Clock className='h-5 w-5 shrink-0 text-orange-600 md:h-6 md:w-6' />
+            <div className='min-w-0 flex-1 text-left'>
+              <p className='text-sm font-semibold text-gray-800 md:text-base'>Duyệt Shop</p>
+              <p className='truncate text-xs text-gray-600 md:text-sm'>
+                {isLoading ? '...' : `${data.pendingShops} shop chờ xét duyệt`}
+              </p>
             </div>
           </a>
 
           <a
             href='/admin/users'
-            className='flex items-center gap-3 rounded-lg border border-blue-200 bg-blue-50 p-4 no-underline transition-colors hover:bg-blue-100'>
-            <Users className='h-6 w-6 text-blue-600' />
-            <div className='text-left'>
-              <p className='font-semibold text-gray-800'>Quản lý Người dùng</p>
-              <p className='text-sm text-gray-600'>{isLoading ? '...' : `${data.totalUsers} người dùng`}</p>
+            className='flex items-center gap-3 rounded-lg border border-blue-200 bg-blue-50 p-3 no-underline transition-colors hover:bg-blue-100 active:bg-blue-200 md:p-4'>
+            <Users className='h-5 w-5 shrink-0 text-blue-600 md:h-6 md:w-6' />
+            <div className='min-w-0 flex-1 text-left'>
+              <p className='text-sm font-semibold text-gray-800 md:text-base'>Quản lý Người dùng</p>
+              <p className='truncate text-xs text-gray-600 md:text-sm'>
+                {isLoading ? '...' : `${data.totalUsers} người dùng`}
+              </p>
             </div>
           </a>
 
           <a
             href='/admin/settings'
-            className='flex items-center gap-3 rounded-lg border border-purple-200 bg-purple-50 p-4 no-underline transition-colors hover:bg-purple-100'>
-            <Settings className='h-6 w-6 text-purple-600' />
-            <div className='text-left'>
-              <p className='font-semibold text-gray-800'>Cấu hình sàn</p>
-              <p className='text-sm text-gray-600'>Điều chỉnh hệ thống</p>
+            className='flex items-center gap-3 rounded-lg border border-purple-200 bg-purple-50 p-3 no-underline transition-colors hover:bg-purple-100 active:bg-purple-200 sm:col-span-2 md:p-4 lg:col-span-1'>
+            <Settings className='h-5 w-5 shrink-0 text-purple-600 md:h-6 md:w-6' />
+            <div className='min-w-0 flex-1 text-left'>
+              <p className='text-sm font-semibold text-gray-800 md:text-base'>Cấu hình sàn</p>
+              <p className='truncate text-xs text-gray-600 md:text-sm'>Điều chỉnh hệ thống</p>
             </div>
           </a>
         </div>
       </div>
 
       {/* Recent Activities */}
-      <div className='rounded-xl border border-gray-100 bg-white p-6 shadow-sm'>
-        <h2 className='mb-4 text-xl font-bold text-gray-800'>Hoạt động gần đây</h2>
-        <div className='space-y-4'>
+      <div className='rounded-xl border border-gray-100 bg-white p-4 shadow-sm md:p-6'>
+        <h2 className='mb-3 text-lg font-bold text-gray-800 md:mb-4 md:text-xl'>Hoạt động gần đây</h2>
+        <div className='space-y-3 md:space-y-4'>
           {[
             {
               action: 'Yêu cầu mở shop mới',
@@ -161,10 +163,10 @@ export default function AdminDashboard() {
               type: 'info',
             },
           ].map((activity, index) => (
-            <div key={index} className='flex items-center justify-between rounded-lg bg-gray-50 p-4'>
-              <div className='flex items-center gap-3'>
+            <div key={index} className='flex items-center justify-between gap-3 rounded-lg bg-gray-50 p-3 md:p-4'>
+              <div className='flex min-w-0 flex-1 items-center gap-2 md:gap-3'>
                 <div
-                  className={`h-2 w-2 rounded-full ${
+                  className={`h-2 w-2 shrink-0 rounded-full ${
                     activity.type === 'pending'
                       ? 'bg-orange-500'
                       : activity.type === 'success'
@@ -172,12 +174,12 @@ export default function AdminDashboard() {
                         : 'bg-blue-500'
                   }`}
                 />
-                <div>
-                  <p className='font-medium text-gray-800'>{activity.action}</p>
-                  <p className='text-sm text-gray-600'>{activity.user}</p>
+                <div className='min-w-0 flex-1'>
+                  <p className='truncate text-sm font-medium text-gray-800 md:text-base'>{activity.action}</p>
+                  <p className='truncate text-xs text-gray-600 md:text-sm'>{activity.user}</p>
                 </div>
               </div>
-              <span className='text-sm text-gray-500'>{activity.time}</span>
+              <span className='shrink-0 whitespace-nowrap text-xs text-gray-500 md:text-sm'>{activity.time}</span>
             </div>
           ))}
         </div>

@@ -1,11 +1,11 @@
-"use client";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import ProductCard, { ProductCardProps } from "@/src/app/components/ui/ProductCard";
+'use client';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import ProductCard, { ProductCardProps } from '@/src/app/components/ui/ProductCard';
 
 export default function SearchPage() {
   const params = useSearchParams();
-  const q = params.get("q") || "";
+  const q = params.get('q') || '';
   const [results, setResults] = useState<ProductCardProps[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -24,12 +24,12 @@ export default function SearchPage() {
   if (loading) return <h2>Đang tìm kiếm...</h2>;
 
   return (
-    <div className="min-h-[calc(100vh-120px)] flex flex-col items-center justify-start px-4 py-8">
-      <h2 className="text-2xl font-bold mb-4">Kết quả cho: “{q}”</h2>
+    <div className='flex min-h-[calc(100vh-120px)] flex-col items-center justify-start px-4 py-8'>
+      <h2 className='mb-4 text-xl font-bold md:text-2xl'>Kết quả cho: “{q}”</h2>
       {results.length === 0 && <p>Không có sản phẩm phù hợp.</p>}
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 w-full max-w-[1120px]">
-        {results.map(item => (
+      <div className='grid h-[310px] grid-cols-2 gap-2 px-2 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5'>
+        {results.map((item) => (
           <ProductCard
             key={item.id}
             id={item.id}
