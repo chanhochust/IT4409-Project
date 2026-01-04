@@ -2,12 +2,13 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { FaSpinner, FaArrowRight, FaTrash } from 'react-icons/fa';
+import { FaSpinner, FaArrowRight, FaTrashAlt } from 'react-icons/fa';
 import { useCartStore } from '@/store/cart_actions';
 import { useRouter } from 'next/navigation';
+
+const GRID_LAYOUT = 'grid grid-cols-[50px_1fr_150px_150px_150px_100px] items-center gap-4';
 
 function EmptyCart() {
   useEffect(() => {
@@ -93,155 +94,104 @@ function HasCart() {
     .reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
-    <div className='flex justify-center px-2 md:px-4'>
-      <div className='w-full max-w-[1200px] rounded-xl bg-white p-3 shadow-[0_2px_10px_rgba(0,0,0,0.05)] md:m-2.5 md:p-6'>
-        <h2 className='mb-3 text-lg font-semibold md:mb-4 md:text-[22px]'>Giỏ hàng của bạn</h2>
+    <div className='flex min-h-screen justify-center bg-[#f5f5fa] py-8'>
+      <div className='w-full max-w-[1200px] px-4'>
+        <div className='rounded-xl bg-white p-6 shadow-sm'>
+          <h2 className='mb-6 text-xl font-bold text-gray-800'>Giỏ hàng của bạn</h2>
 
-        {/* Desktop Header - Ẩn trên mobile */}
-        <div className='hidden grid-cols-[1fr_6fr_2fr_2fr_2fr_2fr] border-b-2 border-[#eee] pb-2.5 text-center font-semibold text-[#555] md:grid'>
-          <div className='flex items-center gap-1.5'>
-            <input
-              type='checkbox'
-              checked={selected.length === cart.length}
-              onChange={toggleAll}
-              className='h-[18px] w-[18px]'
-            />
+          {/* Header - Sử dụng GRID_LAYOUT */}
+          <div
+            className={`${GRID_LAYOUT} border-b border-gray-200 pb-4 text-sm font-semibold uppercase tracking-wider text-gray-500`}>
+            <div className='flex justify-center'>
+              <input
+                type='checkbox'
+                checked={selected.length === cart.length && cart.length > 0}
+                onChange={toggleAll}
+                className='h-5 w-5 cursor-pointer'
+              />
+            </div>
+            <div className='ml-4 text-left'>Sản phẩm</div>
+            <div className='text-center'>Đơn giá</div>
+            <div className='text-center'>Số lượng</div>
+            <div className='text-center'>Số tiền</div>
+            <div className='text-center'>Thao tác</div>
           </div>
-          <div>Sản phẩm</div>
-          <div>Đơn giá</div>
-          <div>Số lượng</div>
-          <div>Số tiền</div>
-          <div>Thao tác</div>
-        </div>
 
-        {/* Mobile: Select All */}
-        <div className='mb-2 flex items-center gap-2 border-b border-[#eee] pb-2 md:hidden'>
-          <input
-            type='checkbox'
-            checked={selected.length === cart.length}
-            onChange={toggleAll}
-            className='h-[16px] w-[16px]'
-          />
-          <label className='text-sm font-medium'>Chọn tất cả ({cart.length})</label>
-        </div>
-
-        {/* Items - Desktop Grid & Mobile Card */}
-        <div>
-          {cart.map((item) => (
-            <div key={item.id}>
-              {/* Desktop Layout */}
-              <div className='hidden grid-cols-[1fr_6fr_2fr_2fr_2fr_2fr] border-b border-[#eee] py-4 md:grid'>
-                <div className='flex items-center justify-start'>
+          {/* Items List */}
+          <div className='divide-y divide-gray-100'>
+            {cart.map((item) => (
+              <div className={`${GRID_LAYOUT} py-5 transition-colors hover:bg-gray-50`} key={item.id}>
+                {/* Checkbox */}
+                <div className='flex justify-center'>
                   <input
                     type='checkbox'
                     checked={selected.includes(item.id)}
                     onChange={() => toggleItem(item.id)}
-                    className='h-[18px] w-[18px]'
+                    className='h-5 w-5 cursor-pointer'
                   />
                 </div>
 
-                <div className='flex gap-[30px] text-left'>
-                  <Image src={item.image} width={90} height={90} alt={item.name} />
-                  <h3 className='flex items-center justify-center font-medium text-[#222]'>{item.name}</h3>
+                {/* Sản phẩm */}
+                <div className='flex items-center gap-4'>
+                  <div className='relative h-20 w-20 shrink-0 overflow-hidden rounded-md'>
+                    <Image src={item.image} alt={item.name} fill className='object-contain p-1' />
+                  </div>
+                  <Link href={`/products/${item.id}`} className='transition-colors hover:text-red-600'>
+                    <h3 className='line-clamp-2 font-medium'>{item.name}</h3>
+                  </Link>
                 </div>
 
-                <div className='flex items-center justify-center font-medium text-[#222]'>
-                  {item.price.toLocaleString()}₫
+                {/* Đơn giá */}
+                <div className='text-center font-medium text-gray-700'>{item.price.toLocaleString()}₫</div>
+
+                {/* Số lượng */}
+                <div className='flex justify-center'>
+                  <div className='flex items-center overflow-hidden rounded-md border border-gray-300'>
+                    <button
+                      onClick={() => decrease(item.id)}
+                      className='border-r border-gray-300 bg-gray-50 px-3 py-1 text-lg transition-colors hover:bg-gray-200'>
+                      –
+                    </button>
+                    <span className='bg-white px-4 py-1 text-sm font-semibold'>{item.quantity}</span>
+                    <button
+                      onClick={() => increase(item.id)}
+                      className='border-l border-gray-300 bg-gray-50 px-3 py-1 text-lg transition-colors hover:bg-gray-200'>
+                      +
+                    </button>
+                  </div>
                 </div>
 
-                <div className='flex items-center justify-center overflow-hidden'>
-                  <button
-                    onClick={() => decrease(item.id)}
-                    className='cursor-pointer border border-gray-300 bg-gray-50 px-3 py-1.5 hover:bg-gray-200'>
-                    –
-                  </button>
-                  <span className='border border-gray-300 px-3 py-1.5'>{item.quantity}</span>
-                  <button
-                    onClick={() => increase(item.id)}
-                    className='cursor-pointer border border-gray-300 bg-gray-50 px-3 py-1.5 hover:bg-gray-200'>
-                    +
-                  </button>
-                </div>
-
-                <div className='flex items-center justify-center text-[15px] font-semibold text-[#d70018]'>
+                {/* Tổng tiền item */}
+                <div className='text-center font-bold text-red-600'>
                   {(item.quantity * item.price).toLocaleString()}₫
                 </div>
 
-                <div className='flex items-center justify-center'>
+                {/* Thao tác */}
+                <div className='flex justify-center'>
                   <button
                     onClick={() => remove(item.id)}
-                    className='cursor-pointer rounded-md border-0 bg-[#ffe5e5] px-3 py-1.5 text-[#d70018]'>
-                    Xóa
+                    className='p-2 text-gray-400 transition-colors hover:text-red-600'
+                    title='Xóa sản phẩm'>
+                    <FaTrashAlt size={18} />
                   </button>
                 </div>
               </div>
+            ))}
+          </div>
 
-              {/* Mobile Layout - Card Style */}
-              <div className='flex gap-3 border-b border-[#eee] py-3 md:hidden'>
-                {/* Checkbox */}
-                <div className='flex items-start pt-1'>
-                  <input
-                    type='checkbox'
-                    checked={selected.includes(item.id)}
-                    onChange={() => toggleItem(item.id)}
-                    className='h-[16px] w-[16px]'
-                  />
-                </div>
-
-                {/* Image */}
-                <div className='flex-shrink-0'>
-                  <Image src={item.image} width={70} height={70} alt={item.name} className='rounded' />
-                </div>
-
-                {/* Info */}
-                <div className='min-w-0 flex-1'>
-                  <h3 className='mb-1 line-clamp-2 text-sm font-medium'>{item.name}</h3>
-                  <p className='mb-2 text-xs text-gray-500'>Đơn giá: {item.price.toLocaleString()}₫</p>
-
-                  {/* Quantity Controls */}
-                  <div className='flex items-center justify-between'>
-                    <div className='flex items-center'>
-                      <button
-                        onClick={() => decrease(item.id)}
-                        className='cursor-pointer border border-gray-300 bg-gray-50 px-2 py-1 text-sm hover:bg-gray-200'>
-                        –
-                      </button>
-                      <span className='border-y border-gray-300 px-3 py-1 text-sm'>{item.quantity}</span>
-                      <button
-                        onClick={() => increase(item.id)}
-                        className='cursor-pointer border border-gray-300 bg-gray-50 px-2 py-1 text-sm hover:bg-gray-200'>
-                        +
-                      </button>
-                    </div>
-
-                    {/* Delete Button */}
-                    <button onClick={() => remove(item.id)} className='cursor-pointer p-2 text-red-600'>
-                      <FaTrash size={14} />
-                    </button>
-                  </div>
-
-                  {/* Total Price */}
-                  <p className='mt-2 text-sm font-semibold text-[#d70018]'>
-                    {(item.quantity * item.price).toLocaleString()}₫
-                  </p>
-                </div>
-              </div>
+          {/* Footer Thanh toán */}
+          <div className='mt-8 flex flex-col items-center justify-between gap-4 border-t border-gray-200 pt-6 md:flex-row'>
+            <div className='text-lg'>
+              Tổng cộng ({selected.length} sản phẩm):
+              <span className='ml-2 text-2xl font-bold text-red-600'>{selectedTotal.toLocaleString()}₫</span>
             </div>
-          ))}
-        </div>
-
-        {/* Payment Summary */}
-        <div className='mt-4 flex flex-col gap-3 md:mt-6 md:flex-row md:items-center md:justify-between'>
-          <span className='text-base font-semibold text-[#d70018] md:text-[20px]'>
-            Tổng cộng ({selected.length} sản phẩm):{' '}
-            <span className='mt-1 block md:mt-0 md:inline'>{selectedTotal.toLocaleString()}₫</span>
-          </span>
-          <button
-            className='w-full cursor-pointer rounded-md border-0 bg-[#d70018] px-5 py-3 text-sm font-semibold text-white disabled:opacity-50 md:w-auto md:py-2.5 md:text-[16px]'
-            disabled={selected.length === 0}
-            onClick={() => router.push('/checkout?items=' + JSON.stringify(selected))}>
-            Thanh toán ({selected.length})
-          </button>
+            <button
+              className='w-full cursor-pointer rounded-lg bg-red-600 px-10 py-3 text-lg font-bold text-white shadow-md transition-all hover:bg-red-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 md:w-auto'
+              disabled={selected.length === 0}
+              onClick={() => router.push('/checkout?items=' + JSON.stringify(selected))}>
+              Tiến hành thanh toán
+            </button>
+          </div>
         </div>
       </div>
     </div>

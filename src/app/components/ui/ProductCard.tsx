@@ -13,10 +13,20 @@ export interface ProductCardProps {
   price: number;
   oldPrice?: number;
   rating?: number;
+  category: string;
   compact?: boolean;
 }
 
-const ProductCard: FC<ProductCardProps> = ({ id, name, image, price, oldPrice, rating = 5, compact = false }) => {
+const ProductCard: FC<ProductCardProps> = ({
+  id,
+  name,
+  image,
+  price,
+  oldPrice,
+  rating = 5,
+  category, // Nhận prop category
+  compact = false,
+}) => {
   const onAddToCart = useCartStore((state) => state.onAddToCart);
   const [isAdded, setIsAdded] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);

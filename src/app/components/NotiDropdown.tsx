@@ -74,8 +74,8 @@ export function NotiDropdown() {
       {/* Bell button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`relative flex cursor-pointer items-center justify-center rounded-full border-none bg-transparent p-2 transition-all ${
-          isOpen ? 'bg-cyan-50 text-[#00bcd4]' : 'text-[#555] hover:bg-gray-100 hover:text-sky-500'
+        className={`-right-5 relative flex cursor-pointer items-center justify-center rounded-full border-none bg-transparent p-2 transition-all ${
+          isOpen ? 'bg-cyan-50 text-[#00bcd4]' : 'text-[#333] hover:bg-gray-100 hover:text-sky-500'
         }`}>
         <FaBell />
         {unreadCount > 0 && (

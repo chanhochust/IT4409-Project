@@ -89,7 +89,7 @@ export function Header() {
           </p>
           {/* Text ngắn cho mobile */}
           <p className='m-0 text-xs text-[#555] sm:hidden'>
-            <b className='text-sky-700'>Free ship</b> đơn từ 45k
+            <b className='text-sky-700'>Freeship</b> đơn từ 45k
           </p>
         </div>
 
@@ -102,9 +102,9 @@ export function Header() {
           </div>
           <button
             onClick={handleSellerChannelClick}
-            className='flex cursor-pointer items-center gap-0.5 text-xs text-[#555] hover:text-sky-600 md:text-base'>
-            <span className='hidden sm:inline'>Kênh người bán</span>
-            <span className='sm:hidden'>Kênh bán</span>
+            className='flex cursor-pointer items-center gap-0.5 text-[#555] hover:text-sky-600 md:text-[14px]'>
+            <span className='hidden sm:inline md:ml-4'>Kênh người bán</span>
+            <span className='ml-4 sm:hidden'>Kênh bán</span>
           </button>
         </div>
       </div>

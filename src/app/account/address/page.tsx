@@ -83,11 +83,7 @@ export default function AddressPage() {
   }, []);
 
   const fetchDistricts = (cityCode: number) => {
-    if (!cityCode) {
-      setDistricts([]);
-      setWards([]);
-      return;
-    }
+    if (!cityCode) return;
     fetch(`https://provinces.open-api.vn/api/p/${cityCode}?depth=2`)
       .then((res) => res.json())
       .then((data) => {
@@ -97,10 +93,7 @@ export default function AddressPage() {
   };
 
   const fetchWards = (districtCode: number) => {
-    if (!districtCode) {
-      setWards([]);
-      return;
-    }
+    if (!districtCode) return;
     fetch(`https://provinces.open-api.vn/api/d/${districtCode}?depth=2`)
       .then((res) => res.json())
       .then((data) => setWards(data.wards));
