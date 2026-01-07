@@ -1,5 +1,8 @@
+import { getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
 import { DEFAULT_LOCALE } from 'src/shared/constants/locale';
+import { AppRouter } from './shared/constants/appRouter.constant';
+import { clientEnvironment } from './shared/environments/client';
 
 const PUBLIC_FILE = /\.(.*)$/;
 const AVAILABLE_LOCALES = ['en', 'vi'];
@@ -17,7 +20,7 @@ function getLocale(request: NextRequest) {
   }
 
   // Check if there's a locale in the cookie
-  const cookieLocale = request.cookies.get('NEXT_LOCALE')?.value;
+  const cookieLocale = request.cookies.get('i18next')?.value;
   if (cookieLocale && AVAILABLE_LOCALES.includes(cookieLocale)) {
     return cookieLocale;
   }
@@ -41,13 +44,68 @@ function getLocale(request: NextRequest) {
   return DEFAULT_LOCALE;
 }
 
-export function middleware(request: NextRequest) {
+function getCleanPathname(pathname: string) {
+  for (const locale of AVAILABLE_LOCALES) {
+    if (pathname.startsWith(`/${locale}/`)) {
+      pathname = pathname.replace(`/${locale}`, '');
+    }
+    if (pathname === `/${locale}`) {
+      return '/';
+    }
+  }
+  return pathname;
+}
+
+export async function middleware(request: NextRequest) {
+  const token = await getToken({ req: request, secret: clientEnvironment.secretNextAuth });
+  const pathname = request.nextUrl.pathname;
+  // Check user preference locale if logged in
+  // if (token?.language) {
+  //   const userLocale = token?.language;
+  //   const currentLocale = getLocale(request);
+
+  //   // If user's preferred locale is different from current URL locale, redirect
+  //   if (userLocale !== currentLocale && AVAILABLE_LOCALES.includes(userLocale)) {
+  //     const cleanPathname = getCleanPathname(pathname);
+  //     const searchParams = new URL(request.url).searchParams;
+
+  //     return NextResponse.redirect(
+  //       new URL(
+  //         `/${userLocale}${cleanPathname === '/' ? '' : cleanPathname}${searchParams.size ? `?${searchParams.toString()}` : ''}`,
+  //         request.url,
+  //       ),
+  //     );
+  //   }
+  // }
+
+  const publicRoutes = [
+    AppRouter.home,
+    AppRouter.login,
+    AppRouter.forgotPassword,
+    AppRouter.register,
+    AppRouter.resetPassword,
+    AppRouter.chat,
+  ];
+  if (token && publicRoutes.includes(getCleanPathname(pathname))) {
+    return NextResponse.redirect(new URL(AppRouter.dashboard, request.url));
+  }
+
+  // If there's no token and not in public route and the pathname is localhost:3000/en or /vi. It runs, also skip request images
+  if (
+    !token &&
+    !publicRoutes.includes(getCleanPathname(pathname)) &&
+    getCleanPathname(pathname) !== `/${getLocale(request)}`
+  ) {
+    if (pathname.startsWith('/images')) {
+      return NextResponse.next();
+    }
+    return NextResponse.redirect(new URL(AppRouter.login, request.url));
+  }
+
   // Skip public files
   if (PUBLIC_FILE.test(request.nextUrl.pathname) || request.nextUrl.pathname.includes('/api/')) {
     return;
   }
-
-  const pathname = request.nextUrl.pathname;
 
   // Check if the pathname already has a locale
   const pathnameIsMissingLocale = AVAILABLE_LOCALES.every(
@@ -56,10 +114,21 @@ export function middleware(request: NextRequest) {
 
   if (pathnameIsMissingLocale) {
     const locale = getLocale(request);
+    const searchParams = new URL(request.url).searchParams;
 
     // Redirect to the same URL with locale prefix
-    return NextResponse.redirect(new URL(`/${locale}${pathname === '/' ? '' : pathname}`, request.url));
+    return NextResponse.redirect(
+      new URL(
+        `/${locale}${pathname === '/' ? '' : pathname}${searchParams.size ? `?${searchParams.toString()}` : ''}`,
+        request.url,
+      ),
+    );
   }
+  if (pathname.startsWith('/images') || pathname.startsWith('/_next') || pathname.startsWith('/favicon.ico')) {
+    return NextResponse.next();
+  }
+  // default case
+  return NextResponse.next();
 }
 
 export const config = {

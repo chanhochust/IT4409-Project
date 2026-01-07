@@ -11,8 +11,10 @@ import storybook from 'eslint-plugin-storybook';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import tseslint from 'typescript-eslint';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 const compat = new FlatCompat({
   baseDirectory: __dirname,
   recommendedConfig: js.configs.recommended,
@@ -42,7 +44,7 @@ export default [
     },
     settings: {
       react: {
-        version: 'detect', // You can add this if you get a warning about the React version when you lint
+        version: 'detect',
       },
     },
   },
@@ -62,7 +64,6 @@ export default [
     },
   },
   {
-
     languageOptions: {
       ...reactPlugin.configs.flat?.recommended.languageOptions,
       parser: tsParser,
@@ -72,27 +73,14 @@ export default [
         project: './tsconfig.json',
       },
     },
-
     rules: {
-      // 'prettier/prettier': 'error',
-      '@typescript-eslint/no-unused-vars': 'warn',
-      '@typescript-eslint/no-unsafe-enum-comparison': 'error',
-      '@typescript-eslint/no-unsafe-assignment': 'off',
-      '@typescript-eslint/no-unsafe-call': 'off',
-      '@typescript-eslint/no-unsafe-member-access': 'off',
-      '@typescript-eslint/no-unsafe-return': 'off',
-      '@typescript-eslint/no-unsafe-argument': 'off',
-      '@typescript-eslint/no-redundant-type-constituents': 'off',
-      '@typescript-eslint/no-misused-promises': 'off',
-      'react/prefer-read-only-props': 'warn',
-      'react/prop-types': 'off',
-      '@typescript-eslint/await-thenable': 'error',
-      '@typescript-eslint/no-deprecated': 'warn',
-      '@typescript-eslint/no-unsafe-declaration-merging': 'error',
-      '@typescript-eslint/no-explicit-any': 'error',
-      '@typescript-eslint/unbound-method': 'off',
-      '@typescript-eslint/require-await': 'off',
-      'prefer-template': 'error',
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-floating-promises': 'off',
+      'react/no-unescaped-entities': 'off',
+      '@next/next/no-img-element': 'off',
+      'prefer-template': 'off',
+      'no-var': 'off',
+      'prettier/prettier': 'warn',
       'no-console': [
         'warn',
         {
@@ -116,10 +104,14 @@ export default [
     },
   },
   {
+    files: ['src/app/**/image-gallery/**/*.tsx'],
+    rules: { '@next/next/no-img-element': 'off' },
+  },
+  {
     ...eslintPluginPrettierRecommended,
     rules: {
       'prettier/prettier': 'error',
     },
     ignores: ['.next'],
-  }
+  },
 ];
