@@ -90,7 +90,7 @@ export const RegisterForm: React.FC = () => {
           ? (error as { response?: { data?: { message?: string } } }).response?.data?.message
           : 'Unable to register. Please try again later.';
 
-      setErrorMessage(message);
+      setErrorMessage(message ?? 'Unable to register. Please try again later.');
     } finally {
       setIsLoading(false);
     }

@@ -6,6 +6,7 @@ import React from 'react';
 // Import global styles
 import { clientEnvironment } from 'src/shared/environments/client';
 import { I18nProviderClient } from 'src/shared/providers/I18nProvider';
+import { AppProviders } from 'src/shared/providers/AppProviders';
 import '../globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
@@ -25,7 +26,9 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} dir={dir(locale)}>
       <body className={inter.className} suppressHydrationWarning={clientEnvironment.suppressHydrationWarning}>
-        <I18nProviderClient locale={locale}>{children}</I18nProviderClient>
+        <AppProviders>
+          <I18nProviderClient locale={locale}>{children}</I18nProviderClient>
+        </AppProviders>
       </body>
     </html>
   );

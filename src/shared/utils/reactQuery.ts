@@ -1,5 +1,6 @@
 import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
+import { useId } from 'react';
 
 type AsyncFunctionReturnType<T extends AsyncFunction> = Awaited<ReturnType<T>>;
 
@@ -151,7 +152,9 @@ export function generateUseMutationHook<T extends MutationAsyncFunction>(fn: T, 
   const mutationFn = ((...args: Params extends undefined ? [Options?] : [Params, Options?]) => {
     const [firstArg, options] = args.length === 2 ? [args[0], args[1]] : [undefined, args[0]];
 
-    const keys = Array.isArray(mutationKey) ? mutationKey : [mutationKey];
+    // If the mutationKey is not provided, generate a random id
+    const autoId = useId();
+    const keys = Array.isArray(mutationKey) ? mutationKey : [mutationKey ?? autoId];
 
     return useMutation<ResponseType, AxiosError, Params>({
       mutationKey: [...keys, firstArg],
