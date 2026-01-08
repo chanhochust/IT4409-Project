@@ -11,6 +11,7 @@ import { AppDialog } from 'src/shared/components/ui/dialog/AppDialog';
 import { AppInput } from 'src/shared/components/ui/input/AppInput';
 import { AppButton } from 'src/shared/components/ui/button/AppButton';
 import { AppSelect } from 'src/shared/components/ui/select/AppSelect';
+import { DatePicker } from 'src/shared/components/ui/date-picker/DatePicker';
 import { toast } from 'sonner';
 import { useUpdateProfileMutation } from 'src/shared/services/api/mutations/profile.mutation';
 import { Gender } from 'src/shared/constants/enums';
@@ -22,14 +23,17 @@ export default function Page() {
   const user = profileQuery.data?.data;
   const updateProfile = useUpdateProfileMutation();
   const [open, setOpen] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const [nickname, setNickname] = useState('');
   const [phone, setPhone] = useState('');
   const [nationality, setNationality] = useState('');
   const [gender, setGender] = useState<string>(Gender.Male);
-  const [dobDay, setDobDay] = useState<string>('');
-  const [dobMonth, setDobMonth] = useState<string>('');
-  const [dobYear, setDobYear] = useState<string>('');
+  const [selectedDate, setSelectedDate] = useState<{
+    day?: number;
+    month?: number;
+    year?: number;
+  }>({});
 
   // Avatar dialog state
   const [avatarOpen, setAvatarOpen] = useState(false);
@@ -45,6 +49,11 @@ export default function Page() {
     setPhone(user.phone ?? '');
     setNationality(user.nationality ?? '');
     setGender(user.gender ?? Gender.Male);
+    setSelectedDate({
+      day: user.dob_day ?? undefined,
+      month: user.dob_month ?? undefined,
+      year: user.dob_year ?? undefined,
+    });
   }, [user]);
 
   React.useEffect(() => {
@@ -232,9 +241,9 @@ export default function Page() {
                     phone: phone || undefined,
                     nationality: nationality || undefined,
                     gender: gender || undefined,
-                    dob_day: dobDay ? Number(dobDay) : undefined,
-                    dob_month: dobMonth ? Number(dobMonth) : undefined,
-                    dob_year: dobYear ? Number(dobYear) : undefined,
+                    dob_day: selectedDate.day ? selectedDate.day : undefined,
+                    dob_month: selectedDate.month ? selectedDate.month : undefined,
+                    dob_year: selectedDate.year ? selectedDate.year : undefined,
                   };
 
                   updateProfile.mutate(payload, {
@@ -273,20 +282,18 @@ export default function Page() {
                       </AppSelect.Content>
                     </AppSelect.Root>
                   </label>
-                  <div className='grid grid-cols-3 gap-3 sm:col-span-2'>
-                    <label className='flex flex-col gap-1'>
-                      <span className='text-xs font-semibold'>DOB Day</span>
-                      <AppInput inputMode='numeric' value={dobDay} onChange={(e) => setDobDay(e.target.value)} />
-                    </label>
-                    <label className='flex flex-col gap-1'>
-                      <span className='text-xs font-semibold'>DOB Month</span>
-                      <AppInput inputMode='numeric' value={dobMonth} onChange={(e) => setDobMonth(e.target.value)} />
-                    </label>
-                    <label className='flex flex-col gap-1'>
-                      <span className='text-xs font-semibold'>DOB Year</span>
-                      <AppInput inputMode='numeric' value={dobYear} onChange={(e) => setDobYear(e.target.value)} />
-                    </label>
-                  </div>
+                  <label className='flex flex-col gap-1 sm:col-span-2'>
+                    <span className='text-xs font-semibold'>Date of Birth</span>
+                    <AppButton
+                      type='button'
+                      variant='outline'
+                      onClick={() => setShowDatePicker(true)}
+                      className='justify-start'>
+                      {selectedDate.day && selectedDate.month && selectedDate.year
+                        ? `${selectedDate.day}/${selectedDate.month}/${selectedDate.year}`
+                        : 'Select date'}
+                    </AppButton>
+                  </label>
                 </div>
 
                 <AppDialog.Footer className='pt-4'>
@@ -298,6 +305,31 @@ export default function Page() {
                   </AppButton>
                 </AppDialog.Footer>
               </form>
+            </AppDialog.Content>
+          </AppDialog.Root>
+
+          {/* Date Picker Modal */}
+          <AppDialog.Root open={showDatePicker} onOpenChange={setShowDatePicker}>
+            <AppDialog.Content>
+              <AppDialog.Header>
+                <AppDialog.Title>Select Date of Birth</AppDialog.Title>
+              </AppDialog.Header>
+
+              <div className='py-4'>
+                <DatePicker
+                  value={selectedDate}
+                  onChange={(date) => {
+                    setSelectedDate(date);
+                    setShowDatePicker(false);
+                  }}
+                />
+              </div>
+
+              <AppDialog.Footer className='pt-4'>
+                <AppButton type='button' variant='outline' onClick={() => setShowDatePicker(false)}>
+                  Close
+                </AppButton>
+              </AppDialog.Footer>
             </AppDialog.Content>
           </AppDialog.Root>
         </main>

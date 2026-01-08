@@ -12,6 +12,9 @@ export interface ProfileData {
   gender: Gender;
   nationality: string;
   phone: string;
+  dob_day?: number;
+  dob_month?: number;
+  dob_year?: number;
   defaultAddressId?: string | null;
   createdAt: string;
   updatedAt: string;

@@ -2,11 +2,10 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { User, Settings, LogOut } from 'lucide-react';
+import { User, LogOut, MapPin } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import { AppPopover } from 'src/shared/components/ui/popover/AppPopover';
 import { AppButton } from 'src/shared/components/ui/button/AppButton';
-import { cn } from 'src/shared/utils/className';
 
 export function UserMenu() {
   const { data: session } = useSession();
@@ -23,37 +22,37 @@ export function UserMenu() {
         <div
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          className={cn('flex cursor-pointer items-center gap-2 select-none')}>
-          <User className={cn('text-muted-foreground hover:text-primary h-5 w-5')} />
-          {name && <span className={cn('text-foreground hidden text-sm font-medium sm:inline')}>{name}</span>}
+          className='flex cursor-pointer items-center gap-2 select-none'>
+          <User className='text-muted-foreground hover:text-primary h-5 w-5' />
+          {name && <span className='text-foreground hidden text-sm font-medium sm:inline'>{name}</span>}
         </div>
       </AppPopover.Trigger>
       <AppPopover.Content
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className={cn('w-56 p-2')}
+        className='w-56 p-2'
         sideOffset={8}>
-        <div className={cn('flex flex-col gap-2')}>
+        <div className='flex flex-col gap-2'>
           <AppButton asChild variant='ghost'>
-            <Link href='/profile' className={cn('justify-start')}>
-              <User className={cn('h-4 w-4')} />
+            <Link href='/profile' className='justify-start'>
+              <User className='h-4 w-4' />
               <span>Profile</span>
             </Link>
           </AppButton>
           <AppButton asChild variant='ghost'>
-            <Link href='/settings' className={cn('justify-start')}>
-              <Settings className={cn('h-4 w-4')} />
-              <span>Settings</span>
+            <Link href='/address' className='justify-start'>
+              <MapPin className='h-4 w-4' />
+              <span>Address</span>
             </Link>
           </AppButton>
           <AppButton
             variant='ghost'
-            className={cn('justify-start')}
+            className='justify-start'
             onClick={() => {
               setOpen(false);
               void signOut({ callbackUrl: '/' });
             }}>
-            <LogOut className={cn('h-4 w-4')} />
+            <LogOut className='h-4 w-4' />
             <span>Logout</span>
           </AppButton>
         </div>
