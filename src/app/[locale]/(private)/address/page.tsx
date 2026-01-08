@@ -1,25 +1,47 @@
 'use client';
 
 import React, { useState } from 'react';
-import { AxiosError, isAxiosError } from 'axios';
+import { isAxiosError, type AxiosError } from 'axios';
 import { Plus, RotateCcw } from 'lucide-react';
+import { type UseMutationResult } from '@tanstack/react-query';
 import { AppButton } from 'src/shared/components/ui/button/AppButton';
 import { AppDialog } from 'src/shared/components/ui/dialog/AppDialog';
+import { AppAlertDialog } from 'src/shared/components/ui/alert-dialog/AppAlertDialog';
 import { AddressCard } from 'src/shared/components/address/AddressCard';
 import { AddressForm } from 'src/shared/components/address/AddressForm';
 import { AddressSkeleton } from 'src/shared/components/address/AddressSkeleton';
-import { useCreateAddressMutation } from 'src/shared/services/api/mutations/address.mutation';
+import {
+  useCreateAddressMutation,
+  useUpdateAddressMutation,
+  useDeleteAddressMutation,
+} from 'src/shared/services/api/mutations/address.mutation';
 import { useMyAddressesQuery } from 'src/shared/services/api/queries/address.query';
 import { toast } from 'sonner';
 import type { Address } from 'src/shared/types/api/address/address.type';
-import type { CreateAddressPayload } from 'src/shared/types/api/address/createAddress.type';
+import type { CreateAddressPayload, CreateAddressResponse } from 'src/shared/types/api/address/createAddress.type';
 
 export default function AddressPage() {
   const { data: addressesData, isLoading, isError, refetch } = useMyAddressesQuery();
-  const createMutation = useCreateAddressMutation();
+  const createMutation: UseMutationResult<
+    CreateAddressResponse,
+    AxiosError<unknown>,
+    CreateAddressPayload
+  > = useCreateAddressMutation();
+  const updateMutation: UseMutationResult<
+    CreateAddressResponse,
+    AxiosError<unknown>,
+    { id: string; payload: CreateAddressPayload }
+  > = useUpdateAddressMutation();
+  const deleteMutation: UseMutationResult<
+    { success: boolean; message: string },
+    AxiosError<unknown>,
+    string
+  > = useDeleteAddressMutation();
 
   const [open, setOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editingAddress, setEditingAddress] = useState<Address | undefined>();
+  const [deletingAddress, setDeletingAddress] = useState<Address | undefined>();
   const [formError, setFormError] = useState<string>('');
 
   function extractErrorMessage(error: unknown): string {
@@ -49,16 +71,56 @@ export default function AddressPage() {
   }
 
   function handleSubmit(payload: CreateAddressPayload) {
-    createMutation.mutate(payload, {
+    if (editingAddress) {
+      updateMutation.mutate(
+        { id: editingAddress.id, payload },
+        {
+          onSuccess: () => {
+            toast.success('Address updated successfully');
+            setOpen(false);
+            setEditingAddress(undefined);
+            setFormError('');
+          },
+          onError: (error: unknown) => {
+            const errorMessage = extractErrorMessage(error);
+            setFormError(errorMessage);
+            toast.error(errorMessage);
+          },
+        },
+      );
+    } else {
+      createMutation.mutate(payload, {
+        onSuccess: () => {
+          toast.success('Address saved successfully');
+          setOpen(false);
+          setEditingAddress(undefined);
+          setFormError('');
+        },
+        onError: (error: unknown) => {
+          const errorMessage = extractErrorMessage(error);
+          setFormError(errorMessage);
+          toast.error(errorMessage);
+        },
+      });
+    }
+  }
+
+  function handleDeleteAddress(address: Address) {
+    setDeletingAddress(address);
+    setDeleteDialogOpen(true);
+  }
+
+  function handleConfirmDelete() {
+    if (!deletingAddress) return;
+
+    deleteMutation.mutate(deletingAddress.id, {
       onSuccess: () => {
-        toast.success('Address saved successfully');
-        setOpen(false);
-        setEditingAddress(undefined);
-        setFormError('');
+        toast.success('Address deleted successfully');
+        setDeleteDialogOpen(false);
+        setDeletingAddress(undefined);
       },
       onError: (error: unknown) => {
         const errorMessage = extractErrorMessage(error);
-        setFormError(errorMessage);
         toast.error(errorMessage);
       },
     });
@@ -124,7 +186,13 @@ export default function AddressPage() {
       ) : (
         <div className='grid gap-6 sm:grid-cols-2'>
           {addresses.map((address) => (
-            <AddressCard key={address.id} address={address} onEdit={handleEditAddress} />
+            <AddressCard
+              key={address.id}
+              address={address}
+              onEdit={handleEditAddress}
+              onDelete={handleDeleteAddress}
+              isDeleting={deleteMutation.isPending && deletingAddress?.id === address.id}
+            />
           ))}
         </div>
       )}
@@ -142,7 +210,8 @@ export default function AddressPage() {
             <AddressForm
               address={editingAddress}
               error={formError}
-              isSubmitting={createMutation.isPending}
+              isSubmitting={editingAddress ? updateMutation.isPending : createMutation.isPending}
+              isEditing={!!editingAddress}
               onSubmit={handleSubmit}
             />
           </div>
@@ -152,12 +221,29 @@ export default function AddressPage() {
               type='button'
               variant='outline'
               onClick={() => setOpen(false)}
-              disabled={createMutation.isPending}>
+              disabled={editingAddress ? updateMutation.isPending : createMutation.isPending}>
               Cancel
             </AppButton>
           </AppDialog.Footer>
         </AppDialog.Content>
       </AppDialog.Root>
+
+      <AppAlertDialog.Root open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AppAlertDialog.Content>
+          <AppAlertDialog.Header>
+            <AppAlertDialog.Title>Delete Address</AppAlertDialog.Title>
+            <AppAlertDialog.Description>
+              Are you sure you want to delete this address? This cannot be undone.
+            </AppAlertDialog.Description>
+          </AppAlertDialog.Header>
+          <AppAlertDialog.Footer>
+            <AppAlertDialog.Cancel disabled={deleteMutation.isPending}>Cancel</AppAlertDialog.Cancel>
+            <AppAlertDialog.Action onClick={handleConfirmDelete} disabled={deleteMutation.isPending}>
+              {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
+            </AppAlertDialog.Action>
+          </AppAlertDialog.Footer>
+        </AppAlertDialog.Content>
+      </AppAlertDialog.Root>
     </div>
   );
 }
