@@ -21,10 +21,21 @@ export default function ProductCard({ product }: { product: Product }) {
 
   React.useEffect(() => {
     if (images.length <= 1) return;
-    const id = setInterval(() => {
-      setIndex((prev) => (prev + 1) % images.length);
-    }, 3500);
-    return () => clearInterval(id);
+
+    // Random delay between 0-3000ms to desynchronize cards
+    const randomDelay = Math.random() * 3000;
+    let intervalId: NodeJS.Timeout;
+
+    const delayTimeout = setTimeout(() => {
+      intervalId = setInterval(() => {
+        setIndex((prev) => (prev + 1) % images.length);
+      }, 4500);
+    }, randomDelay);
+
+    return () => {
+      clearTimeout(delayTimeout);
+      if (intervalId) clearInterval(intervalId);
+    };
   }, [images.length]);
   return (
     <div

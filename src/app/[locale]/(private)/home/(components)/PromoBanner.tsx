@@ -10,9 +10,10 @@ export default function PromoBanner() {
             'border-border from-primary/15 via-background to-background relative overflow-hidden rounded-3xl border bg-gradient-to-r p-8 sm:p-16',
           )}>
           <div className={cn('mx-auto max-w-3xl text-center')}>
-            <h3 className={cn('text-foreground mb-3 text-2xl font-bold sm:text-3xl')}>Refresh Your Everyday</h3>
+            <h3 className={cn('text-foreground mb-3 text-2xl font-bold sm:text-3xl')}>Become a Shop Owner</h3>
             <p className={cn('text-muted-foreground mb-6 text-sm sm:text-base')}>
-              Calm colors. Quiet confidence. Designed to last.
+              Sell your products on Tibiki and reach a wider audience. Join our community of sellers and start growing
+              your business today!
             </p>
             <Link
               className={cn(
