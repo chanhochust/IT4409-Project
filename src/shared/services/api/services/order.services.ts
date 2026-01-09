@@ -22,8 +22,6 @@ export class OrderService {
 
   static async getShopOrders(this: void, params: GetShopOrdersParams): Promise<GetShopOrdersResponse> {
     const { page, limit } = params;
-    return axiosClient
-      .get<GetShopOrdersResponse>('/orders/shop-orders', { params: { page, limit } })
-      .then((res) => res.data);
+    return axiosClient.get<GetShopOrdersResponse>('/orders/shop', { params: { page, limit } }).then((res) => res.data);
   }
 }

@@ -24,8 +24,7 @@ axiosClient.interceptors.request.use(
       config.url === '/sign_up' ||
       config.url === '/auth/social_login' ||
       config.url === '/auth/login' ||
-      config.url === '/auth/register' ||
-      config.url === '/products'
+      config.url === '/auth/register'
     ) {
       return config;
     }
