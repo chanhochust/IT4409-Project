@@ -34,11 +34,7 @@ export function ProductsPagination({ currentPage, totalPages, onPageChange }: Pr
 
   return (
     <div className='flex items-center justify-center gap-2 py-8'>
-      <AppButton
-        disabled={currentPage === 1}
-        onClick={() => onPageChange(currentPage - 1)}
-        size='sm'
-        variant='outline'>
+      <AppButton disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)} size='sm' variant='outline'>
         <ChevronLeft className='h-4 w-4' />
         Prev
       </AppButton>
@@ -47,7 +43,7 @@ export function ProductsPagination({ currentPage, totalPages, onPageChange }: Pr
         {pageNumbers.map((pageNum, idx) => {
           if (pageNum === '...') {
             return (
-              <span key={`ellipsis-${idx}`} className='px-2 py-1 text-muted-foreground'>
+              <span key={`ellipsis-${idx}`} className='text-muted-foreground px-2 py-1'>
                 ...
               </span>
             );

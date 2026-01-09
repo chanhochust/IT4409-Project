@@ -51,6 +51,7 @@ export default function ProductPage() {
               We couldn't load the product details. The product might not exist or has been removed.
             </p>
             <div className='flex justify-center gap-3 pt-4'>
+              {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
               <AppButton onClick={() => refetch()} variant='outline'>
                 Try Again
               </AppButton>

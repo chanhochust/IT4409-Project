@@ -88,9 +88,9 @@ export const RegisterForm: React.FC = () => {
         (error as { response?: { data?: unknown } }).response?.data &&
         typeof (error as { response?: { data?: { message?: unknown } } }).response?.data?.message === 'string'
           ? (error as { response?: { data?: { message?: string } } }).response?.data?.message
-          : 'Unable to register. Please try again later.';
+          : undefined;
 
-      setErrorMessage(message ?? 'Unable to register. Please try again later.');
+      setErrorMessage(message || 'Unable to register. Please try again later.');
     } finally {
       setIsLoading(false);
     }

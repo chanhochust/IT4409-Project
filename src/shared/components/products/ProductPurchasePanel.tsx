@@ -23,6 +23,7 @@ export function ProductPurchasePanel({ product }: ProductPurchasePanelProps) {
   function handleAddToCart() {
     if (!isOutOfStock) {
       // UI only - no actual cart logic implemented yet
+      // eslint-disable-next-line no-console
       console.log(`Added ${quantity} ${product.name} to cart`);
     }
   }
@@ -30,6 +31,7 @@ export function ProductPurchasePanel({ product }: ProductPurchasePanelProps) {
   function handleBuyNow() {
     if (!isOutOfStock) {
       // UI only - no actual checkout logic implemented yet
+      // eslint-disable-next-line no-console
       console.log(`Proceeding to checkout with ${quantity} ${product.name}`);
     }
   }

@@ -55,6 +55,7 @@ export default function ProductsPage() {
             </div>
             <h2 className='text-foreground text-xl font-semibold'>Failed to load products</h2>
             <p className='text-muted-foreground'>An error occurred while fetching products. Please try again.</p>
+            {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
             <AppButton onClick={() => refetch()} variant='outline'>
               Retry
             </AppButton>
