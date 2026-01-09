@@ -11,9 +11,13 @@ import { MyShopOrderCard } from 'src/shared/components/orders/MyShopOrderCard';
 import { ShopRegistrationForm } from 'src/shared/components/shop/ShopRegistrationForm';
 import { ShopProductCard } from 'src/shared/components/shop/ShopProductCard';
 import { ProductFormDialog } from 'src/shared/components/products/ProductFormDialog';
+import { ProductUpdateDialog } from 'src/shared/components/products/ProductUpdateDialog';
 import { AppRouter } from 'src/shared/constants/appRouter.constant';
 import { useShopOrdersQuery } from 'src/shared/services/api/queries/useOrder.query';
 import { useMyShopQuery, useMyShopProductsQuery } from 'src/shared/services/api/queries/shop.query';
+import { useDeleteProductMutation } from 'src/shared/services/api/mutations/product.mutation';
+import { toast } from 'sonner';
+import type { ProductItem } from 'src/shared/types/api/product/product.type';
 
 export default function MyShopPage() {
   const params = useParams();
@@ -27,10 +31,13 @@ export default function MyShopPage() {
   const [page, setPage] = React.useState<number>(Number.isNaN(initialPage) ? 1 : initialPage);
   const [limit, setLimit] = React.useState<number>(Number.isNaN(initialLimit) ? 10 : initialLimit);
   const [isProductDialogOpen, setIsProductDialogOpen] = React.useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false);
+  const [editingProduct, setEditingProduct] = React.useState<ProductItem | null>(null);
 
   // Check if user has a shop
   const myShopQuery = useMyShopQuery();
   const myShopProductsQuery = useMyShopProductsQuery();
+  const deleteMutation = useDeleteProductMutation();
 
   React.useEffect(() => {
     const p = Number(searchParams.get('page') ?? 1);
@@ -120,6 +127,23 @@ export default function MyShopPage() {
   const shop = myShopQuery.data?.data;
   const products = myShopProductsQuery.data?.data?.products ?? [];
 
+  function handleEdit(product: ProductItem) {
+    setEditingProduct(product);
+    setIsEditDialogOpen(true);
+  }
+
+  function handleDelete(product: ProductItem) {
+    const agree = typeof window !== 'undefined' ? window.confirm('Delete this product?') : true;
+    if (!agree) return;
+    deleteMutation.mutate(product.id, {
+      onSuccess: () => toast.success('Product deleted successfully'),
+      onError: (err: unknown) => {
+        const e = err as { response?: { data?: { message?: string } } };
+        toast.error(e?.response?.data?.message || 'Failed to delete product');
+      },
+    });
+  }
+
   if (orders.length === 0) {
     return (
       <div className='mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8'>
@@ -177,7 +201,13 @@ export default function MyShopPage() {
           {products.length > 0 ? (
             <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
               {products.map((product) => (
-                <ShopProductCard key={product.id} product={product} locale={locale} />
+                <ShopProductCard
+                  key={product.id}
+                  product={product}
+                  locale={locale}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                />
               ))}
             </div>
           ) : (
@@ -194,6 +224,7 @@ export default function MyShopPage() {
         </div>
 
         <ProductFormDialog open={isProductDialogOpen} onOpenChange={setIsProductDialogOpen} />
+        <ProductUpdateDialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} product={editingProduct} />
       </div>
     );
   }
@@ -261,7 +292,13 @@ export default function MyShopPage() {
         {products.length > 0 ? (
           <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
             {products.map((product) => (
-              <ShopProductCard key={product.id} product={product} locale={locale} />
+              <ShopProductCard
+                key={product.id}
+                product={product}
+                locale={locale}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
             ))}
           </div>
         ) : (
@@ -278,6 +315,7 @@ export default function MyShopPage() {
       </div>
 
       <ProductFormDialog open={isProductDialogOpen} onOpenChange={setIsProductDialogOpen} />
+      <ProductUpdateDialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} product={editingProduct} />
     </div>
   );
 }

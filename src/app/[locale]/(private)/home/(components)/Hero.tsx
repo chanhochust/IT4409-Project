@@ -14,18 +14,19 @@ export default function Hero() {
               Minimalist Essentials
             </p>
             <h1 className={cn('text-foreground mb-4 text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl')}>
-              Elevate Everyday Living
+              Shopping Everyday Now
             </h1>
             <p className={cn('text-muted-foreground mb-6 text-base leading-relaxed sm:text-lg')}>
-              Timeless pieces in a calming palette designed for clarity, comfort, and focus.
+              You love shopping, we love to make it easy for you. Discover a wide range of products at unbeatable
+              prices. Enjoy seamless shopping experience with fast delivery and excellent customer service.
             </p>
             <div className={cn('flex flex-wrap gap-3')}>
               <Link
                 className={cn(
                   'bg-primary text-primary-foreground rounded-full px-6 py-3 text-sm font-bold transition-opacity hover:opacity-90',
                 )}
-                href='/'>
-                Browse Collection
+                href='/products'>
+                Buying Now
               </Link>
               <Link
                 className={cn(

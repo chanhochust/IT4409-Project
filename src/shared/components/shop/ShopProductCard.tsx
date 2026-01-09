@@ -3,13 +3,17 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { ProductItem } from 'src/shared/types/api/product/product.type';
+import { AppButton } from 'src/shared/components/ui/button/AppButton';
+import { Pencil, Trash2 } from 'lucide-react';
 
 interface ShopProductCardProps {
   product: ProductItem;
   locale: string;
+  onEdit?: (product: ProductItem) => void;
+  onDelete?: (product: ProductItem) => void;
 }
 
-export function ShopProductCard({ product, locale }: ShopProductCardProps) {
+export function ShopProductCard({ product, locale, onEdit, onDelete }: ShopProductCardProps) {
   const imageSrc =
     product.thumbnailUrl ||
     (Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : '/images/shopping.png');
@@ -22,6 +26,36 @@ export function ShopProductCard({ product, locale }: ShopProductCardProps) {
             alt={product.name}
             className='size-full object-cover transition-transform duration-300 group-hover:scale-105'
           />
+          {(onEdit || onDelete) && (
+            <div className='absolute top-2 left-2 flex gap-2'>
+              {onEdit && (
+                <AppButton
+                  variant='secondary'
+                  size='icon'
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onEdit(product);
+                  }}
+                  aria-label='Edit product'>
+                  <Pencil className='size-4' />
+                </AppButton>
+              )}
+              {onDelete && (
+                <AppButton
+                  className='bg-red-400'
+                  size='icon'
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onDelete(product);
+                  }}
+                  aria-label='Delete product'>
+                  <Trash2 className='size-4' />
+                </AppButton>
+              )}
+            </div>
+          )}
           {product.discount > 0 && (
             <span className='absolute top-2 right-2 rounded-full bg-red-500 px-2 py-1 text-xs font-bold text-white'>
               -{product.discount}%
