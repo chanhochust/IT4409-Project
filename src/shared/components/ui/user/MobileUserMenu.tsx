@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Menu, User, Settings, LogOut } from 'lucide-react';
+import { Menu, User, ShoppingBag, LogOut } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import { AppPopover } from 'src/shared/components/ui/popover/AppPopover';
 import { AppButton } from 'src/shared/components/ui/button/AppButton';
@@ -35,9 +35,9 @@ export function MobileUserMenu() {
             </Link>
           </AppButton>
           <AppButton asChild variant='ghost' onClick={() => setOpen(false)}>
-            <Link href='/settings' className='justify-start'>
-              <Settings className='h-4 w-4' />
-              <span>Settings</span>
+            <Link href='/products' className='justify-start'>
+              <ShoppingBag className='h-4 w-4' />
+              <span>Shopping</span>
             </Link>
           </AppButton>
           <AppButton

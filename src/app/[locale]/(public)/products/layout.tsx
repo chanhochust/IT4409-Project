@@ -33,7 +33,8 @@ function Header() {
             />
           </div>
         </div>
-        <div className='flex items-center gap-2 sm:gap-4'>
+        <div
+          className={cn('flex w-full items-center gap-2 sm:gap-4', session?.user ? 'justify-end' : 'justify-between')}>
           <Link className='text-primary text-2xl font-black tracking-tighter' href='/'>
             TIBIKI
           </Link>

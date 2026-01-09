@@ -30,4 +30,5 @@ export interface UpdateProfilePayload {
   gender?: Gender | string;
   nationality?: string;
   phone?: string;
+  defaultAddressId?: string | null;
 }

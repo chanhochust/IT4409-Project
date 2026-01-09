@@ -4,6 +4,9 @@ export const AppRouter = {
   register: '/register',
   forgotPassword: '/forgot-password',
   resetPassword: '/forgot-password/reset',
-  dashboard: '/home',
+  dashboard: '/products',
   chat: '/chat',
+  products: '/products',
+  productDetail: (id: string) => `/products/${id}`,
+  cart: '/cart',
 };

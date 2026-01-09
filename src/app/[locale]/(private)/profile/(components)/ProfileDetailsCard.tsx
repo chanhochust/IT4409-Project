@@ -1,6 +1,7 @@
 import React from 'react';
-import { Calendar, IdCard, Mail, Phone, Globe, User as UserIcon } from 'lucide-react';
+import { Calendar, IdCard, Mail, Phone, Globe, User as UserIcon, MapPin } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { useAddressByIdQuery } from 'src/shared/services/api/queries/address.query';
 
 interface ProfileDetailsProps {
   createdAt: string;
@@ -14,7 +15,15 @@ interface ProfileDetailsProps {
   updatedAt: string;
 }
 
-function DetailItem({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) {
+function DetailItem({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: LucideIcon;
+  label: string;
+  value: string | React.ReactNode;
+}) {
   return (
     <div className='flex items-start gap-4 py-4 first:pt-0 last:pb-0'>
       <div className='bg-muted/10 text-muted flex h-10 w-10 shrink-0 items-center justify-center rounded-lg'>
@@ -36,8 +45,11 @@ export function ProfileDetailsCard({
   gender,
   nationality,
   phone,
+  defaultAddressId,
   updatedAt,
 }: ProfileDetailsProps) {
+  const { data: addressData, isLoading: isLoadingAddress } = useAddressByIdQuery(defaultAddressId);
+
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleString('en-GB', {
       day: '2-digit',
@@ -48,6 +60,15 @@ export function ProfileDetailsCard({
     });
   };
 
+  const formatAddress = () => {
+    if (!defaultAddressId) return 'Not set';
+    if (isLoadingAddress) return 'Loading...';
+    if (!addressData?.data) return 'Address not found';
+
+    const { street, ward, district, city } = addressData.data;
+    return `${street}, ${ward}, ${district}, ${city}`;
+  };
+
   return (
     <div className='border-border bg-card-bg rounded-lg border p-8 shadow-xl'>
       <div className='divide-border/30 divide-y'>
@@ -56,6 +77,7 @@ export function ProfileDetailsCard({
         <DetailItem icon={UserIcon} label='Gender' value={gender} />
         <DetailItem icon={Globe} label='Nationality' value={nationality} />
         <DetailItem icon={Phone} label='Phone' value={phone} />
+        <DetailItem icon={MapPin} label='Default Address' value={formatAddress()} />
         <DetailItem icon={IdCard} label='User ID' value={id} />
         <DetailItem icon={Calendar} label='Created At' value={formatDate(createdAt)} />
         <DetailItem icon={Calendar} label='Last Updated' value={formatDate(updatedAt)} />

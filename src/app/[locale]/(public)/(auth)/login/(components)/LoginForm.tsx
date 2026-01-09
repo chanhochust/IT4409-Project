@@ -1,19 +1,42 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { cn } from 'src/shared/utils/className';
 import { signIn } from 'next-auth/react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
+
+function isValidReturnTo(returnTo: string): boolean {
+  // Security check: only allow internal paths starting with "/"
+  if (!returnTo || !returnTo.startsWith('/')) {
+    return false;
+  }
+
+  // Prevent open redirect: no absolute URLs
+  if (returnTo.includes('://')) {
+    return false;
+  }
+
+  return true;
+}
 
 export const LoginForm: React.FC = () => {
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
   const [customerEmail, setCustomerEmail] = useState('');
   const [customerPassword, setCustomerPassword] = useState('');
   const [isCustomerRemembered, setIsCustomerRemembered] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Save returnTo to sessionStorage on mount
+  useEffect(() => {
+    const returnToParam = searchParams.get('returnTo');
+    if (returnToParam && isValidReturnTo(returnToParam)) {
+      sessionStorage.setItem('returnTo', returnToParam);
+    }
+  }, [searchParams]);
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -46,7 +69,23 @@ export const LoginForm: React.FC = () => {
         setErrorMessage('Invalid credentials. Please try again.');
       } else {
         const locale = typeof params?.locale === 'string' ? params.locale : 'en';
-        router.push(`/${locale}`);
+
+        // Get returnTo from query param or sessionStorage
+        const returnToParam = searchParams.get('returnTo');
+        const returnToStorage = sessionStorage.getItem('returnTo');
+        let redirectPath = `/${locale}`;
+
+        // Priority: query param > sessionStorage > default
+        if (returnToParam && isValidReturnTo(returnToParam)) {
+          redirectPath = returnToParam;
+        } else if (returnToStorage && isValidReturnTo(returnToStorage)) {
+          redirectPath = returnToStorage;
+        }
+
+        // Clean up sessionStorage
+        sessionStorage.removeItem('returnTo');
+
+        router.push(redirectPath);
       }
     } catch {
       setErrorMessage('Unable to sign in. Please try again later.');

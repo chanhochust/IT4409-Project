@@ -37,10 +37,10 @@ export const WithIcons: Story = {
     <AppTabs.Root defaultValue='profile' className='w-[400px]'>
       <AppTabs.List>
         <AppTabs.Trigger value='profile'>Profile</AppTabs.Trigger>
-        <AppTabs.Trigger value='settings'>Settings</AppTabs.Trigger>
+        <AppTabs.Trigger value='products'>Shopping</AppTabs.Trigger>
       </AppTabs.List>
       <AppTabs.Content value='profile'>View and update your profile information.</AppTabs.Content>
-      <AppTabs.Content value='settings'>Manage your account settings and preferences.</AppTabs.Content>
+      <AppTabs.Content value='products'>Shopping.</AppTabs.Content>
     </AppTabs.Root>
   ),
 };

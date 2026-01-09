@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { isAxiosError, type AxiosError } from 'axios';
-import { Plus, RotateCcw } from 'lucide-react';
+import { Plus, RotateCcw, Star } from 'lucide-react';
 import { type UseMutationResult } from '@tanstack/react-query';
 import { AppButton } from 'src/shared/components/ui/button/AppButton';
 import { AppDialog } from 'src/shared/components/ui/dialog/AppDialog';
@@ -16,12 +16,15 @@ import {
   useDeleteAddressMutation,
 } from 'src/shared/services/api/mutations/address.mutation';
 import { useMyAddressesQuery } from 'src/shared/services/api/queries/address.query';
+import { useProfileQuery } from 'src/shared/services/api/queries/profile.query';
+import { useUpdateProfileMutation } from 'src/shared/services/api/mutations/profile.mutation';
 import { toast } from 'sonner';
 import type { Address } from 'src/shared/types/api/address/address.type';
 import type { CreateAddressPayload, CreateAddressResponse } from 'src/shared/types/api/address/createAddress.type';
 
 export default function AddressPage() {
   const { data: addressesData, isLoading, isError, refetch } = useMyAddressesQuery();
+  const { data: profileData } = useProfileQuery();
   const createMutation: UseMutationResult<
     CreateAddressResponse,
     AxiosError<unknown>,
@@ -37,12 +40,14 @@ export default function AddressPage() {
     AxiosError<unknown>,
     string
   > = useDeleteAddressMutation();
+  const updateProfileMutation = useUpdateProfileMutation();
 
   const [open, setOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editingAddress, setEditingAddress] = useState<Address | undefined>();
   const [deletingAddress, setDeletingAddress] = useState<Address | undefined>();
   const [formError, setFormError] = useState<string>('');
+  const [settingDefaultId, setSettingDefaultId] = useState<string | null>(null);
 
   function extractErrorMessage(error: unknown): string {
     if (isAxiosError<{ message?: string }>(error)) {
@@ -57,6 +62,25 @@ export default function AddressPage() {
   }
 
   const addresses = addressesData?.data?.addresses ?? [];
+  const defaultAddressId = profileData?.data?.defaultAddressId;
+
+  function handleSetDefaultAddress(address: Address) {
+    setSettingDefaultId(address.id);
+    updateProfileMutation.mutate(
+      { defaultAddressId: address.id },
+      {
+        onSuccess: () => {
+          toast.success('Default address updated successfully');
+          setSettingDefaultId(null);
+        },
+        onError: (error: unknown) => {
+          const errorMessage = extractErrorMessage(error);
+          toast.error(errorMessage);
+          setSettingDefaultId(null);
+        },
+      },
+    );
+  }
 
   function handleOpenModal() {
     setEditingAddress(undefined);
@@ -175,6 +199,16 @@ export default function AddressPage() {
         </AppButton>
       </div>
 
+      {!defaultAddressId && addresses.length > 0 && (
+        <div className='text-foreground mb-6 flex items-start gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4'>
+          <Star className='h-5 w-5 shrink-0 text-yellow-600 dark:text-yellow-500' />
+          <div>
+            <p className='font-semibold'>No Default Address Set</p>
+            <p className='text-muted-foreground text-sm'>Set a default address for faster checkout</p>
+          </div>
+        </div>
+      )}
+
       {addresses.length === 0 ? (
         <div className='border-border bg-card flex flex-col items-center justify-center rounded-lg border p-12 text-center'>
           <p className='text-muted-foreground mb-6 text-sm'>Add your first address to get started</p>
@@ -192,6 +226,9 @@ export default function AddressPage() {
               onEdit={handleEditAddress}
               onDelete={handleDeleteAddress}
               isDeleting={deleteMutation.isPending && deletingAddress?.id === address.id}
+              isDefault={address.id === defaultAddressId}
+              onSetDefault={handleSetDefaultAddress}
+              isSettingDefault={settingDefaultId === address.id}
             />
           ))}
         </div>

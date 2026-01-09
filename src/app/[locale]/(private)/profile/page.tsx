@@ -132,6 +132,7 @@ export default function Page() {
             gender={user.gender}
             nationality={user.nationality}
             phone={user.phone}
+            defaultAddressId={user.defaultAddressId}
             updatedAt={user.updatedAt}
           />
 

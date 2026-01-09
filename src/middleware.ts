@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { DEFAULT_LOCALE } from 'src/shared/constants/locale';
 import { AppRouter } from './shared/constants/appRouter.constant';
 import { clientEnvironment } from './shared/environments/client';
+import App from 'next/app';
 
 const PUBLIC_FILE = /\.(.*)$/;
 const AVAILABLE_LOCALES = ['en', 'vi'];
@@ -85,21 +86,41 @@ export async function middleware(request: NextRequest) {
     AppRouter.register,
     AppRouter.resetPassword,
     AppRouter.chat,
+    AppRouter.products,
+    AppRouter.cart,
   ];
-  if (token && publicRoutes.includes(getCleanPathname(pathname))) {
+
+  // Routes that should redirect logged-in users to dashboard
+  const authOnlyRoutes = [AppRouter.login, AppRouter.forgotPassword, AppRouter.register, AppRouter.resetPassword];
+
+  const cleanPathname = getCleanPathname(pathname);
+
+  // Check if it's a product detail page (starts with /products/ and has an id after)
+  const isProductDetail = /^\/products\/[^/]+$/.test(cleanPathname);
+
+  // Only redirect logged-in users away from auth routes, not from shopping routes
+  if (token && authOnlyRoutes.includes(cleanPathname)) {
     return NextResponse.redirect(new URL(AppRouter.dashboard, request.url));
   }
 
   // If there's no token and not in public route and the pathname is localhost:3000/en or /vi. It runs, also skip request images
   if (
     !token &&
-    !publicRoutes.includes(getCleanPathname(pathname)) &&
-    getCleanPathname(pathname) !== `/${getLocale(request)}`
+    !publicRoutes.includes(cleanPathname) &&
+    !isProductDetail &&
+    cleanPathname !== `/${getLocale(request)}`
   ) {
     if (pathname.startsWith('/images')) {
       return NextResponse.next();
     }
-    return NextResponse.redirect(new URL(AppRouter.login, request.url));
+
+    // Build returnTo URL with current path and search params
+    const searchParams = request.nextUrl.searchParams;
+    const returnTo = `${pathname}${searchParams.size > 0 ? `?${searchParams.toString()}` : ''}`;
+    const loginUrl = new URL(AppRouter.login, request.url);
+    loginUrl.searchParams.set('returnTo', returnTo);
+
+    return NextResponse.redirect(loginUrl);
   }
 
   // Skip public files

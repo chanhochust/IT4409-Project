@@ -25,7 +25,7 @@ export default function CategoryStrip() {
             <h2 className={cn('text-foreground text-xl font-bold')}>Shop by Category</h2>
             <p className={cn('text-muted-foreground text-sm')}>Curated picks across the Tibiki palette</p>
           </div>
-          <Link className={cn('text-primary text-sm font-semibold hover:opacity-90')} href='/'>
+          <Link className={cn('text-primary text-sm font-semibold hover:opacity-90')} href='/products'>
             View all
           </Link>
         </div>

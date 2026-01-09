@@ -39,6 +39,7 @@ export class ProfileService {
     appendIfDefined('gender', payload.gender);
     appendIfDefined('nationality', payload.nationality);
     appendIfDefined('phone', payload.phone);
+    appendIfDefined('defaultAddressId', payload.defaultAddressId);
 
     return axiosClient
       .put<ProfileResponse>('/users/profile', form, {

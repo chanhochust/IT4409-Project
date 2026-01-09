@@ -16,7 +16,7 @@ export default function ProductsGrid() {
             <h2 className={cn('text-foreground text-xl font-bold')}>Featured Products</h2>
             <p className={cn('text-muted-foreground text-sm')}>Best of the season</p>
           </div>
-          <Link className={cn('text-primary text-sm font-semibold hover:opacity-90')} href='/'>
+          <Link className={cn('text-primary text-sm font-semibold hover:opacity-90')} href='/products'>
             Explore
           </Link>
         </div>

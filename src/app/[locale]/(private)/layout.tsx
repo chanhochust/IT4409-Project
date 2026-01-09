@@ -1,12 +1,14 @@
 'use client';
-import { Search, ShoppingBag } from 'lucide-react';
+import { Search } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import { useSession } from 'next-auth/react';
-import { cn } from 'src/shared/utils/className';
-import { AppRouter } from 'src/shared/constants/appRouter.constant';
-import { UserMenu } from 'src/shared/components/ui/user/UserMenu';
+import { CartIconButton } from 'src/shared/components/cart/CartIconButton';
 import { MobileUserMenu } from 'src/shared/components/ui/user/MobileUserMenu';
+import { UserMenu } from 'src/shared/components/ui/user/UserMenu';
+import { AppRouter } from 'src/shared/constants/appRouter.constant';
+import { cn } from 'src/shared/utils/className';
+
 function Header() {
   const { data: session } = useSession();
 
@@ -28,9 +30,7 @@ function Header() {
           <Link className='text-primary text-2xl font-black tracking-tighter' href='/'>
             TIBIKI
           </Link>
-          <Link className='relative' href='/'>
-            <ShoppingBag className='text-muted-foreground hover:text-primary h-5 w-5' />
-          </Link>
+          <CartIconButton />
           {session?.user ? (
             <div className='hidden sm:block'>
               <UserMenu />
