@@ -1,5 +1,5 @@
 'use client';
-import { Search } from 'lucide-react';
+import { Search, ClipboardList } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
@@ -38,6 +38,11 @@ function Header() {
             TIBIKI
           </Link>
           <CartIconButton />
+          {session?.user && (
+            <Link href={AppRouter.orders} aria-label='Orders'>
+              <ClipboardList className='text-muted-foreground hover:text-primary h-5 w-5 transition-colors' />
+            </Link>
+          )}
           {session?.user ? (
             <div className='hidden sm:block'>
               <UserMenu />

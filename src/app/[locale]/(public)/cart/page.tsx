@@ -150,7 +150,6 @@ export default function CartPage() {
         const response = await createOrderMutation.mutateAsync({
           items: validItems,
           paymentMethod,
-          shippingAddressId,
         });
 
         return { orderId: response.data.id, shopOwnerId: group.shopOwnerId, items: validItems };

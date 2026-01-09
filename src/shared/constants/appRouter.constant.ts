@@ -9,4 +9,5 @@ export const AppRouter = {
   products: '/products',
   productDetail: (id: string) => `/products/${id}`,
   cart: '/cart',
+  orders: '/orders',
 };

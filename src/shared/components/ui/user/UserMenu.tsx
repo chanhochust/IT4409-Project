@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { User, LogOut, MapPin } from 'lucide-react';
+import { User, LogOut, MapPin, ClipboardList, Store } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import { AppPopover } from 'src/shared/components/ui/popover/AppPopover';
 import { AppButton } from 'src/shared/components/ui/button/AppButton';
@@ -43,6 +43,18 @@ export function UserMenu() {
             <Link href='/address' className='justify-start'>
               <MapPin className='h-4 w-4' />
               <span>Address</span>
+            </Link>
+          </AppButton>
+          <AppButton asChild variant='ghost'>
+            <Link href='/orders' className='justify-start'>
+              <ClipboardList className='h-4 w-4' />
+              <span>Orders</span>
+            </Link>
+          </AppButton>
+          <AppButton asChild variant='ghost'>
+            <Link href='/my-shop' className='justify-start'>
+              <Store className='h-4 w-4' />
+              <span>My Shop</span>
             </Link>
           </AppButton>
           <AppButton

@@ -10,8 +10,6 @@ export interface CreateOrderItemPayload {
 export interface CreateOrderPayload {
   items: CreateOrderItemPayload[];
   paymentMethod: 'CASH' | 'CARD' | 'MOMO' | (string & {});
-  shippingAddress?: Address;
-  shippingAddressId?: string;
 }
 
 export type CreateOrderResponse = ApiResponse<Order>;
