@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Minus, Plus, ShoppingCart, Zap } from 'lucide-react';
 import { AppButton } from 'src/shared/components/ui/button/AppButton';
+import { useCart } from 'src/shared/stores/cart/useCart';
 import type { ProductItem } from 'src/shared/types/api/products/product.type';
 
 interface ProductPurchasePanelProps {
@@ -11,6 +12,7 @@ interface ProductPurchasePanelProps {
 
 export function ProductPurchasePanel({ product }: ProductPurchasePanelProps) {
   const [quantity, setQuantity] = useState(1);
+  const { addItem } = useCart();
   const isOutOfStock = product.stock === 0;
 
   function handleQuantityChange(delta: number) {
@@ -22,17 +24,16 @@ export function ProductPurchasePanel({ product }: ProductPurchasePanelProps) {
 
   function handleAddToCart() {
     if (!isOutOfStock) {
-      // UI only - no actual cart logic implemented yet
-      // eslint-disable-next-line no-console
-      console.log(`Added ${quantity} ${product.name} to cart`);
+      addItem(product.id, quantity);
+      setQuantity(1);
     }
   }
 
   function handleBuyNow() {
     if (!isOutOfStock) {
-      // UI only - no actual checkout logic implemented yet
-      // eslint-disable-next-line no-console
-      console.log(`Proceeding to checkout with ${quantity} ${product.name}`);
+      addItem(product.id, quantity);
+      setQuantity(1);
+      // TODO: Redirect to checkout
     }
   }
 
@@ -42,9 +43,9 @@ export function ProductPurchasePanel({ product }: ProductPurchasePanelProps) {
       <div>
         <p className='text-muted-foreground mb-1 text-sm'>Price</p>
         <p className='text-primary text-2xl font-bold'>
-          {new Intl.NumberFormat('vi-VN', {
+          {new Intl.NumberFormat('en-US', {
             style: 'currency',
-            currency: 'VND',
+            currency: 'USD',
           }).format(product.price)}
         </p>
       </div>

@@ -40,9 +40,9 @@ export function ProductCard({ product }: ProductCardProps) {
   }
 
   return (
-    <Link href={`/products/${product.id}`}>
-      <div className='border-border bg-card hover:border-primary group relative flex h-full flex-col rounded-lg border p-3 transition-all duration-200'>
-        {/* Image Container */}
+    <div className='border-border bg-card hover:border-primary group relative flex h-full flex-col rounded-lg border p-3 transition-all duration-200'>
+      {/* Image Container */}
+      <Link href={`/products/${product.id}`}>
         <div className='bg-muted relative mb-3 h-40 w-full overflow-hidden rounded-md'>
           {imageUrl ? (
             <Image
@@ -67,9 +67,11 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
           )}
         </div>
+      </Link>
 
-        {/* Content */}
-        <div className='mt-auto flex flex-col justify-between'>
+      {/* Content */}
+      <div className='mt-auto flex flex-col justify-between'>
+        <Link href={`/products/${product.id}`}>
           <div className='flex flex-1 flex-col gap-2'>
             {/* Name */}
             <h3 className='text-foreground line-clamp-2 text-sm font-medium'>{product.name}</h3>
@@ -89,18 +91,18 @@ export function ProductCard({ product }: ProductCardProps) {
               )}
             </div>
           </div>
+        </Link>
 
-          {/* Add to Cart Button */}
-          <button
-            className='bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground mt-2 flex items-center justify-center gap-2 rounded-lg py-2 text-xs font-semibold transition-colors disabled:cursor-not-allowed'
-            disabled={product.stock <= 0}
-            onClick={handleAddToCart}
-            type='button'>
-            <ShoppingCart className='h-3.5 w-3.5' />
-            Add to Cart
-          </button>
-        </div>
+        {/* Add to Cart Button */}
+        <button
+          className='bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground mt-2 flex items-center justify-center gap-2 rounded-lg py-2 text-xs font-semibold transition-colors disabled:cursor-not-allowed'
+          disabled={product.stock <= 0}
+          onClick={handleAddToCart}
+          type='button'>
+          <ShoppingCart className='h-3.5 w-3.5' />
+          Add to Cart
+        </button>
       </div>
-    </Link>
+    </div>
   );
 }
