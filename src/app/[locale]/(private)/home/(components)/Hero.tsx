@@ -1,18 +1,13 @@
 import React from 'react';
 import { cn } from 'src/shared/utils/className';
 import Link from 'next/link';
+
 export default function Hero() {
   return (
     <section className={cn('relative overflow-hidden pt-12 lg:pt-20')}>
       <div className={cn('mx-auto max-w-7xl px-4 sm:px-6 lg:px-8')}>
         <div className={cn('grid grid-cols-1 items-center gap-12 lg:grid-cols-2')}>
           <div className={cn('z-10 max-w-xl')}>
-            <p
-              className={cn(
-                'border-primary/30 bg-primary/10 text-primary mb-3 inline-flex rounded-full border px-3 py-1 text-xs font-semibold',
-              )}>
-              Minimalist Essentials
-            </p>
             <h1 className={cn('text-foreground mb-4 text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl')}>
               Shopping Everyday Now
             </h1>
@@ -37,14 +32,24 @@ export default function Hero() {
               </Link>
             </div>
           </div>
-          <div className={cn('relative lg:h-[600px]')}>
-            <div className={cn('bg-primary/10 absolute -top-20 -right-20 h-96 w-96 rounded-full blur-[100px]')} />
-            <div className={cn('bg-primary/5 absolute right-0 -bottom-20 h-64 w-64 rounded-full blur-[80px]')} />
+
+          <div className={cn('relative flex items-center justify-center lg:h-[600px]')}>
+            <div className={cn('bg-primary/10 absolute -top-10 -right-10 h-72 w-72 rounded-full blur-[100px]')} />
+            <div className={cn('bg-primary/5 absolute right-0 -bottom-10 h-64 w-64 rounded-full blur-[80px]')} />
             <div
               className={cn(
-                'border-border from-primary/10 via-background to-background h-80 w-full rounded-3xl border bg-gradient-to-br',
-              )}
-            />
+                'border-border relative z-10 w-full overflow-hidden rounded-3xl border bg-white shadow-2xl transition-transform hover:scale-[1.02]',
+              )}>
+              <img
+                src='/images/shopping.png'
+                alt='Tibiki Shopping Experience'
+                className={cn('h-full w-full object-cover')}
+                onError={(e) => {
+                  e.currentTarget.src =
+                    'https://t3.ftcdn.net/jpg/02/71/77/56/360_F_271775672_yo8ZgraN2IHGbfqP2k0PsLjwvmatUNUJ.jpg';
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
